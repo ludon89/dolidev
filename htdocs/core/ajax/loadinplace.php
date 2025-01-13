@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2011-2014  Regis Houssin           <regis.houssin@inodbox.com>
+/* Copyright (C) 2011-2025  Regis Houssin           <regis.houssin@inodbox.com>
  * Copyright (C) 2024		MDW						<mdeweerd@users.noreply.github.com>
  * Copyright (C) 2024       Frédéric France         <frederic.france@free.fr>
  *
@@ -19,7 +19,7 @@
 
 /**
  *       \file       htdocs/core/ajax/loadinplace.php
- *       \brief      File to load field value. used only when option "Edit In Place" is set (MAIN_USE_JQUERY_JEDITABLE).
+ *       \brief      File to load field value. used only when option "Edit In Place" is set (MAIN_USE_EDIT_IN_PLACE).
  */
 
 if (!defined('NOTOKENRENEWAL')) {
@@ -77,8 +77,8 @@ if (!$result) {
 	httponly_accessforbidden('Not allowed by restrictArea');
 }
 
-if (!getDolGlobalString('MAIN_USE_JQUERY_JEDITABLE')) {
-	httponly_accessforbidden('Can be used only when option MAIN_USE_JQUERY_JEDITABLE is set');
+if (!getDolGlobalString('MAIN_USE_EDIT_IN_PLACE')) {
+	httponly_accessforbidden('Can be used only when option MAIN_USE_EDIT_IN_PLACE is set');
 }
 
 
