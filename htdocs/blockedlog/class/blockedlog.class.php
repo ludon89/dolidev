@@ -168,19 +168,19 @@ class BlockedLog
 	public $debuginfo;
 
 	/**
-	 * Array of tracked event codes
+	 * Array of tracked event codes. They are event codes that triggers a record in the unalterable log (and you can filter in list of events).
 	 * @var array<string,string|mixed>
 	 */
 	public $trackedevents = array();
 
 	/**
-	 * Array of controlled event codes
+	 * Array of controlled event codes. They are event the execute a control when they occurs. An error return will cancel the action.
 	 * @var array<string,string|mixed>
 	 */
 	public $controlledevents = array();
 
 	/**
-	 * Array of tracked modules (key => label)
+	 * Array of tracked modules (key => label). List of modules we can see in module_pos.
 	 * @var array<int|string,string>
 	 */
 	public $trackedmodules = array();
@@ -506,6 +506,8 @@ class BlockedLog
 
 		// Generic fields
 
+		// entity
+		$this->entity = $object->entity ?? getDolEntity();
 		// action
 		$this->action = $action;
 		// amount
@@ -1242,8 +1244,12 @@ class BlockedLog
 		$this->date_creation = dol_now();
 
 		$this->object_version = DOL_VERSION;
+
 		// The object_format define the formatting rules into buildKeyForSignature and buildFirstPartOfKeyForSignature and buildFinalSignatureHash
-		$this->object_format = 'V1';	// TODO Switch to V2 when v2 support is complete
+		$this->object_format = 'V1';	// TODO Switch to V2 for every version
+		if (defined('CERTIF_LNE') && in_array((int) constant('CERTIF_LNE'), array(1, 2))) {
+			$this->object_format = 'V2';
+		}
 
 		$previoushash = '';
 		$previousid = 0;
