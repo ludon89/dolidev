@@ -19,5 +19,9 @@ UPDATE votre_table SET
 sudo timedatectl set-ntp false; sudo timedatectl set-time "2025-01-15 09:30:00"; sudo timedatectl status;
 sudo /etc/init.d/apache2 stop; sudo /etc/init.d/apache2 start; sudo /etc/init.d/apache2 status;
 
+Warning: When going in past, you must be sure that users have no date of session invalidation after this date. You can fix this with:
+UPDATE llx_user set flagdelsessionsbefore = NULL WHERE flagdelsessionsbefore IS NOT NULL;
+
+
 ***** To restore current date
 sudo timedatectl set-ntp true
