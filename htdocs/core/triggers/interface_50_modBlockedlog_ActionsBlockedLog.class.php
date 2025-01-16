@@ -173,12 +173,6 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 				}
 			}
 		}
-		/*if ($action === 'BILL_PAYED' || $action==='BILL_UNPAYED'
-		 || $action === 'BILL_SUPPLIER_PAYED' || $action === 'BILL_SUPPLIER_UNPAYED')
-		{
-			$qualified++;
-			$amounts=  (double) $object->total_ttc;
-		}*/
 		if ($action === 'PAYMENT_CUSTOMER_CREATE' || $action === 'PAYMENT_SUPPLIER_CREATE' || $action === 'DONATION_PAYMENT_CREATE'
 			|| $action === 'PAYMENT_CUSTOMER_DELETE' || $action === 'PAYMENT_SUPPLIER_DELETE' || $action === 'DONATION_PAYMENT_DELETE') {
 			$qualified++;

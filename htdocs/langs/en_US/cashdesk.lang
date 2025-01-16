@@ -184,3 +184,4 @@ LifetimeStatDate=Lifetime amount start date
 AllTerminals=All terminals
 NoFreeZoneProduct=Disallow the use of non predefined products
 NoFreeZoneProductDesc=You can activate the feature to force the use of predefined product only in any sales. Adding a custom non predefined product will become not possible.
+NoneOrChooseAnEmailTemplateForInvoice=None or select an email template for invoices

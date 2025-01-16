@@ -382,7 +382,8 @@ if (is_array($formmail->lines_model)) {
 }
 //var_dump($arraydefaultmessage);
 //var_dump($arrayofmessagename);
-print $form->selectarray('TAKEPOS_EMAIL_TEMPLATE_INVOICE', $arrayofmessagename, getDolGlobalString('TAKEPOS_EMAIL_TEMPLATE_INVOICE'), 'None', 1, 0, '', 0, 0, 0, '', 'maxwidth500 widthcentpercentminusx', 1);
+print $form->selectarray('TAKEPOS_EMAIL_TEMPLATE_INVOICE', $arrayofmessagename, getDolGlobalString('TAKEPOS_EMAIL_TEMPLATE_INVOICE'), $langs->transnoentitiesnoconv('NoneOrChooseAnEmailTemplateForInvoice'), 1, 0, '', 0, 0, 0, '', 'maxwidth500 widthcentpercentminusx', 1);
+// TODO Add link to go to email templates
 print "</td></tr>\n";
 
 // Control cash box at opening pos
