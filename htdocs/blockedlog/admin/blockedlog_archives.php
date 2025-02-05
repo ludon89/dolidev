@@ -1050,9 +1050,9 @@ if ($action == 'check' || $action == 'checkconfirmed') {
 
 			print '<b>'.dolPrintHTML($langs->trans("TotalForAction").' '.$langs->trans('log'.$key)).'</b>';
 			if ($key == 'BILL_VALIDATE') {
-				print ' ('.$langs->trans("Turnover").')';
+				print ' <span class="opacitymedium">('.$langs->trans("Turnover").')</span>';
 			} elseif ($key == 'PAYMENT_CUSTOMER_CREATE') {
-				print ' ('.$langs->trans("TurnoverCollected").')';
+				print ' <span class="opacitymedium">('.$langs->trans("TurnoverCollected").')</span>';
 			}
 			print ': ';
 
