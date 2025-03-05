@@ -189,3 +189,4 @@ TheoricalAmountAtOpening=Estimated and theorical amount (based on the balance, a
 KeepEmptyForAYearlyControl=Keep empty for a yearly control
 KeepEmptyForAMonthlyControl=Keep empty for a yearly or monthly control
 AmuntCountedByUserShort=Counted by user
+ACashControlHasBeenclosedForCurrentDay=A cash control for this terminal, containing the current day, has been closed. You must redo the cashcontrol (and re-close it later) if you need to continue to work today.

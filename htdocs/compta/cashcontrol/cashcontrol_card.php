@@ -210,16 +210,14 @@ if (GETPOST('cancel', 'alpha')) {
 	}
 }
 
-/*
 if ($action == "reopen" && $permissiontoadd) {
-	$result = $object->setStatut($object::STATUS_DRAFT, null, '', 'CASHFENCE_REOPEN');
+	$result = $object->setStatut($object::STATUS_DRAFT, null, '', 'CASHFENCE_MODIFY');
 	if ($result < 0) {
 		setEventMessages($object->error, $object->errors, 'errors');
 	}
 
 	$action = 'view';
 }
-*/
 
 if ($action == "start" && $permissiontoadd) {
 	if (!GETPOST('posmodule', 'alpha') || GETPOST('posmodule', 'alpha') == '-1') {
@@ -983,7 +981,7 @@ if (empty($action) || $action == "view" || $action == "close") {
 
 				print '<div class="inline-block divButAction"><a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.((int) $id).'&action=confirm_delete&token='.newToken().'">'.$langs->trans('Delete').'</a></div>';
 			} else {
-				//print '<div class="inline-block divButAction"><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.((int) $id).'&action=reopen&token='.newToken().'">'.$langs->trans('ReOpen').'</a></div>';
+				print '<div class="inline-block divButAction"><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.((int) $id).'&action=reopen&token='.newToken().'">'.$langs->trans('ReOpen').'</a></div>';
 			}
 
 			print '</div>';

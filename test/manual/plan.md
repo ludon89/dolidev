@@ -31,7 +31,7 @@ Check you can create cash control for February
 - Create n sales with cash from Takepos with full payment
 - Create n sales with cheque from Takepos with full payment
 - Close the cash control for the day
-- Try to make another sale for the same day.
+- Try to make another sale for the same day => Should fails
 
 
 ***** 4)
