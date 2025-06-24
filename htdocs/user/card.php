@@ -1239,7 +1239,7 @@ if ($action == 'create' || $action == 'adduserldap') {
 		//$generated_password = getRandomPassword(false);
 		print '<tr><td>'.$langs->trans("UseApiKey").'</td>';
 		print '<td>';
-		print '<input type="checkbox" id="api_key" name="api_key" value="1"'.(GETPOST('api_key') == '1' ? ' checked="checked"' : "").'>';
+		print '<input type="checkbox" id="api_key" name="api_key" value="'.getRandomPassword().'"'.(GETPOST('api_key') != '' ? ' checked="checked"' : "").'>';
 		print '</td></tr>';
 	} else {
 		// PARTIAL WORKAROUND
@@ -2648,7 +2648,7 @@ if ($action == 'create' || $action == 'adduserldap') {
 				print '<tr><td>'.$langs->trans("UseApiKey").'</td>';
 				print '<td>';
 				if ($permissiontoeditpasswordandsee || $user->hasRight("api", "apikey", "generate")) {
-					print '<input type="checkbox" id="api_key" name="api_key" value="1"'.($object->api_key != '' ? ' checked="checked"' : "").'>';
+					print '<input type="checkbox" id="api_key" name="api_key" value="'.getRandomPassword().'"'.($object->api_key != '' ? ' checked="checked"' : "").'>';
 				}
 				print '</td></tr>';
 			}
