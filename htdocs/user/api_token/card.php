@@ -101,17 +101,62 @@ if ($reshook < 0) {
 }
 
 if (empty($reshook)) {
-	if (in_array($action, array('addrights', 'delrights')) && $module != '') {
+	if (in_array($action, array('addrights', 'delrights'))) {
 		$rigthsarray = [];
-		$sql = "SELECT id";
-		$sql .= " FROM ".MAIN_DB_PREFIX."rights_def";
-		$sql .= " WHERE entity IN (".$db->sanitize($token->entity, 0, 0, 0, 0).")";
-		if ($module != 'allmodules') {
-			$sql .= " AND (module='".$db->escape($module)."')";	// Note: parenthesis are important because wherefordel can contains OR. Also note that $wherefordel is already sanitized
-		}
-		$resql = $db->query($sql);
-		while ($obj = $db->fetch_object($resql)) {
-			$rigthsarray []= $obj->id;
+
+		if ($rights != '') {
+			$sql = "SELECT module, perms, subperms";
+			$sql .= " FROM ".$db->prefix()."rights_def";
+			$sql .= " WHERE id = ".((int) $rights);
+			$sql .= " AND entity = ".((int) $token->entity);
+
+			$result = $db->query($sql);
+			if ($result) {
+				$obj = $db->fetch_object($result);
+
+				if ($obj) {
+					$module = $obj->module;
+					$perms = $obj->perms;
+					$subperms = $obj->subperms;
+				}
+			} else {
+				dol_print_error($db);
+			}
+
+			$sql = "SELECT id";
+			$sql .= " FROM ".$db->prefix()."rights_def";
+			$sql .= " WHERE entity = ".((int) $token->entity);
+			$sql .= " AND (id=".((int) $rights);
+			if ($action == 'addrights') {
+				if (!empty($subperms)) {
+					$sql .= " OR (module='".$db->escape($module)."' AND perms='".$db->escape($perms)."' AND (subperms='lire' OR subperms='read'))";
+				} elseif (!empty($perms)) {
+					$sql .= " OR (module='".$db->escape($module)."' AND (perms='lire' OR perms='read') AND (subperms IS NULL or subperms = ''))";
+				}
+			} elseif ($action == 'delrights') {
+				if ($subperms == 'lire' || $subperms == 'read') {
+					$sql .= " OR (module='".$db->escape($module)."' AND perms='".$db->escape($perms)."' AND subperms IS NOT NULL)";
+				}
+				if ($perms == 'lire' || $perms == 'read') {
+					$sql .= " OR (module='".$db->escape($module)."')";
+				}
+			}
+			$sql .= ")";
+			$resql = $db->query($sql);
+			while ($obj = $db->fetch_object($resql)) {
+				$rigthsarray []= $obj->id;
+			}
+		} elseif ($module != '') {
+			$sql = "SELECT id";
+			$sql .= " FROM ".MAIN_DB_PREFIX."rights_def";
+			$sql .= " WHERE entity IN (".$db->sanitize($token->entity, 0, 0, 0, 0).")";
+			if ($module != 'allmodules') {
+				$sql .= " AND (module='".$db->escape($module)."')";
+			}
+			$resql = $db->query($sql);
+			while ($obj = $db->fetch_object($resql)) {
+				$rigthsarray []= $obj->id;
+			}
 		}
 	}
 	if ($action == 'addrights' && $caneditperms && $confirm == 'yes') {
