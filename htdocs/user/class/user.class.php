@@ -1305,10 +1305,11 @@ class User extends CommonObject
 	 *
 	 *	@param  string	$moduletag		Limit permission for a particular module ('' by default means load all permissions)
 	 *  @param	int		$forcereload	Force reload of permissions even if they were already loaded (ignore cache)
+	 * 	@param 	string 	$token 			Load only permissions of the token
 	 *	@return	void
 	 *  @see	clearrights(), delrights(), addrights(), hasRight()
 	 */
-	public function loadRights($moduletag = '', $forcereload = 0)
+	public function loadRights($moduletag = '', $forcereload = 0, $token = '')
 	{
 		global $conf;
 
@@ -1337,133 +1338,120 @@ class User extends CommonObject
 		// Get permission of users + Get permissions of groups
 
 		if (!$alreadyloaded) {
-			// First user permissions
-			$sql = "SELECT DISTINCT r.module, r.perms, r.subperms";
-			$sql .= " FROM ".$this->db->prefix()."user_rights as ur,";
-			$sql .= " ".$this->db->prefix()."rights_def as r";
-			$sql .= " WHERE r.id = ur.fk_id";
-			if (getDolGlobalString('MULTICOMPANY_BACKWARD_COMPATIBILITY')) {
-				// On old version, we used entity defined into table r only
-				// @FIXME Test on MULTICOMPANY_BACKWARD_COMPATIBILITY is a very strange business rules because the select should be always the
-				// same than into user->loadRights() in user/perms.php and user/group/perms.php
-				// We should never use and remove this case.
-				$sql .= " AND r.entity IN (0,".(isModEnabled('multicompany') && getDolGlobalString('MULTICOMPANY_TRANSVERSE_MODE') ? "1," : "").$conf->entity.")";
-			} else {
-				// On table r=rights_def, the unique key is (id, entity) because id is hard coded into module descriptor and inserted during module activation.
-				// So we must include the filter on entity on both table r. and ur.
-				$sql .= " AND r.entity = ".((int) $conf->entity)." AND ur.entity = ".((int) $conf->entity);
-			}
-			$sql .= " AND ur.fk_user = ".((int) $this->id);
-			$sql .= " AND r.perms IS NOT NULL";
-			if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
-				$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
-			}
-			if ($moduletag) {
-				$sql .= " AND r.module = '".$this->db->escape($moduletag)."'";
-			}
+			if (!empty($token)) { // If token specified, we only load perms from it
+				$sql = "SELECT ot.state as rights, ot.entity";
+				$sql .= " FROM ".MAIN_DB_PREFIX."oauth_token as ot";
+				$sql .= " WHERE ot.token = '".($this->db->escape($token))."'";
 
-			$resql = $this->db->query($sql);
-			if ($resql) {
-				$num = $this->db->num_rows($resql);
-				$i = 0;
-				while ($i < $num) {
-					$obj = $this->db->fetch_object($resql);
+				$resql = $this->db->query($sql);
+				if ($resql) {
+					$tokenobj = $this->db->fetch_object($resql);
+					$this->db->free($resql);
 
-					if ($obj) {
-						$module = $obj->module;
-						$perms = $obj->perms;
-						$subperms = $obj->subperms;
+					$sql = "SELECT r.module, r.perms, r.subperms";
+					$sql .= " FROM llx_rights_def as r";
+					$sql .= " WHERE r.id IN (".$tokenobj->rights.")";
+					$sql .= " AND r.entity = ".$tokenobj->entity; // TODO : Check if working with multicompany and if MULTICOMPANY_BACKWARD_COMPATIBILITY is needed
+					$sql .= " AND r.perms IS NOT NULL";
+					if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
+						$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
+					}
+					if ($moduletag) {
+						$sql .= " AND r.module = '" . $this->db->escape($moduletag) . "'";
+					}
 
-						if (!empty($perms)) {
-							if (!empty($module)) {
-								if (!isset($this->rights->$module) || !is_object($this->rights->$module)) {
-									$this->rights->$module = new stdClass();
-								}
-								if (!empty($subperms)) {
-									if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
-										$this->rights->$module->$perms = new stdClass();
+					$resql = $this->db->query($sql);
+					if ($resql) {
+						$num = $this->db->num_rows($resql);
+						$i = 0;
+						while ($i < $num) {
+							$obj = $this->db->fetch_object($resql);
+
+							if ($obj) {
+								$module = $obj->module;
+								$perms = $obj->perms;
+								$subperms = $obj->subperms;
+
+								if (!empty($perms)) {
+									if (!empty($module)) {
+										if (!isset($this->rights->$module) || !is_object($this->rights->$module)) {
+											$this->rights->$module = new stdClass();
+										}
+										if (!empty($subperms)) {
+											if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
+												$this->rights->$module->$perms = new stdClass();
+											}
+											if (empty($this->rights->$module->$perms->$subperms)) {    // if not already counted
+												$this->nb_rights++;
+											}
+											$this->rights->$module->$perms->$subperms = 1;
+										} else {
+											if (empty($this->rights->$module->$perms)) {            // if not already counted
+												$this->nb_rights++;
+											}
+											$this->rights->$module->$perms = 1;
+										}
 									}
-									if (empty($this->rights->$module->$perms->$subperms)) {	// if not already counted
-										$this->nb_rights++;
-									}
-									$this->rights->$module->$perms->$subperms = 1;
-								} else {
-									if (empty($this->rights->$module->$perms)) {			// if not already counted
-										$this->nb_rights++;
-									}
-									$this->rights->$module->$perms = 1;
 								}
 							}
+							$i++;
 						}
+						$this->db->free($resql);
 					}
-					$i++;
 				}
-				$this->db->free($resql);
-			}
-
-			// Now permissions of groups
-			$sql = "SELECT DISTINCT r.module, r.perms, r.subperms, r.entity";
-			$sql .= " FROM ".$this->db->prefix()."usergroup_rights as gr,";
-			$sql .= " ".$this->db->prefix()."usergroup_user as gu,";
-			$sql .= " ".$this->db->prefix()."rights_def as r";
-			$sql .= " WHERE r.id = gr.fk_id";
-			if (getDolGlobalString('MULTICOMPANY_BACKWARD_COMPATIBILITY')) {
-				// @FIXME Test on MULTICOMPANY_BACKWARD_COMPATIBILITY is a very strange business rules because the select should be always the
-				// same than into user->loadRights() in user/perms.php and user/group/perms.php
-				// We should never use and remove this case.
-				if (isModEnabled('multicompany') && getDolGlobalString('MULTICOMPANY_TRANSVERSE_MODE')) {
-					$sql .= " AND gu.entity IN (0,".$conf->entity.")";
+			} else { // If no token, we load user and groups perms
+				// First user permissions
+				$sql = "SELECT DISTINCT r.module, r.perms, r.subperms";
+				$sql .= " FROM " . $this->db->prefix() . "user_rights as ur,";
+				$sql .= " " . $this->db->prefix() . "rights_def as r";
+				$sql .= " WHERE r.id = ur.fk_id";
+				if (getDolGlobalString('MULTICOMPANY_BACKWARD_COMPATIBILITY')) {
+					// On old version, we used entity defined into table r only
+					// @FIXME Test on MULTICOMPANY_BACKWARD_COMPATIBILITY is a very strange business rules because the select should be always the
+					// same than into user->loadRights() in user/perms.php and user/group/perms.php
+					// We should never use and remove this case.
+					$sql .= " AND r.entity IN (0," . (isModEnabled('multicompany') && getDolGlobalString('MULTICOMPANY_TRANSVERSE_MODE') ? "1," : "") . $conf->entity . ")";
 				} else {
-					$sql .= " AND r.entity = ".((int) $conf->entity);
+					// On table r=rights_def, the unique key is (id, entity) because id is hard coded into module descriptor and inserted during module activation.
+					// So we must include the filter on entity on both table r. and ur.
+					$sql .= " AND r.entity = " . ((int)$conf->entity) . " AND ur.entity = " . ((int)$conf->entity);
 				}
-			} else {
-				$sql .= " AND gr.entity = ".((int) $conf->entity);	// Only groups created in current entity
-				// The entity on the table gu=usergroup_user should be useless and should never be used because it is already into gr and r.
-				// but when using MULTICOMPANY_TRANSVERSE_MODE, we may have inserted record that make rubbish result here due to the duplicate record of
-				// other entities, so we are forced to add a filter on gu here
-				$sql .= " AND gu.entity IN (0,".$conf->entity.")";
-				$sql .= " AND r.entity = ".((int) $conf->entity);	// Only permission of modules enabled in current entity
-			}
-			// End of strange business rule
-			$sql .= " AND gr.fk_usergroup = gu.fk_usergroup";
-			$sql .= " AND gu.fk_user = ".((int) $this->id);
-			$sql .= " AND r.perms IS NOT NULL";
-			if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
-				$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
-			}
-			if ($moduletag) {
-				$sql .= " AND r.module = '".$this->db->escape($moduletag)."'";
-			}
+				$sql .= " AND ur.fk_user = " . ((int)$this->id);
+				$sql .= " AND r.perms IS NOT NULL";
+				if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
+					$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
+				}
+				if ($moduletag) {
+					$sql .= " AND r.module = '" . $this->db->escape($moduletag) . "'";
+				}
 
-			$resql = $this->db->query($sql);
-			if ($resql) {
-				$num = $this->db->num_rows($resql);
-				$i = 0;
-				while ($i < $num) {
-					$obj = $this->db->fetch_object($resql);
+				$resql = $this->db->query($sql);
+				if ($resql) {
+					$num = $this->db->num_rows($resql);
+					$i = 0;
+					while ($i < $num) {
+						$obj = $this->db->fetch_object($resql);
 
-					if ($obj) {
-						$module = $obj->module;
-						$perms = $obj->perms;
-						$subperms = $obj->subperms;
+						if ($obj) {
+							$module = $obj->module;
+							$perms = $obj->perms;
+							$subperms = $obj->subperms;
 
-						if (!empty($perms)) {
-							if (!empty($module)) {
-								if (!isset($this->rights->$module) || !is_object($this->rights->$module)) {
-									$this->rights->$module = new stdClass();
-								}
-								if (!empty($subperms)) {
-									if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
-										$this->rights->$module->$perms = new stdClass();
+							if (!empty($perms)) {
+								if (!empty($module)) {
+									if (!isset($this->rights->$module) || !is_object($this->rights->$module)) {
+										$this->rights->$module = new stdClass();
 									}
-									if (empty($this->rights->$module->$perms->$subperms)) {	// if not already counted
-										$this->nb_rights++;
-									}
-									$this->rights->$module->$perms->$subperms = 1;
-								} else {
-									// if we have already define a subperm like this $this->rights->$module->level1->level2 with llx_user_rights, we don't want override level1 because the level2 can be not define on user group
-									if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
-										if (empty($this->rights->$module->$perms)) {			// if not already counted
+									if (!empty($subperms)) {
+										if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
+											$this->rights->$module->$perms = new stdClass();
+										}
+										if (empty($this->rights->$module->$perms->$subperms)) {    // if not already counted
+											$this->nb_rights++;
+										}
+										$this->rights->$module->$perms->$subperms = 1;
+									} else {
+										if (empty($this->rights->$module->$perms)) {            // if not already counted
 											$this->nb_rights++;
 										}
 										$this->rights->$module->$perms = 1;
@@ -1471,10 +1459,86 @@ class User extends CommonObject
 								}
 							}
 						}
+						$i++;
 					}
-					$i++;
+					$this->db->free($resql);
 				}
-				$this->db->free($resql);
+
+				// Now permissions of groups
+				$sql = "SELECT DISTINCT r.module, r.perms, r.subperms, r.entity";
+				$sql .= " FROM " . $this->db->prefix() . "usergroup_rights as gr,";
+				$sql .= " " . $this->db->prefix() . "usergroup_user as gu,";
+				$sql .= " " . $this->db->prefix() . "rights_def as r";
+				$sql .= " WHERE r.id = gr.fk_id";
+				if (getDolGlobalString('MULTICOMPANY_BACKWARD_COMPATIBILITY')) {
+					// @FIXME Test on MULTICOMPANY_BACKWARD_COMPATIBILITY is a very strange business rules because the select should be always the
+					// same than into user->loadRights() in user/perms.php and user/group/perms.php
+					// We should never use and remove this case.
+					if (isModEnabled('multicompany') && getDolGlobalString('MULTICOMPANY_TRANSVERSE_MODE')) {
+						$sql .= " AND gu.entity IN (0," . $conf->entity . ")";
+					} else {
+						$sql .= " AND r.entity = " . ((int)$conf->entity);
+					}
+				} else {
+					$sql .= " AND gr.entity = " . ((int)$conf->entity);    // Only groups created in current entity
+					// The entity on the table gu=usergroup_user should be useless and should never be used because it is already into gr and r.
+					// but when using MULTICOMPANY_TRANSVERSE_MODE, we may have inserted record that make rubbish result here due to the duplicate record of
+					// other entities, so we are forced to add a filter on gu here
+					$sql .= " AND gu.entity IN (0," . $conf->entity . ")";
+					$sql .= " AND r.entity = " . ((int)$conf->entity);    // Only permission of modules enabled in current entity
+				}
+				// End of strange business rule
+				$sql .= " AND gr.fk_usergroup = gu.fk_usergroup";
+				$sql .= " AND gu.fk_user = " . ((int)$this->id);
+				$sql .= " AND r.perms IS NOT NULL";
+				if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
+					$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
+				}
+				if ($moduletag) {
+					$sql .= " AND r.module = '" . $this->db->escape($moduletag) . "'";
+				}
+
+				$resql = $this->db->query($sql);
+				if ($resql) {
+					$num = $this->db->num_rows($resql);
+					$i = 0;
+					while ($i < $num) {
+						$obj = $this->db->fetch_object($resql);
+
+						if ($obj) {
+							$module = $obj->module;
+							$perms = $obj->perms;
+							$subperms = $obj->subperms;
+
+							if (!empty($perms)) {
+								if (!empty($module)) {
+									if (!isset($this->rights->$module) || !is_object($this->rights->$module)) {
+										$this->rights->$module = new stdClass();
+									}
+									if (!empty($subperms)) {
+										if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
+											$this->rights->$module->$perms = new stdClass();
+										}
+										if (empty($this->rights->$module->$perms->$subperms)) {    // if not already counted
+											$this->nb_rights++;
+										}
+										$this->rights->$module->$perms->$subperms = 1;
+									} else {
+										// if we have already define a subperm like this $this->rights->$module->level1->level2 with llx_user_rights, we don't want override level1 because the level2 can be not define on user group
+										if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
+											if (empty($this->rights->$module->$perms)) {            // if not already counted
+												$this->nb_rights++;
+											}
+											$this->rights->$module->$perms = 1;
+										}
+									}
+								}
+							}
+						}
+						$i++;
+					}
+					$this->db->free($resql);
+				}
 			}
 
 			// Force permission on user for admin
@@ -1566,9 +1630,9 @@ class User extends CommonObject
 	 *  @see	clearrights(), delrights(), addrights(), hasRight()
 	 *  @phpstan-ignore-next-line
 	 */
-	public function getrights($moduletag = '', $forcereload = 0)
+	public function getrights($moduletag = '', $forcereload = 0, $token = '')
 	{
-		$this->loadRights($moduletag, $forcereload);
+		$this->loadRights($moduletag, $forcereload, $token);
 	}
 
 	/**
