@@ -74,7 +74,7 @@ if ($user->id != $id && !$canreaduser) {
 	accessforbidden();
 }
 
-$sql = "SELECT ot.rowid as token_id, ot.token, ot.entity, ot.state, ot.datec, ot.tms";
+$sql = "SELECT ot.rowid as token_id, ot.token, ot.entity, ot.state as rights, ot.datec as date_creation, ot.tms as date_modification";
 $sql .= " FROM ".MAIN_DB_PREFIX."oauth_token as ot";
 $sql .= " WHERE ot.rowid = ".((int) $tokenid);
 
@@ -187,14 +187,14 @@ print '</tr>'."\n";
 // Creation date
 print '<tr><td class="titlefield">'.$langs->trans("DateCreation").'</td>';
 print '<td>';
-print '<input type="text" id="creation_date" name="creation_date" value="'.$token->datec.'" readonly>';
+print '<input type="text" id="creation_date" name="creation_date" value="'.$token->date_creation.'" readonly>';
 print '</td>';
 print '</tr>'."\n";
 
 // Modification date
 print '<tr><td class="titlefield">'.$langs->trans("DateModification").'</td>';
 print '<td>';
-print '<input type="text" id="modification_date" name="modification_date" value="'.$token->tms.'" readonly>';
+print '<input type="text" id="modification_date" name="modification_date" value="'.$token->date_modification.'" readonly>';
 print '</td>';
 print '</tr>'."\n";
 
