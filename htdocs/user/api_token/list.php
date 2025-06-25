@@ -196,7 +196,7 @@ if (empty($reshook)) {
 	print '<th class="liste_titre">'.$langs->trans("DateModification").'</th>';
 	print '</tr>';
 
-	$sql = "SELECT ot.rowid as token_id, ot.token, ot.entity, ot.state, ot.datec, ot.tms";
+	$sql = "SELECT ot.rowid as token_id, ot.token, ot.entity, ot.state as rights, ot.datec as date_creation, ot.tms as date_modification";
 	$sql .= " FROM ".MAIN_DB_PREFIX."oauth_token as ot";
 	$sql .= " WHERE ot.fk_user = ".((int) $object->id);
 
@@ -205,6 +205,11 @@ if (empty($reshook)) {
 	// List of groups of user
 	if ($db->num_rows($resql) > 0) {
 		while ($obj = $db->fetch_object($resql)) {
+			// Compute number of perms
+			$numperms = 0;
+			if (!empty($obj->rights)) {
+				$numperms = count(explode(",", $obj->rights));
+			}
 			print '<tr class="oddeven">';
 			// Action column
 			if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
@@ -219,7 +224,7 @@ if (empty($reshook)) {
 				print '</td>';
 			}
 			print '<td>';
-			print '<a href="'.DOL_URL_ROOT.'/user/api_token/card.php?id='.$object->id.'&tokenid='.$obj->token_id.'">'.img_object($langs->trans("ShowToken"), "email").' ';  // TODO : change icon
+			print '<a href="'.DOL_URL_ROOT.'/user/api_token/card.php?id='.$object->id.'&tokenid='.$obj->token_id.'">';
 			print $obj->token;
 			print '</a>';
 			print '</td>';
@@ -227,13 +232,13 @@ if (empty($reshook)) {
 			print $obj->entity;
 			print '</td>';
 			print '<td>';
-			print $obj->state;
+			print $numperms;
 			print '</td>';
 			print '<td>';
-			print $obj->datec;
+			print $obj->date_creation;
 			print '</td>';
 			print '<td>';
-			print $obj->tms;
+			print $obj->date_modification;
 			print '</td>';
 			print '</tr>';
 		}
