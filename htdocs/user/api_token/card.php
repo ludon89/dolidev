@@ -54,7 +54,7 @@ $rights = GETPOSTINT('rights');
 $cancel = GETPOST('cancel', 'alpha');
 $backtopage = GETPOST('backtopage', 'alpha');
 
-if (!isset($id) || empty($id)) {
+if (empty($id) && $action != 'add' && $action != 'create') {
 	accessforbidden();
 }
 
@@ -248,9 +248,17 @@ if (empty($reshook)) {
 
 	if ($action == 'add') {
 		$tokenstring = GETPOST('api_key', 'alphanohtml');
+		$userid = GETPOSTINT('user');
+		$useridtoadd = !empty($userid) && $userid > 0 ? $userid : $id;
 
 		if (empty($tokenstring)) {
 			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ApiToken")), null, 'errors');
+			$action = 'create';
+			$error++;
+		}
+
+		if (empty($useridtoadd)) {
+			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("User")), null, 'errors');
 			$action = 'create';
 			$error++;
 		}
@@ -276,7 +284,7 @@ if (empty($reshook)) {
 			$db->begin();
 
 			$sql = "INSERT INTO ".MAIN_DB_PREFIX."oauth_token (service, token, fk_user, entity, datec)";
-			$sql .= " VALUES ('dolibarr_rest_api', '".$db->escape($tokenstring)."', ".($id).", ".((int) $conf->entity).", '".$db->idate(dol_now())."')";
+			$sql .= " VALUES ('dolibarr_rest_api', '".$db->escape($tokenstring)."', ".($useridtoadd).", ".((int) $conf->entity).", '".$db->idate(dol_now())."')";
 			$resql = $db->query($sql);
 
 			if (!$resql) {
@@ -285,7 +293,7 @@ if (empty($reshook)) {
 			} else {
 				$insertedtokenid = $db->last_insert_id(MAIN_DB_PREFIX."oauth_token");
 				$db->commit();
-				header("Location: ".$_SERVER["PHP_SELF"].'?id='.$object->id.'&tokenid='.$insertedtokenid);
+				header("Location: ".$_SERVER["PHP_SELF"].'?id='.$useridtoadd.'&tokenid='.$insertedtokenid);
 				exit;
 			}
 		}
@@ -318,8 +326,12 @@ if (isset($reloadtoken)) { // If we add or del rights, we want to refresh the to
  * View
  */
 
-$person_name = !empty($object->firstname) ? $object->lastname.", ".$object->firstname : $object->lastname;
-$title = $person_name." - ".$langs->trans('Card');
+if ($object->id > 0) {
+	$person_name = !empty($object->firstname) ? $object->lastname.", ".$object->firstname : $object->lastname;
+	$title = $person_name." - ".$langs->trans('Card');
+} else {
+	$title = $langs->trans("NewToken");
+}
 $help_url = '';
 
 llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-user page-card_param_ihm');
@@ -332,27 +344,8 @@ if ($action == 'delete') {
 
 print $formconfirm;
 
-$arrayofselected = is_array($toselect) ? $toselect : array();
-
-$head = user_prepare_head($object);
-
-$title = $langs->trans("User");
-
-print dol_get_fiche_head($head, 'apitoken', $title, -1, 'user');
-
-$linkback = '<a href="'.DOL_URL_ROOT.'/user/api_token/list.php?id='.$id.'">'.$langs->trans("BackToList").'</a>';
-
-$morehtmlref = '<a href="'.DOL_URL_ROOT.'/user/vcard.php?id='.$object->id.'&output=file&file='.urlencode(dol_sanitizeFileName($object->getFullName($langs).'.vcf')).'" class="refid" rel="noopener">';
-$morehtmlref .= img_picto($langs->trans("Download").' '.$langs->trans("VCard"), 'vcard.png', 'class="valignmiddle marginleftonly paddingrightonly"');
-$morehtmlref .= '</a>';
-
-$urltovirtualcard = '/user/virtualcard.php?id='.((int) $object->id);
-$morehtmlref .= dolButtonToOpenUrlInDialogPopup('publicvirtualcard', $langs->transnoentitiesnoconv("PublicVirtualCardUrl").' - '.$object->getFullName($langs), img_picto($langs->trans("PublicVirtualCardUrl"), 'card', 'class="valignmiddle marginleftonly paddingrightonly"'), $urltovirtualcard, '', 'nohover');
-
-// Disabled prev/next because there is no token object
-dol_banner_tab($object, '', $linkback, $user->hasRight("user", "user", "read") || $user->admin, 'none', '', $morehtmlref);
-
 if ($action == 'create') {
+	print load_fiche_titre($title, '', 'user');
 	print '<form action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'" method="post">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="add">';
@@ -362,7 +355,14 @@ if ($action == 'create') {
 
 	print '<table class="border centpercent tableforfieldcreate">';
 
-	print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('User').'</td><td class="valuefieldcreate">'.$person_name.'</td></tr>';
+	if ($user->admin) {
+		print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('User').'</td>';
+		print '<td class="valuefieldcreate">';
+		print $form->select_dolusers('', 'user', 1, '', 0, '', '', (string) $object->entity, 0, 0, '', 0, '', 'minwidth200 maxwidth500');
+		print '</td></tr>';
+	} else {
+		print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('User').'</td><td class="valuefieldcreate">'.$person_name.'</td></tr>';
+	}
 	print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('Entity').'</td><td class="valuefieldcreate">'.$conf->entity.'</td></tr>';
 
 	print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans("ApiToken").'</td>';
@@ -384,6 +384,26 @@ if ($action == 'create') {
 	print "</form>";
 
 } elseif ($id > 0 && !empty($token)) {
+	$arrayofselected = is_array($toselect) ? $toselect : array();
+
+	$head = user_prepare_head($object);
+
+	$title = $langs->trans("User");
+
+	print dol_get_fiche_head($head, 'apitoken', $title, -1, 'user');
+
+	$linkback = '<a href="'.DOL_URL_ROOT.'/user/api_token/list.php?id='.$id.'">'.$langs->trans("BackToList").'</a>';
+
+	$morehtmlref = '<a href="'.DOL_URL_ROOT.'/user/vcard.php?id='.$object->id.'&output=file&file='.urlencode(dol_sanitizeFileName($object->getFullName($langs).'.vcf')).'" class="refid" rel="noopener">';
+	$morehtmlref .= img_picto($langs->trans("Download").' '.$langs->trans("VCard"), 'vcard.png', 'class="valignmiddle marginleftonly paddingrightonly"');
+	$morehtmlref .= '</a>';
+
+	$urltovirtualcard = '/user/virtualcard.php?id='.((int) $object->id);
+	$morehtmlref .= dolButtonToOpenUrlInDialogPopup('publicvirtualcard', $langs->transnoentitiesnoconv("PublicVirtualCardUrl").' - '.$object->getFullName($langs), img_picto($langs->trans("PublicVirtualCardUrl"), 'card', 'class="valignmiddle marginleftonly paddingrightonly"'), $urltovirtualcard, '', 'nohover');
+
+	// Disabled prev/next because there is no token object
+	dol_banner_tab($object, '', $linkback, $user->hasRight("user", "user", "read") || $user->admin, 'none', '', $morehtmlref);
+
 	// Tokens info
 	print '<div class="fichecenter">';
 	print '<div class="underbanner clearboth"></div>';
