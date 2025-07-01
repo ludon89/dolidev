@@ -110,6 +110,10 @@ if ($reshook < 0) {
 }
 
 if (empty($reshook)) {
+	if (empty($backtopage)) {
+		$backtopage = 'list.php?id='.$object->id;
+	}
+
 	if ($cancel) {
 		if (!empty($backtopage)) {
 			header("Location: ".$backtopage);
@@ -361,7 +365,7 @@ if ($action == 'create') {
 	print '<form action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'" method="post">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="add">';
-	print '<input type="hidden" name="backtopage" value="list.php?id='.$object->id.'">';
+	print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
 
 	print dol_get_fiche_head();
 

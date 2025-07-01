@@ -305,7 +305,7 @@ if (GETPOSTINT('nomassaction') || in_array($massaction, array('presend', 'predel
 $massactionbutton = $form->selectMassAction('', $arrayofmassactions);
 
 $morehtmlright = '';
-$tmpurlforbutton = DOL_URL_ROOT.'/user/api_token/card.php?action=create';
+$tmpurlforbutton = DOL_URL_ROOT.'/user/api_token/card.php?action=create&backtopage='.urlencode(DOL_URL_ROOT.'/api/admin/token_list.php');
 $morehtmlright .= dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', $tmpurlforbutton);
 
 print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?id=">'."\n";
