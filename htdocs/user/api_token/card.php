@@ -377,7 +377,7 @@ if ($action == 'create') {
 	print dol_get_fiche_end();
 
 	print '<div class="center">';
-	print '<input class="button" name="add" value="'.$langs->trans("CreateToken").'" type="submit">';
+	print '<input class="button" name="add" value="'.$langs->trans("Create").'" type="submit">';
 	print '<input class="button button-cancel" value="'.$langs->trans("Cancel").'" name="cancel" type="submit">';
 	print '</div>';
 
