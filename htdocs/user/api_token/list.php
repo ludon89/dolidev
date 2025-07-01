@@ -117,7 +117,7 @@ if ($user->id != $id && !$canreaduser) {
 
 $arrayfields = array(
 	'oat.token' => array('label' => "ApiToken", 'checked' => '1'),
-	'oat.entity' => array('label' => "Entity", 'checked' => '1'),
+	'e.label' => array('label' => "Entity", 'checked' => '1'),
 	'oat.datec' => array('label' => "DateCreation", 'checked' => '1'),
 	'oat.tms' => array('label' => "DateModification", 'checked' => '1'),
 );
@@ -235,7 +235,13 @@ if (!getDolGlobalInt('MAIN_DISABLE_FULL_SCANLIST')) {
 }
 
 $sql = "SELECT oat.rowid as token_id, oat.token, oat.entity, oat.state as rights, oat.datec as date_creation, oat.tms as date_modification";
+if (isModEnabled('multicompany')) {
+	$sql .= ", e.label as entity_name";
+}
 $sql .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
+if (isModEnabled('multicompany')) {
+	$sql .= " JOIN ".$db->prefix()."entity as e ON oat.entity = e.rowid";
+}
 $sql .= " WHERE oat.fk_user = ".((int) $object->id);
 $sql .= " AND entity IN (".$conf->entity.")";
 $sql .= " AND service = 'dolibarr_rest_api'";
@@ -412,9 +418,9 @@ if (empty($reshook)) {
 	}
 
 	// Entity
-	if (!empty($arrayfields['oat.entity']['checked']) && isModEnabled('multicompany')) {
+	if (!empty($arrayfields['e.label']['checked']) && isModEnabled('multicompany')) {
 		print '<td class="liste_titre">';
-		print '<input class="flat maxwidth100" type="text" name="search_entity" value="'.dol_escape_htmltag($search_entity).'"'.($socid > 0 ? " disabled" : "").'>';
+		print '<input class="flat maxwidth100" type="text" name="search_entity" value="'.dol_escape_htmltag($search_entity).'">';
 		print '</td>';
 	}
 
@@ -466,8 +472,8 @@ if (empty($reshook)) {
 	if (!empty($arrayfields['oat.token']['checked'])) {
 		print_liste_field_titre($arrayfields['oat.token']['label'], $_SERVER["PHP_SELF"], 'oat.token', '', $param, '', $sortfield, $sortorder);
 	}
-	if (!empty($arrayfields['oat.entity']['checked']) && isModEnabled('multicompany')) {
-		print_liste_field_titre($arrayfields['oat.entity']['label'], $_SERVER["PHP_SELF"], 'oat.entity', '', $param, '', $sortfield, $sortorder);
+	if (!empty($arrayfields['e.label']['checked']) && isModEnabled('multicompany')) {
+		print_liste_field_titre($arrayfields['e.label']['label'], $_SERVER["PHP_SELF"], 'e.label', '', $param, '', $sortfield, $sortorder);
 	}
 	print '<th class="liste_titre right">'.$langs->trans("NumberOfPermissions").'</th>';
 	if (!empty($arrayfields['oat.datec']['checked'])) {
@@ -514,7 +520,7 @@ if (empty($reshook)) {
 			print '</td>';
 			if (isModEnabled('multicompany')) {
 				print '<td>';
-				print $obj->entity;
+				print $obj->entity_name;
 				print '</td>';
 			}
 			print '<td class="right">';
