@@ -45,6 +45,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/api.lib.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array('admin', 'users'));
+$error = 0;
 
 if (!$user->admin) {
 	accessforbidden();
@@ -134,6 +135,46 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
 if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')
 	|| GETPOST('button_search_x', 'alpha') || GETPOST('button_search.x', 'alpha') || GETPOST('button_search', 'alpha')) {
 	$massaction = ''; // Protection to avoid mass action if we force a new search during a mass action confirmation
+}
+if (($action == 'delete' && $confirm == 'yes')) {
+	$db->begin();
+
+	$nbok = 0;
+	$TMsg = array();
+
+	//$toselect could contain duplicate entries, cf https://github.com/Dolibarr/dolibarr/issues/26244
+	$unique_arr = array_unique($toselect);
+	foreach ($unique_arr as $toselectid) {
+		$sql = "DELETE FROM ".MAIN_DB_PREFIX."oauth_token";
+		$sql .= " WHERE rowid = '".$toselectid."'";
+		$sql .= " AND service = 'dolibarr_rest_api'";
+
+		$result = $db->query($sql);
+
+		if ($result > 0) {
+			$nbok++;
+		} else {
+			setEventMessages($db->error(), null, 'errors');
+			$error++;
+			break;
+		}
+	}
+
+	if (empty($error)) {
+		// Message for elements well deleted
+		if ($nbok > 1) {
+			setEventMessages($langs->trans("RecordsDeleted", $nbok), null, 'mesgs');
+		} elseif ($nbok > 0) {
+			setEventMessages($langs->trans("RecordDeleted", $nbok), null, 'mesgs');
+		} else {
+			setEventMessages($langs->trans("NoRecordDeleted"), null, 'mesgs');
+		}
+		$db->commit();
+	} else {
+		$db->rollback();
+	}
+
+	//var_dump($listofobjectthirdparties);exit;
 }
 
 /*
