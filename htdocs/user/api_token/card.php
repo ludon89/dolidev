@@ -126,6 +126,8 @@ if (empty($reshook)) {
 		$rigthsarray = [];
 
 		if (!empty($rights)) {
+			$module = $perms = $subperms = '';
+
 			$sql = "SELECT module, perms, subperms";
 			$sql .= " FROM ".$db->prefix()."rights_def";
 			$sql .= " WHERE id = ".((int) $rights);
@@ -284,7 +286,7 @@ if (empty($reshook)) {
 		} else {
 			dol_print_error($db);
 		}
-		if ($nbtotalofrecords > 0) {
+		if (empty($nbtotalofrecords) || $nbtotalofrecords > 0) {
 			setEventMessages($langs->trans("ErrorFieldExist", $langs->transnoentitiesnoconv("ApiToken")), null, 'errors');
 			$action = 'create';
 			$error++;
@@ -376,10 +378,10 @@ if ($action == 'create') {
 		print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('User').'</td>';
 		print '<td class="valuefieldcreate">';
 		$selecteduser = !empty($id) ? $id : '';
-		print $form->select_dolusers($selecteduser, 'user', 1, '', 0, '', '', (string) $object->entity, 0, 0, '', 0, '', 'minwidth200 maxwidth500');
+		print $form->select_dolusers($selecteduser, 'user', 1, null, 0, '', '', (string) $object->entity, 0, 0, '', 0, '', 'minwidth200 maxwidth500');
 		print '</td></tr>';
 	} else {
-		print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('User').'</td><td class="valuefieldcreate">'.$person_name.'</td></tr>';
+		print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('User').'</td><td class="valuefieldcreate">'.($person_name ?? '').'</td></tr>';
 	}
 
 	if (isModEnabled('multicompany') && is_object($mc)) {
@@ -404,7 +406,6 @@ if ($action == 'create') {
 	print '</div>';
 
 	print "</form>";
-
 } elseif ($id > 0 && !empty($token)) {
 	$arrayofselected = is_array($toselect) ? $toselect : array();
 
@@ -574,7 +575,7 @@ if ($action == 'create') {
 	$sql = "SELECT r.id, r.libelle as label, r.module, r.perms, r.subperms, r.module_position, r.bydefault";
 	$sql .= " FROM ".MAIN_DB_PREFIX."rights_def as r";
 	$sql .= " WHERE r.libelle NOT LIKE 'tou%'"; // On ignore droits "tous"
-	$sql .= " AND r.entity = ".((int)$entity);
+	$sql .= " AND r.entity = ".((int) $entity);
 	$sql .= " ORDER BY r.family_position, r.module_position, r.module, r.id";
 
 	$result = $db->query($sql);
@@ -622,9 +623,9 @@ if ($action == 'create') {
 						$newmoduleposition += 100000;
 					}
 
-					$sqlupdate = 'UPDATE '.MAIN_DB_PREFIX."rights_def SET module_position = ".((int)$newmoduleposition).",";
-					$sqlupdate .= " family_position = ".((int)$familyposition);
-					$sqlupdate .= " WHERE module_position = ".((int)$obj->module_position)." AND module = '".$db->escape($obj->module)."'";
+					$sqlupdate = 'UPDATE '.MAIN_DB_PREFIX."rights_def SET module_position = ".((int) $newmoduleposition).",";
+					$sqlupdate .= " family_position = ".((int) $familyposition);
+					$sqlupdate .= " WHERE module_position = ".((int) $obj->module_position)." AND module = '".$db->escape($obj->module)."'";
 
 					$db->query($sqlupdate);
 				}
@@ -638,13 +639,13 @@ if ($action == 'create') {
 	// Users perms
 	$sql = "SELECT ur.fk_id";
 	$sql .= " FROM ".MAIN_DB_PREFIX."user_rights as ur";
-	$sql .= " WHERE ur.entity = ".((int)$entity);
-	$sql .= " AND ur.fk_user = ".((int)$object->id);
+	$sql .= " WHERE ur.entity = ".((int) $entity);
+	$sql .= " AND ur.fk_user = ".((int) $object->id);
 	$sql .= " UNION ";
 	// Groups perms
 	$sql .= "SELECT gr.fk_id";
 	$sql .= " FROM ".MAIN_DB_PREFIX."usergroup_rights as gr";
-	$sql .= " WHERE EXISTS(SELECT gu.rowid FROM llx_usergroup_user as gu WHERE gu.fk_user = ".((int)$id)." AND gu.fk_usergroup = gr.fk_usergroup)";
+	$sql .= " WHERE EXISTS(SELECT gu.rowid FROM llx_usergroup_user as gu WHERE gu.fk_user = ".((int) $id)." AND gu.fk_usergroup = gr.fk_usergroup)";
 
 	dol_syslog("get user perms", LOG_DEBUG);
 	$result = $db->query($sql);
@@ -667,7 +668,7 @@ if ($action == 'create') {
 	$sql = "SELECT r.id, r.libelle as label, r.module, r.perms, r.subperms, r.module_position, r.bydefault";
 	$sql .= " FROM ".MAIN_DB_PREFIX."rights_def as r";
 	$sql .= " WHERE r.libelle NOT LIKE 'tou%'"; // On ignore droits "tous"
-	$sql .= " AND r.entity = ".((int)$entity);
+	$sql .= " AND r.entity = ".((int) $entity);
 	$sql .= " AND r.id IN (".implode(', ', $allusersperms).")";
 	if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
 		$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
@@ -1035,7 +1036,6 @@ if ($action == 'create') {
 	//$parameters = array('caneditgroup' => $permissiontoeditgroup, 'groupslist' => $groupslist, 'exclude' => $exclude);
 	//$reshook = $hookmanager->executeHooks('formAddUserToGroup', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 	//print $hookmanager->resPrint;
-
 }
 
 if (isModEnabled('api') && $action == 'create') {
