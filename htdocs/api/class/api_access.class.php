@@ -133,10 +133,12 @@ class DolibarrApiAccess implements iAuthenticate
 		if ($api_key) {
 			$userentity = 0;
 
-			$sql = "SELECT u.login, u.datec, u.api_key,";
-			$sql .= " u.tms as date_modification, u.entity";
-			$sql .= " FROM ".MAIN_DB_PREFIX."user as u";
-			$sql .= " WHERE u.api_key = '".$this->db->escape($api_key)."' OR u.api_key = '".$this->db->escape(dolEncrypt($api_key, '', '', 'dolibarr'))."'";
+			$sql = "SELECT u.login, oat.token as api_key, oat.entity";
+			$sql .= " FROM ".MAIN_DB_PREFIX."oauth_token AS oat";
+			$sql .= " JOIN ".MAIN_DB_PREFIX."user AS u ON u.rowid = oat.fk_user";
+			$sql .= " WHERE oat.token = '".$this->db->escape($api_key)."'";
+			$sql .= " OR oat.token = '".$this->db->escape(dolEncrypt($api_key, '', '', 'dolibarr'))."'";
+			$sql .= " AND oat.service = 'dolibarr_rest_api'";
 
 			$result = $this->db->query($sql);
 			if ($result) {
@@ -206,7 +208,7 @@ class DolibarrApiAccess implements iAuthenticate
 			}
 
 			// User seems valid
-			$fuser->loadRights();
+			$fuser->loadRights('', 0, $stored_key);
 
 			// Set the property $user to the $user of API
 			static::$user = $fuser;

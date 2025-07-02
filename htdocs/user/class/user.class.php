@@ -1350,7 +1350,9 @@ class User extends CommonObject
 			if (!empty($token)) { // If token specified, we only load perms from it
 				$sql = "SELECT oat.state as rights, oat.entity";
 				$sql .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
-				$sql .= " WHERE oat.token = '".($this->db->escape($token))."'";
+				$sql .= " WHERE oat.token = '".$this->db->escape($token)."'";
+				$sql .= " OR oat.token = '".$this->db->escape(dolEncrypt($token, '', '', 'dolibarr'))."'";
+				$sql .= " AND oat.service = 'dolibarr_rest_api'";
 
 				$resql = $this->db->query($sql);
 				if ($resql) {
