@@ -375,7 +375,8 @@ if ($action == 'create') {
 	if ($user->admin) {
 		print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('User').'</td>';
 		print '<td class="valuefieldcreate">';
-		print $form->select_dolusers('', 'user', 1, '', 0, '', '', (string) $object->entity, 0, 0, '', 0, '', 'minwidth200 maxwidth500');
+		$selecteduser = !empty($id) ? $id : '';
+		print $form->select_dolusers($selecteduser, 'user', 1, '', 0, '', '', (string) $object->entity, 0, 0, '', 0, '', 'minwidth200 maxwidth500');
 		print '</td></tr>';
 	} else {
 		print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('User').'</td><td class="valuefieldcreate">'.$person_name.'</td></tr>';
