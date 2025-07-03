@@ -537,6 +537,13 @@ if (!GETPOST('action', 'aZ09') || preg_match('/upgrade/i', GETPOST('action', 'aZ
 			if (versioncompare($versiontoarray, $afterversionarray) >= 0 && versioncompare($versiontoarray, $beforeversionarray) <= 0) {
 				migrate_accountingbookkeeping($entity);
 			}
+
+			// Scripts for 23.0
+			$afterversionarray = explode('.', '22.0.9');
+			$beforeversionarray = explode('.', '23.0.9');
+			if (versioncompare($versiontoarray, $afterversionarray) >= 0 && versioncompare($versiontoarray, $beforeversionarray) <= 0) {
+				migrate_apiresttokens();
+			}
 		}
 
 
@@ -5280,5 +5287,85 @@ function migrate_accountingbookkeeping(int $entity)
 
 	if (!$resultstring) {
 		print '<tr class="trforrunsql" style=""><td class="wordbreak" colspan="4">'.$langs->trans("NothingToDo")."</td></tr>\n";
+	}
+}
+
+/**
+ * Migrate API key in oauth_token table
+ *
+ * @return  void
+ */
+function migrate_apiresttokens()
+{
+	global $db, $langs;
+
+	print '<tr class="trforrunsql"><td colspan="4">';
+	print '<b>'.$langs->trans('MigrationApiRestTokens')."</b><br>\n";
+
+	$error = 0;
+	$nbofmigration = 0;
+	$allexistingtokens = array();
+
+	$db->begin();
+
+	$sqlforalltokens = "SELECT oat.token";
+	$sqlforalltokens .= " FROM ".$db->prefix()."oauth_token AS oat";
+	$sqlforalltokens .= " WHERE oat.service = 'dolibarr_rest_api'";
+
+	$resalltoken = $db->query($sqlforalltokens);
+
+	if ($resalltoken) {
+		while ($tokenobj = $db->fetch_object($resalltoken)) {
+			$allexistingtokens[] = dolDecrypt($tokenobj->token);
+		}
+	} else {
+		$error++;
+		dol_print_error($db);
+		$db->rollback();
+	}
+
+	if (!$error) {
+		$sql = "SELECT 'dolibarr_rest_api' AS service, u.api_key AS token, GROUP_CONCAT(rights.fk_id SEPARATOR ',') AS state, u.rowid AS fk_user, CURRENT_TIMESTAMP AS datec, rights.entity";
+		$sql .= " FROM llx_user AS u";
+		$sql .= " LEFT JOIN (SELECT fk_user, fk_id, entity FROM llx_user_rights UNION SELECT gu.fk_user, gr.fk_id, gr.entity FROM llx_usergroup_user AS gu JOIN llx_usergroup_rights AS gr on gu.fk_usergroup = gr.fk_usergroup) AS rights on rights.fk_user = u.rowid";
+		$sql .= " WHERE u.api_key IS NOT NULL";
+		$sql .= " AND rights.entity = 1";
+		$sql .= " GROUP BY u.login, u.api_key, u.rowid, rights.entity";
+
+		$result = $db->query($sql);
+
+		if ($result) {
+			while ($obj = $db->fetch_object($result)) {
+				if (!in_array(dolDecrypt($obj->token), $allexistingtokens)) {
+					$sqlforinsert = "INSERT INTO ".MAIN_DB_PREFIX."oauth_token (service, token, state, fk_user, datec, entity)";
+					$sqlforinsert .= " VALUES ('".$obj->service."', '".$obj->token."', '".$obj->state."', ".$obj->fk_user.", '".$obj->datec."', ".$obj->entity.")";
+
+					$insertresult = $db->query($sqlforinsert);
+					if (!$insertresult) {
+						$error++;
+						dol_print_error($db);
+					} else {
+						$nbofmigration++;
+					}
+				}
+			}
+
+			if (!$error) {
+				$db->commit();
+			} else {
+				$db->rollback();
+			}
+		} else {
+			dol_print_error($db);
+			$db->rollback();
+		}
+	}
+
+	if (!$nbofmigration) {
+		print '</td></tr>';
+		print '<tr class="trforrunsql" style=""><td class="wordbreak" colspan="4">'.$langs->trans("NothingToDo")."</td></tr>\n";
+	} else {
+		print $langs->trans('MigratedTokens', $nbofmigration);
+		print '</td></tr>';
 	}
 }
