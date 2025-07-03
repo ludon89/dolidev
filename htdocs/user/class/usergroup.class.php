@@ -531,7 +531,6 @@ class UserGroup extends CommonObject
 				$sql .= " AND ".$wherefordel;
 			}
 
-			$sqlforid = $sql;
 			$result = $this->db->query($sql);
 			if ($result) {
 				$num = $this->db->num_rows($result);
@@ -560,6 +559,15 @@ class UserGroup extends CommonObject
 
 			if (!$error) {
 				$idtodelete = array();
+
+				// Query to avoid erasing perms from token if the user still have them himself
+				$sqlforid = "SELECT id";
+				$sqlforid .= " FROM ".$this->db->prefix()."rights_def";
+				$sqlforid .= " WHERE (entity = ".((int) $entity);
+				if (!empty($wherefordel) && $wherefordel != 'allmodules') {
+					$sqlforid .= " AND ".$wherefordel;
+				}
+				$sqlforid .= ") AND NOT EXISTS(SELECT ur.fk_id FROM llx_user_rights as ur WHERE ur.entity = 1 AND ur.fk_user = 3 AND id = ur.fk_id)";
 
 				$sqlusertokens = "SELECT oat.rowid, oat.state as rights";
 				$sqlusertokens .= " FROM llx_usergroup_user AS gu";

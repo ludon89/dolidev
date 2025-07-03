@@ -1273,12 +1273,21 @@ class User extends CommonObject
 			if (!$error) {
 				$idtodelete = array();
 
+				// Query to avoid erasing perms from token if the user still have them inherited by a group
+				$sqlforid = "SELECT id";
+				$sqlforid .= " FROM ".$this->db->prefix()."rights_def";
+				$sqlforid .= " WHERE (entity IN (".$this->db->sanitize($entity, 0, 0, 0, 0).")";
+				if (!empty($wherefordel) && $wherefordel != 'allmodules') {
+					$sqlforid .= " AND (".$wherefordel.")";
+				}
+				$sqlforid .= ") AND NOT EXISTS(SELECT gr.fk_id FROM llx_usergroup_rights as gr, llx_usergroup_user as gu WHERE gr.entity = 1 AND gu.entity IN (0,1) AND gr.fk_usergroup = gu.fk_usergroup AND gu.fk_user = 3 AND id = gr.fk_id)";
+
 				$sqlusertokens = "SELECT oat.rowid, oat.state as rights";
 				$sqlusertokens .= " FROM llx_oauth_token AS oat";
 				$sqlusertokens .= " WHERE oat.fk_user = ".((int) $this->id);
 				$sqlusertokens .= " AND oat.service = 'dolibarr_rest_api'";
 
-				$idtodeletequery = $this->db->query($sql);
+				$idtodeletequery = $this->db->query($sqlforid);
 				$resulttokens = $this->db->query($sqlusertokens);
 				if ($resulttokens && $idtodeletequery) {
 					while ($idobj = $this->db->fetch_object($idtodeletequery)) {
