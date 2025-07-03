@@ -531,6 +531,7 @@ class UserGroup extends CommonObject
 				$sql .= " AND ".$wherefordel;
 			}
 
+			$sqlforid = $sql;
 			$result = $this->db->query($sql);
 			if ($result) {
 				$num = $this->db->num_rows($result);
@@ -555,6 +556,40 @@ class UserGroup extends CommonObject
 			} else {
 				$error++;
 				dol_print_error($this->db);
+			}
+
+			if (!$error) {
+				$idtodelete = array();
+
+				$sqlusertokens = "SELECT oat.rowid, oat.state as rights";
+				$sqlusertokens .= " FROM llx_usergroup_user AS gu";
+				$sqlusertokens .= " JOIN llx_oauth_token AS oat ON gu.fk_user = oat.fk_user";
+				$sqlusertokens .= " WHERE gu.fk_usergroup = ".((int) $this->id);
+				$sqlusertokens .= " AND oat.service = 'dolibarr_rest_api'";
+
+				$idtodeletequery = $this->db->query($sqlforid);
+				$resulttokens = $this->db->query($sqlusertokens);
+				if ($resulttokens && $idtodeletequery) {
+					while ($idobj = $this->db->fetch_object($idtodeletequery)) {
+						$idtodelete []= $idobj->id;
+					}
+
+					while ($obj = $this->db->fetch_object($resulttokens)) {
+						if (!empty($obj->rights)) {
+							$newtokenrigths = array_diff(explode(',', $obj->rights), $idtodelete);
+
+							$sqlupdate = "UPDATE ".MAIN_DB_PREFIX."oauth_token";
+							$sqlupdate.= " SET state = '".$this->db->escape(preg_replace('/\s+/', '', implode(',', $newtokenrigths)))."'";
+							$sqlupdate.= " WHERE rowid = '".$obj->rowid."'";
+
+							$resupdate = $this->db->query($sqlupdate);
+							if (!$resupdate) {
+								$error++;
+								dol_print_error($this->db);
+							}
+						}
+					}
+				}
 			}
 
 			if (!$error) {
