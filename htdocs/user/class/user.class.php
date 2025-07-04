@@ -3075,7 +3075,6 @@ class User extends CommonObject
 				$idtodeletequery = $this->db->query($sqlforid);
 				$resulttokens = $this->db->query($sqlusertokens);
 				if ($resulttokens) {
-
 					while ($obj = $this->db->fetch_object($resulttokens)) {
 						if (!empty($obj->rights)) {
 							$newtokenrigths = array_diff(explode(',', $obj->rights), $idtodelete);
