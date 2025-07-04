@@ -464,7 +464,7 @@ if ($action == 'create') {
 
 	// Entity
 	if (isModEnabled('multicompany') && is_object($mc)) {
-		$mc->getInfo($conf->entity);
+		$mc->getInfo($token->entity);
 		print '<tr><td class="titlefield">'.$langs->trans("Entity").'</td>';
 		print '<td>';
 		print '<span class="multicompany-entity-container">';
