@@ -1280,7 +1280,7 @@ class User extends CommonObject
 				if (!empty($wherefordel) && $wherefordel != 'allmodules') {
 					$sqlforid .= " AND (".$wherefordel.")";
 				}
-				$sqlforid .= ") AND NOT EXISTS(SELECT gr.fk_id FROM llx_usergroup_rights as gr, llx_usergroup_user as gu WHERE gr.entity = 1 AND gu.entity IN (0,1) AND gr.fk_usergroup = gu.fk_usergroup AND gu.fk_user = 3 AND id = gr.fk_id)";
+				$sqlforid .= ") AND NOT EXISTS(SELECT gr.fk_id FROM llx_usergroup_rights as gr, llx_usergroup_user as gu WHERE gr.entity = 1 AND gu.entity IN (0,1) AND gr.fk_usergroup = gu.fk_usergroup AND gu.fk_user = ".((int) $this->id)." AND id = gr.fk_id)";
 
 				$sqlusertokens = "SELECT oat.rowid, oat.state as rights";
 				$sqlusertokens .= " FROM llx_oauth_token AS oat";
