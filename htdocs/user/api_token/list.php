@@ -365,7 +365,10 @@ print dol_get_fiche_end();
 
 print '<!-- Token section -->'."\n";
 
-$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
+$arrayofmassactions = array(
+	'predelete' => img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete")
+);
+
 if (GETPOSTINT('nomassaction') || in_array($massaction, array('presend', 'predelete'))) {
 	$arrayofmassactions = array();
 }

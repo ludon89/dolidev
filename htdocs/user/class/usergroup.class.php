@@ -595,7 +595,6 @@ class UserGroup extends CommonObject
 
 							while ($obj = $this->db->fetch_object($resulttokens)) {
 								if (!empty($obj->rights)) {
-									var_dump($obj->rights, $idtodelete);
 									$newtokenrigths = array_diff(explode(',', $obj->rights), $idtodelete);
 
 									$sqlupdate = "UPDATE ".MAIN_DB_PREFIX."oauth_token";

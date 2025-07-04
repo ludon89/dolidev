@@ -298,7 +298,10 @@ $head = api_admin_prepare_head();
 
 print dol_get_fiche_head($head, 'token_list', '', -1);
 
-$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
+$arrayofmassactions = array(
+	'predelete' => img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete")
+);
+
 if (GETPOSTINT('nomassaction') || in_array($massaction, array('presend', 'predelete'))) {
 	$arrayofmassactions = array();
 }
