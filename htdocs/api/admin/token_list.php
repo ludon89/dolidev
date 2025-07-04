@@ -320,7 +320,6 @@ print_barre_liste($langs->trans("ListOfTokensForAllUsers"), $page, $_SERVER["PHP
 include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
 
 if (empty($reshook)) {
-
 	print '<!-- List of tokens of all users -->';
 	print '<table class="noborder centpercent">';
 

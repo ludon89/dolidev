@@ -396,7 +396,6 @@ include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
 //print $hookmanager->resPrint;
 
 if (empty($reshook)) {
-
 	print '<!-- List of tokens of the user -->';
 	print '<table class="noborder centpercent">';
 

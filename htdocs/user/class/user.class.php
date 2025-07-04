@@ -1677,6 +1677,7 @@ class User extends CommonObject
 	 *
 	 *	@param  string	$moduletag		Limit permission for a particular module ('' by default means load all permissions)
 	 *  @param	int		$forcereload	Force reload of permissions even if they were already loaded (ignore cache)
+	 *  @param 	string 	$token 			Load only permissions of the token
 	 *	@return	void
 	 *  @deprecated Use loadRights
 	 *

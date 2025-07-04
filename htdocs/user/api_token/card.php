@@ -667,7 +667,7 @@ if ($action == 'create') {
 		$sql = "SELECT r.id, r.libelle as label, r.module, r.perms, r.subperms, r.module_position, r.bydefault";
 		$sql .= " FROM ".MAIN_DB_PREFIX."rights_def as r";
 		$sql .= " WHERE r.libelle NOT LIKE 'tou%'"; // On ignore droits "tous"
-		$sql .= " AND r.entity = ".((int)$entity);
+		$sql .= " AND r.entity = ".((int) $entity);
 		$sql .= " AND r.id IN (".implode(', ', $allusersperms).")";
 		if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
 			$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
