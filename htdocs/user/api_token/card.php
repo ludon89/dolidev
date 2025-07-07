@@ -957,7 +957,7 @@ if ($action == 'create') {
 	print '</table>';
 	print '</div>';
 
-	print '<script>';
+	print '<script nonce="'.getNonce().'">';
 	print '$(".tdforbreakperms:not(.alink)").on("click", function(){
 		console.log("Click on tdforbreakperms");
 		moduletohide = $(this).data("hide-perms");
