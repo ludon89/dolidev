@@ -351,7 +351,7 @@ if (isset($reloadtoken)) { // If we add or del rights, we want to refresh the to
 
 if ($object->id > 0) {
 	$person_name = !empty($object->firstname) ? $object->lastname.", ".$object->firstname : $object->lastname;
-	$title = $person_name." - ".$langs->trans('Card');
+	$title = $person_name." - ".$langs->trans('ApiTokens');
 } else {
 	$title = $langs->trans("NewToken");
 }
@@ -392,7 +392,7 @@ if ($action == 'create') {
 		print '<tr class="field_ref"><td class="titlefieldcreate fieldrequired">'.$langs->trans('Entity').'</td><td class="valuefieldcreate">'.$mc->label.'</td></tr>';
 	}
 
-	print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans("ApiToken").'</td>';
+	print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans("Token").'</td>';
 	print '<td>';
 	print '<input class="minwidth300 maxwidth400 widthcentpercentminusx" minlength="12" maxlength="128" type="text" id="api_key" name="api_key" value="'.GETPOST('api_key', 'alphanohtml').'" autocomplete="off">';
 	if (!empty($conf->use_javascript_ajax)) {
@@ -460,7 +460,7 @@ if ($action == 'create') {
 	print '</tr>'."\n";
 
 	// Token
-	print '<tr><td class="titlefield">'.$langs->trans("ApiToken").'</td>';
+	print '<tr><td class="titlefield">'.$langs->trans("Token").'</td>';
 	print '<td>';
 	print showValueWithClipboardCPButton($tokenvalue, 1, $tokenvalue);
 	print '</td>';

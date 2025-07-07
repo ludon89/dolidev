@@ -205,7 +205,7 @@ if (empty($reshook)) {
  */
 
 $person_name = !empty($object->firstname) ? $object->lastname.", ".$object->firstname : $object->lastname;
-$title = $person_name." - ".$langs->trans('Card');
+$title = $person_name." - ".$langs->trans('ApiTokens');
 $help_url = '';
 
 $nbtotalofrecords = '';

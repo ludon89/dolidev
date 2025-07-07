@@ -126,7 +126,7 @@ if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
 	print $form->showCheckAddButtons('checkforselect', 1);
 	print '</th>';
 }
-print '<th class="liste_titre">'.$langs->trans("ApiToken").'</th>';
+print '<th class="liste_titre">'.$langs->trans("Token").'</th>';
 if (!empty($arrayfields['u.login']['checked'])) {
 	print_liste_field_titre($arrayfields['u.login']['label'], $_SERVER["PHP_SELF"], 'u.login', '', $param, '', $sortfield, $sortorder);
 }

@@ -161,7 +161,7 @@ function user_prepare_head(User $object)
 
 	if (isModEnabled('api') && !empty($object->api_key)) {
 		$head[$h][0] = DOL_URL_ROOT.'/user/api_token/list.php?id='.$object->id;
-		$head[$h][1] = $langs->trans("ApiToken");
+		$head[$h][1] = $langs->trans("ApiTokens");
 		$head[$h][2] = 'apitoken';
 		$h++;
 	}
