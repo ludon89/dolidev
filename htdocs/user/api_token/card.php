@@ -481,14 +481,14 @@ if ($action == 'create') {
 	// Creation date
 	print '<tr><td class="titlefield">'.$langs->trans("DateCreation").'</td>';
 	print '<td>';
-	print dol_print_date($db->jdate($token->date_creation), 'day');
+	print dol_print_date($db->jdate($token->date_creation), 'dayhour');
 	print '</td>';
 	print '</tr>'."\n";
 
 	// Modification date
 	print '<tr><td class="titlefield">'.$langs->trans("DateModification").'</td>';
 	print '<td>';
-	print dol_print_date($db->jdate($token->date_modification), 'day');
+	print dol_print_date($db->jdate($token->date_modification), 'dayhour');
 	print '</td>';
 	print '</tr>'."\n";
 

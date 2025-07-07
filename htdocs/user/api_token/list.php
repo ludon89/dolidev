@@ -266,8 +266,6 @@ $resql = $db->query($sql);
 
 $num = $db->num_rows($resql);
 
-llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-user page-card_param_ihm');
-
 $param = '&id='.$id; // We always need the id of the user
 if ($limit > 0 && $limit != $conf->liste_limit) {
 	$param .= '&limit='.((int) $limit);
@@ -313,10 +311,6 @@ $arrayofselected = is_array($toselect) ? $toselect : array();
 
 $head = user_prepare_head($object);
 
-$title = $langs->trans("User");
-
-print dol_get_fiche_head($head, 'apitoken', $title, -1, 'user');
-
 $linkback = '<a href="'.DOL_URL_ROOT.'/user/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
 
 $morehtmlref = '<a href="'.DOL_URL_ROOT.'/user/vcard.php?id='.$object->id.'&output=file&file='.urlencode(dol_sanitizeFileName($object->getFullName($langs).'.vcf')).'" class="refid" rel="noopener">';
@@ -325,6 +319,10 @@ $morehtmlref .= '</a>';
 
 $urltovirtualcard = '/user/virtualcard.php?id='.((int) $object->id);
 $morehtmlref .= dolButtonToOpenUrlInDialogPopup('publicvirtualcard', $langs->transnoentitiesnoconv("PublicVirtualCardUrl").' - '.$object->getFullName($langs), img_picto($langs->trans("PublicVirtualCardUrl"), 'card', 'class="valignmiddle marginleftonly paddingrightonly"'), $urltovirtualcard, '', 'nohover');
+
+llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-user page-card_param_ihm');
+
+print dol_get_fiche_head($head, 'apitoken', $langs->trans("User"), -1, 'user');
 
 dol_banner_tab($object, 'id', $linkback, $user->hasRight("user", "user", "read") || $user->admin, 'rowid', 'ref', $morehtmlref);
 
@@ -368,12 +366,8 @@ if (GETPOSTINT('nomassaction') || in_array($massaction, array('presend', 'predel
 }
 $massactionbutton = $form->selectMassAction('', $arrayofmassactions);
 
-$morehtmlright = '';
-//if (!empty($moreoptions['showhideaddbutton']) && $conf->use_javascript_ajax) {
 $tmpurlforbutton = DOL_URL_ROOT.'/user/api_token/card.php?id='.$id.'&action=create';
-//	TODO Permissions ? $morehtmlright .= dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', $tmpurlforbutton, '', $permtoeditline);
-$morehtmlright .= dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', $tmpurlforbutton);
-//}
+$morehtmlright = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', $tmpurlforbutton);
 
 print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?id='.$id.'">'."\n";
 print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -386,171 +380,12 @@ print_barre_liste($langs->trans("ListOfTokensForUser"), $page, $_SERVER["PHP_SEL
 
 include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
 
-// TODO : Build the hook management
-// Other form for add user to group
-//$parameters = array('caneditgroup' => $permissiontoeditgroup, 'groupslist' => $groupslist, 'exclude' => $exclude);
-//$reshook = $hookmanager->executeHooks('formAddUserToGroup', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-//print $hookmanager->resPrint;
+$colspan = 5; // Base colspan for empty list
 
-if (empty($reshook)) {
-	print '<!-- List of tokens of the user -->';
-	print '<table class="noborder centpercent">';
+include DOL_DOCUMENT_ROOT.'/core/tpl/apitoken_list.tpl.php';
 
-	print '<tr class="liste_titre_filter">';
 
-	// Action buttons
-	if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
-		print '<td class="liste_titre center">';
-		$searchpicto = $form->showFilterButtons('left');
-		print $searchpicto;
-		print '</td>';
-	}
-
-	// Token string
-	// We don't search out tokens because it is encrypted in database
-	print '<td class="liste_titre"></td>';
-
-	// Entity
-	if (!empty($arrayfields['e.label']['checked']) && isModEnabled('multicompany')) {
-		print '<td class="liste_titre">';
-		print '<input class="flat maxwidth100" type="text" name="search_entity" value="'.dol_escape_htmltag($search_entity).'">';
-		print '</td>';
-	}
-
-	// Number of perms
-	// We don't search out number of perms because it is a string field,
-	// and we don't want to count into it with sql query
-	print '<td class="liste_titre"></td>';
-
-	// Date creation
-	if (!empty($arrayfields['oat.datec']['checked'])) {
-		print '<td class="liste_titre center">';
-		print '<div class="nowrapfordate">';
-		print $form->selectDate($search_datec_start ? $search_datec_start : -1, 'search_datec_start', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans('From'));
-		print '</div>';
-		print '<div class="nowrapfordate">';
-		print $form->selectDate($search_datec_end ? $search_datec_end : -1, 'search_datec_end', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans('to'));
-		print '</div>';
-		print '</td>';
-	}
-
-	// Date modification
-	if (!empty($arrayfields['oat.tms']['checked'])) {
-		print '<td class="liste_titre center">';
-		print '<div class="nowrapfordate">';
-		print $form->selectDate($search_tms_start ? $search_tms_start : -1, 'search_tms_start', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans('From'));
-		print '</div>';
-		print '<div class="nowrapfordate">';
-		print $form->selectDate($search_tms_end ? $search_tms_end : -1, 'search_tms_end', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans('to'));
-		print '</div>';
-		print '</td>';
-	}
-
-	// Action buttons
-	if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
-		print '<td class="liste_titre center">';
-		$searchpicto = $form->showFilterButtons('left');
-		print $searchpicto;
-		print '</td>';
-	}
-
-	print "</tr>";
-
-	print '<tr class="liste_titre">';
-	if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
-		print '<th class="wrapcolumntitle center maxwidthsearch liste_titre">';
-		print $form->showCheckAddButtons('checkforselect', 1);
-		print '</th>';
-	}
-	print '<th class="liste_titre">'.$langs->trans("ApiToken").'</th>';
-	if (!empty($arrayfields['e.label']['checked']) && isModEnabled('multicompany')) {
-		print_liste_field_titre($arrayfields['e.label']['label'], $_SERVER["PHP_SELF"], 'e.label', '', $param, '', $sortfield, $sortorder);
-	}
-	print '<th class="liste_titre right">'.$langs->trans("NumberOfPermissions").'</th>';
-	if (!empty($arrayfields['oat.datec']['checked'])) {
-		print_liste_field_titre($arrayfields['oat.datec']['label'], $_SERVER["PHP_SELF"], 'oat.datec', '', $param, '', $sortfield, $sortorder, 'center ');
-	}
-	if (!empty($arrayfields['oat.tms']['checked'])) {
-		print_liste_field_titre($arrayfields['oat.tms']['label'], $_SERVER["PHP_SELF"], 'oat.tms', '', $param, '', $sortfield, $sortorder, 'center ');
-	}
-	if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
-		print '<th class="wrapcolumntitle center maxwidthsearch liste_titre">';
-		print $form->showCheckAddButtons('checkforselect', 1);
-		print '</th>';
-	}
-	print '</tr>';
-
-	// List of tokens of user
-	$i = 0;
-	$imaxinloop = ($limit ? min($num, $limit) : $num);
-	if ($num > 0) {
-		while ($i < $imaxinloop) {
-			// Compute number of perms
-			$obj = $db->fetch_object($resql);
-			$numperms = 0;
-			if (!empty($obj->rights)) {
-				$numperms = count(explode(",", $obj->rights));
-			}
-			print '<tr class="oddeven">';
-			// Action column
-			if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
-				print '<td class="nowrap center">';
-				if ($massactionbutton || $massaction) {   // If we are in select mode (massactionbutton defined) or if we have already selected and sent an action ($massaction) defined
-					$selected = 0;
-					if (in_array($obj->rowid, $arrayofselected)) {
-						$selected = 1;
-					}
-					print '<input id="cb'.$obj->rowid.'" class="flat checkforselect" type="checkbox" name="toselect[]" value="'.$obj->rowid.'"'.($selected ? ' checked="checked"' : '').'>';
-				}
-				print '</td>';
-			}
-			print '<td>';
-			print '<a href="'.DOL_URL_ROOT.'/user/api_token/card.php?id='.$object->id.'&tokenid='.$obj->rowid.'">';
-			print dolDecrypt($obj->token);
-			print '</a>';
-			print '</td>';
-			if (isModEnabled('multicompany')) {
-				print '<td>';
-				print '<span class="multicompany-entity-container">';
-				print '<span class="fa fa-globe multicompany-button-template" title="'.$langs->trans("Entity").'"></span>';
-				print $obj->entity_name;
-				print '&nbsp;</span>';
-				print '</td>';
-			}
-			print '<td class="right">';
-			print $numperms;
-			print '</td>';
-			print '<td class="center">';
-			print dol_print_date($db->jdate($obj->date_creation), 'day');
-			print '</td>';
-			print '<td class="center">';
-			print dol_print_date($db->jdate($obj->date_modification), 'day');
-			print '</td>';
-			if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
-				print '<td class="nowrap center">';
-				if ($massactionbutton || $massaction) {
-					$selected = 0;
-					if (in_array($obj->rowid, $arrayofselected)) {
-						$selected = 1;
-					}
-					print '<input id="cb'.$obj->rowid.'" class="flat checkforselect" type="checkbox" name="toselect[]" value="'.$obj->rowid.'"'.($selected ? ' checked="checked"' : '').'>';
-				}
-				print '</td>';
-			}
-			print '</tr>';
-			$i++;
-		}
-	} else {
-		$colspan = 5; // Base colspan
-		if (isModEnabled('multicompany')) {
-			$colspan++;
-		}
-		print '<tr class="oddeven"><td colspan="'.$colspan.'"><span class="opacitymedium">'.$langs->trans("None").'</span></td></tr>';
-	}
-
-	print "</table>";
-	print '</form>';
-}
+print '</form>';
 
 // End of page
 llxFooter();
