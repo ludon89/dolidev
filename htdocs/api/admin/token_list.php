@@ -203,12 +203,11 @@ if (!getDolGlobalInt('MAIN_DISABLE_FULL_SCANLIST')) {
 	$db->free($resql);
 }
 
-$sql = "SELECT oat.rowid as token_id, oat.token, oat.entity, oat.state as rights, oat.fk_user as user_id, u.login as user, oat.datec as date_creation, oat.tms as date_modification";
+$sql = "SELECT oat.rowid as token_id, oat.token, oat.entity, oat.state as rights, oat.fk_user, oat.datec as date_creation, oat.tms as date_modification";
 if (isModEnabled('multicompany')) {
 	$sql .= ", e.label as entity_name";
 }
 $sql .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
-$sql .= " JOIN llx_user as u ON u.rowid = oat.fk_user";
 if (isModEnabled('multicompany')) {
 	$sql .= " JOIN ".$db->prefix()."entity as e ON oat.entity = e.rowid";
 }
@@ -432,6 +431,8 @@ if (empty($reshook)) {
 		while ($i < $imaxinloop) {
 			// Compute number of perms
 			$obj = $db->fetch_object($resql);
+			$currentuser = new User($db);
+			$currentuser->fetch($obj->fk_user);
 			$numperms = 0;
 			if (!empty($obj->rights)) {
 				$numperms = count(explode(",", $obj->rights));
@@ -450,13 +451,13 @@ if (empty($reshook)) {
 				print '</td>';
 			}
 			print '<td>';
-			print '<a href="'.DOL_URL_ROOT.'/user/api_token/card.php?id='.$obj->user_id.'&tokenid='.$obj->token_id.'">';
+			print '<a href="'.DOL_URL_ROOT.'/user/api_token/card.php?id='.$obj->fk_user.'&tokenid='.$obj->token_id.'">';
 			print dolDecrypt($obj->token);
 			print '</a>';
 			print '</td>';
 			print '<td>';
-			print '<a href="'.DOL_URL_ROOT.'/user/card.php?id='.$obj->user_id.'">';
-			print $obj->user;
+			print '<a href="'.DOL_URL_ROOT.'/user/card.php?id='.$obj->fk_user.'">';
+			print $currentuser->getNomUrl(1);
 			print '</a>';
 			print '</td>';
 			if (isModEnabled('multicompany')) {
