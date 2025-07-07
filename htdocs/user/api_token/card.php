@@ -266,7 +266,7 @@ if (empty($reshook)) {
 		$useridtoadd = !empty($userid) && $userid > 0 ? $userid : $id;
 
 		if (empty($tokenstring)) {
-			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ApiToken")), null, 'errors');
+			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Token")), null, 'errors');
 			$action = 'create';
 			$error++;
 		}
@@ -291,7 +291,7 @@ if (empty($reshook)) {
 		}
 
 		if (isset($nbtotalofrecords) && $nbtotalofrecords > 0) {
-			setEventMessages($langs->trans("ErrorFieldExist", $langs->transnoentitiesnoconv("ApiToken")), null, 'errors');
+			setEventMessages($langs->trans("ErrorFieldExist", $langs->transnoentitiesnoconv("Token")), null, 'errors');
 			$action = 'create';
 			$error++;
 		}
