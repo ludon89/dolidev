@@ -553,9 +553,6 @@ if ($action == 'create') {
 
 	$db->commit();
 
-	// Load perms ids for the user
-	$tokenperms = explode(",", $token->rights);
-
 	print '<div class="div-table-responsive-no-min">';
 	print '<table class="noborder centpercent">';
 
@@ -669,6 +666,13 @@ if ($action == 'create') {
 		$db->free($result);
 	} else {
 		dol_print_error($db);
+	}
+
+	// Load perms ids for the user
+	if (empty($token->rights) && !(strlen($token->rights) == 1 && substr($token->rights, 0, 1) == 0)) {
+		$tokenperms = $allusersperms;
+	} else {
+		$tokenperms = explode(",", $token->rights);
 	}
 
 	// Load and show all the perms grouped by module
