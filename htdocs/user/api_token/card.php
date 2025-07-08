@@ -817,20 +817,7 @@ if ($action == 'create') {
 				print '</td>';
 
 				// Permission and tick (2 columns)
-				if (!empty($object->admin) && !empty($objMod->rights_admin_allowed)) {    // Permission granted because admin
-					print '<!-- perm is a perm allowed to any admin -->';
-					if ($canedittoken) {
-						print '<td class="center nowrap">';
-						print img_picto($langs->trans("AdministratorDesc"), 'star', 'class="paddingleft valignmiddle"');
-						print '</td>';
-					} else {
-						print '<td class="center nowrap">';
-						print img_picto($langs->trans("Active"), 'switch_on', '', 0, 0, 0, '', 'opacitymedium');
-						print '</td>';
-					}
-					print '<td>';
-					print '</td>';
-				} elseif (in_array($obj->id, $tokenperms)) {                    // Permission granted by user
+				if (in_array($obj->id, $tokenperms)) {                    // Permission granted by user
 					print '<!-- user has perm -->';
 					if ($canedittoken) {
 						print '<td class="center nowrap">';
