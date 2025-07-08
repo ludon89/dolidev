@@ -1367,6 +1367,7 @@ class User extends CommonObject
 		global $conf;
 
 		$alreadyloaded = false;
+		$loaduserperms = true;
 
 		if (empty($forcereload)) {
 			if ($moduletag && isset($this->_tab_loaded[$moduletag]) && $this->_tab_loaded[$moduletag]) {
@@ -1392,6 +1393,7 @@ class User extends CommonObject
 
 		if (!$alreadyloaded) {
 			if (!empty($token)) { // If token specified, we only load perms from it
+				$loaduserperms = false;
 				$sql = "SELECT oat.state as rights, oat.entity";
 				$sql .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
 				$sql .= " WHERE oat.token = '".$this->db->escape($token)."'";
@@ -1403,63 +1405,64 @@ class User extends CommonObject
 					$tokenobj = $this->db->fetch_object($resql);
 					$this->db->free($resql);
 
-					if (empty($tokenobj->rights)) {
-						$this->loadRights($moduletag, $forcereload);
-						return;
-					}
+					// Load user perms if state is empty (check if not "0" that means no perms)
+					if (empty($tokenobj->rights) && !(strlen($tokenobj->rights) == 1 && substr($tokenobj->rights, 0, 1) == 0)) {
+						$loaduserperms = true;
+					} else {
+						$sql = "SELECT r.module, r.perms, r.subperms";
+						$sql .= " FROM llx_rights_def as r";
+						$sql .= " WHERE r.id IN (".$tokenobj->rights.")";
+						$sql .= " AND r.entity = ".$tokenobj->entity; // TODO : Check if working with multicompany and if MULTICOMPANY_BACKWARD_COMPATIBILITY is needed
+						$sql .= " AND r.perms IS NOT NULL";
+						if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
+							$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
+						}
+						if ($moduletag) {
+							$sql .= " AND r.module = '".$this->db->escape($moduletag)."'";
+						}
 
-					$sql = "SELECT r.module, r.perms, r.subperms";
-					$sql .= " FROM llx_rights_def as r";
-					$sql .= " WHERE r.id IN (".$tokenobj->rights.")";
-					$sql .= " AND r.entity = ".$tokenobj->entity; // TODO : Check if working with multicompany and if MULTICOMPANY_BACKWARD_COMPATIBILITY is needed
-					$sql .= " AND r.perms IS NOT NULL";
-					if (!getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
-						$sql .= " AND r.perms NOT LIKE '%_advance'"; // Hide advanced perms if option is not enabled
-					}
-					if ($moduletag) {
-						$sql .= " AND r.module = '" . $this->db->escape($moduletag) . "'";
-					}
+						$resql = $this->db->query($sql);
+						if ($resql) {
+							$num = $this->db->num_rows($resql);
+							$i = 0;
+							while ($i < $num) {
+								$obj = $this->db->fetch_object($resql);
 
-					$resql = $this->db->query($sql);
-					if ($resql) {
-						$num = $this->db->num_rows($resql);
-						$i = 0;
-						while ($i < $num) {
-							$obj = $this->db->fetch_object($resql);
+								if ($obj) {
+									$module = $obj->module;
+									$perms = $obj->perms;
+									$subperms = $obj->subperms;
 
-							if ($obj) {
-								$module = $obj->module;
-								$perms = $obj->perms;
-								$subperms = $obj->subperms;
-
-								if (!empty($perms)) {
-									if (!empty($module)) {
-										if (!isset($this->rights->$module) || !is_object($this->rights->$module)) {
-											$this->rights->$module = new stdClass();
-										}
-										if (!empty($subperms)) {
-											if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
-												$this->rights->$module->$perms = new stdClass();
+									if (!empty($perms)) {
+										if (!empty($module)) {
+											if (!isset($this->rights->$module) || !is_object($this->rights->$module)) {
+												$this->rights->$module = new stdClass();
 											}
-											if (empty($this->rights->$module->$perms->$subperms)) {    // if not already counted
-												$this->nb_rights++;
+											if (!empty($subperms)) {
+												if (!isset($this->rights->$module->$perms) || !is_object($this->rights->$module->$perms)) {
+													$this->rights->$module->$perms = new stdClass();
+												}
+												if (empty($this->rights->$module->$perms->$subperms)) {    // if not already counted
+													$this->nb_rights++;
+												}
+												$this->rights->$module->$perms->$subperms = 1;
+											} else {
+												if (empty($this->rights->$module->$perms)) {            // if not already counted
+													$this->nb_rights++;
+												}
+												$this->rights->$module->$perms = 1;
 											}
-											$this->rights->$module->$perms->$subperms = 1;
-										} else {
-											if (empty($this->rights->$module->$perms)) {            // if not already counted
-												$this->nb_rights++;
-											}
-											$this->rights->$module->$perms = 1;
 										}
 									}
 								}
+								$i++;
 							}
-							$i++;
+							$this->db->free($resql);
 						}
-						$this->db->free($resql);
 					}
 				}
-			} else { // If no token, we load user and groups perms
+			}
+			if ($loaduserperms) { // If no token, we load user and groups perms
 				// First user permissions
 				$sql = "SELECT DISTINCT r.module, r.perms, r.subperms";
 				$sql .= " FROM " . $this->db->prefix() . "user_rights as ur,";
@@ -1601,8 +1604,8 @@ class User extends CommonObject
 				}
 			}
 
-			// Force permission on user for admin
-			if (!empty($this->admin)) {
+			// Force permission on user for admin if not loading token perms
+			if (!empty($this->admin) && empty($token)) {
 				if (empty($this->rights->user->user)) {
 					$this->rights->user->user = new stdClass();
 				}
