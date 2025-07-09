@@ -472,7 +472,7 @@ if ($action == 'create') {
 	$morehtmlref .= dolButtonToOpenUrlInDialogPopup('publicvirtualcard', $langs->transnoentitiesnoconv("PublicVirtualCardUrl").' - '.$object->getFullName($langs), img_picto($langs->trans("PublicVirtualCardUrl"), 'card', 'class="valignmiddle marginleftonly paddingrightonly"'), $urltovirtualcard, '', 'nohover');
 
 	// Disabled prev/next because there is no token object
-	dol_banner_tab($object, '', $linkback, $user->hasRight("user", "user", "read") || $user->admin, 'none', '', $morehtmlref);
+	dol_banner_tab($object, 'api_token_card', $linkback, $user->admin, 'rowid', 'ref', $morehtmlref);
 
 	// Tokens info
 	print '<div class="fichecenter">';
