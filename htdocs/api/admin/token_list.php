@@ -315,6 +315,7 @@ print '<input type="hidden" name="action" value="list">';
 print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
 print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
 
+// @phan-suppress-next-line PhanPluginSuspiciousParamOrder
 print_barre_liste($langs->trans("ListOfTokensForAllUsers"), $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'fa-at', 0, $morehtmlright, '', $limit, 0, 0, 1);
 
 include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
