@@ -318,6 +318,7 @@ if (empty($reshook)) {
 			$error++;
 		}
 
+		$nbtotalofrecords = '';
 		$sqlforcount = 'SELECT COUNT(*) as nbtotalofrecords';
 		$sqlforcount .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
 		$sqlforcount .= " WHERE token = '".$db->escape(dolEncrypt($tokenstring, '', '', 'dolibarr'))."'";
