@@ -1277,7 +1277,7 @@ class User extends CommonObject
 				$sqlforid = "SELECT id";
 				$sqlforid .= " FROM ".$this->db->prefix()."rights_def";
 				$sqlforid .= " WHERE (entity IN (".$this->db->sanitize($entity, 0, 0, 0, 0).")";
-				if (!empty($wherefordel) && $wherefordel != 'allmodules') {
+				if ($wherefordel != 'allmodules') {
 					$sqlforid .= " AND (".$wherefordel.")";
 				}
 				$sqlforid .= ") AND NOT EXISTS(SELECT gr.fk_id FROM llx_usergroup_rights as gr, llx_usergroup_user as gu WHERE gr.entity = 1 AND gu.entity IN (0,1) AND gr.fk_usergroup = gu.fk_usergroup AND gu.fk_user = ".((int) $this->id)." AND id = gr.fk_id)";

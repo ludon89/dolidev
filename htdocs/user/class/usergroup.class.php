@@ -573,7 +573,7 @@ class UserGroup extends CommonObject
 						$sqlforid = "SELECT id";
 						$sqlforid .= " FROM ".$this->db->prefix()."rights_def";
 						$sqlforid .= " WHERE (entity = ".((int) $entity);
-						if (!empty($wherefordel) && $wherefordel != 'allmodules') {
+						if ($wherefordel != 'allmodules') {
 							$sqlforid .= " AND ".$wherefordel;
 						}
 						$sqlforid .= ") AND NOT EXISTS(SELECT ur.fk_id FROM llx_user_rights as ur WHERE ur.entity = 1 AND ur.fk_user = ".((int) $usertocheck->id)." AND id = ur.fk_id)";

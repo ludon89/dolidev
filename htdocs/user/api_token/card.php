@@ -103,6 +103,7 @@ $formadmin = new FormAdmin($db);
 $token = $db->fetch_object($resql);
 
 $entity = $conf->entity;
+$mc = $mc ?? "";
 
 /*
  * Actions
