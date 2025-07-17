@@ -47,8 +47,8 @@ function dol_basename($pathfile)
  * @param	string			$utf8_path     	Starting path from which to search. This is a full path.
  * @param	string			$types        	Can be "directories", "files", or "all"
  * @param	int				$recursive		Determines whether subdirectories are searched
- * @param	string			$filter        	Regex filter to restrict list. This regex value must be escaped for '/' by doing preg_quote($var,'/'), since this char is used for preg_match function,
- *                  	                    but must not contains the start and end '/'. Filter is checked into basename only.
+ * @param	string|string[]	$filter        	Regex or Array of Regex filter to restrict list. The regex value must be escaped for '/' by doing preg_quote($var,'/'), since this char is used for preg_match function,
+ *                  	                    but must NOT contains the start and end '/'. Filter is checked into basename only.
  * @param	string|string[]	$excludefilter  Array of Regex for exclude filter (example: array('(\.meta|_preview.*\.png)$','^\.')). Exclude is checked both into fullpath and into basename (So '^xxx' may exclude 'xxx/dirscanned/...' and dirscanned/xxx').
  * @param	string			$sortcriteria	Sort criteria ('','fullname','relativename','name','date','size')
  * @param	int 			$sortorder		Sort order (SORT_ASC, SORT_DESC)
@@ -66,22 +66,38 @@ function dol_dir_list($utf8_path, $types = "all", $recursive = 0, $filter = "", 
 	global $object;
 
 	if ($recursive <= 1) {	// Avoid too verbose log
-		// Verify filters (only on first call to function)
-		$filters_ok = true;
+		// Verify filters (only on the first call of the function)
+		$filter_ok = true;
+		if (!is_array($filter)) {
+			if (strlen($filter) > 25000) {	// Note that limit depends on syntax of filter
+				dol_syslog("Value for filter is too large", LOG_ERR);
+				$filter_ok = false;
+			} else {
+				// Check that all '/' are escaped.
+				if ((int) preg_match('/(?:^|[^\\\\])\//', $filter) > 0) {
+					$excludefilter_ok = false;
+					$error_info .= " error='filter_has_unescaped_slash'";
+					dol_syslog("'$filter' has unescaped '/'", LOG_ERR);
+				}
+			}
+		}
+
+		$excludefilter_ok = true;
 		$error_info = "";
 		// Ensure we have an array for the exclusions
 		$exclude_array = ($excludefilter === null || $excludefilter === '') ? array() : (is_array($excludefilter) ? $excludefilter : array($excludefilter));
-		foreach ((array($filter) + $exclude_array) as $f) {
+		foreach ($exclude_array as $f) {
 			// Check that all '/' are escaped.
 			if ((int) preg_match('/(?:^|[^\\\\])\//', $f) > 0) {
-				$filters_ok = false;
-				$error_info .= " error='$f unescaped_slash'";
+				$excludefilter_ok = false;
+				$error_info .= " error='excludefilter_has_unescaped_slash'";
 				dol_syslog("'$f' has unescaped '/'", LOG_ERR);
 			}
 		}
-		dol_syslog("files.lib.php::dol_dir_list path=".$utf8_path." types=".$types." recursive=".$recursive." filter=".$filter." excludefilter=".json_encode($excludefilter).$error_info);
-		// print 'xxx'."files.lib.php::dol_dir_list path=".$utf8_path." types=".$types." recursive=".$recursive." filter=".$filter." excludefilter=".json_encode($exclude_array);
-		if (!$filters_ok) {
+
+		dol_syslog("files.lib.php::dol_dir_list path=".$utf8_path." types=".$types." recursive=".$recursive." filter=".json_encode($filter)." excludefilter=".json_encode($excludefilter).$error_info);
+		// print 'xxx'."files.lib.php::dol_dir_list path=".$utf8_path." types=".$types." recursive=".$recursive." filter=".json_encode($filter)." excludefilter=".json_encode($exclude_array);
+		if (!$filter_ok || !$excludefilter_ok) {
 			// Return empty array when filters are invalid
 			return array();
 		}
@@ -156,11 +172,10 @@ function dol_dir_list($utf8_path, $types = "all", $recursive = 0, $filter = "", 
 					$utf8_file = $os_file;
 				}
 
-				$qualified = 1;
-
 				$utf8_fullpathfile = $utf8_path_cursor."/".$utf8_file;  // Temp variable for speed
 
 				// Check if file is qualified
+				$qualified = 1;
 				foreach ($excludefilterarray as $filt) {
 					if (preg_match('/'.$filt.'/i', $utf8_file) || preg_match('/'.$filt.'/i', $utf8_fullpathfile)) {
 						$qualified = 0;
@@ -185,7 +200,28 @@ function dol_dir_list($utf8_path, $types = "all", $recursive = 0, $filter = "", 
 								$fileperm = dol_fileperm($utf8_fullpathfile);
 							}
 
-							if (!$filter || preg_match('/'.$filter.'/i', $utf8_file)) {	// We do not search key $filter into all $path, only into $file part
+							$qualifiedforfilter = 0;
+							if (empty($filter)) {
+								$qualifiedforfilter = 1;
+							} else {
+								$testpregmatch = false;
+								if (is_array($filter)) {
+									$chunks = array_chunk($filter, 500);
+									foreach ($chunks as $chunk) {
+										$testpregmatch = preg_match('/'.implode('|', $chunk).'/i', $utf8_file);	// May failed if $filter too large
+										if ($testpregmatch) {
+											break;
+										}
+									}
+								} else {
+									$testpregmatch = preg_match('/'.$filter.'/i', $utf8_file);		// May failed if $filter too large
+								}
+								if ($testpregmatch) {
+									$qualifiedforfilter = 1;
+								}
+							}
+
+							if ($qualifiedforfilter) {	// We do not search key $filter into all $path, only into $file part
 								$reg = array();
 								preg_match('/([^\/]+)\/[^\/]+$/', $utf8_fullpathfile, $reg);
 								$level1name = (isset($reg[1]) ? $reg[1] : '');
@@ -219,7 +255,28 @@ function dol_dir_list($utf8_path, $types = "all", $recursive = 0, $filter = "", 
 							$filesize = dol_filesize($utf8_fullpathfile);
 						}
 
-						if (!$filter || preg_match('/'.$filter.'/i', $utf8_file)) {	// We do not search key $filter into $utf8_path, only into $utf8_file
+						$qualifiedforfilter = 0;
+						if (empty($filter)) {
+							$qualifiedforfilter = 1;
+						} else {
+							$testpregmatch = false;
+							if (is_array($filter)) {
+								$chunks = array_chunk($filter, 500);
+								foreach ($chunks as $chunk) {
+									$testpregmatch = preg_match('/'.implode('|', $chunk).'/i', $utf8_file);	// May failed if $filter too large
+									if ($testpregmatch) {
+										break;
+									}
+								}
+							} else {
+								$testpregmatch = preg_match('/'.$filter.'/i', $utf8_file);		// May failed if $filter too large
+							}
+							if ($testpregmatch) {
+								$qualifiedforfilter = 1;
+							}
+						}
+
+						if ($qualifiedforfilter) {	// We do not search key $filter into all $path, only into $file part
 							if (empty($nbsecondsold) || $filedate <= ($now - $nbsecondsold)) {
 								preg_match('/([^\/]+)\/[^\/]+$/', $utf8_fullpathfile, $reg);
 								$level1name = (isset($reg[1]) ? $reg[1] : '');
