@@ -255,7 +255,11 @@ print dol_get_fiche_head($head, 'settings', '', -1, '');
 
 print '<span class="opacitymedium">'.$langs->trans("datapolicySetupPage").'</span>';
 print $form->textwithpicto('', $langs->trans('DATAPOLICY_Tooltip_SETUP', $langs->transnoentitiesnoconv("DATAPOLICYJob"), $langs->transnoentitiesnoconv("CronList")));
-print '<br><br><br>';
+if (!isModEnabled('cron')) {
+	print info_admin($langs->trans("ModuleMustBeEnabledFirst", $langs->transnoentities("CronList")), 0, 0, 'warning');
+} else {
+}
+print '<br><br>';
 
 if ($action == 'edit') {
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
