@@ -120,8 +120,8 @@ function getURLContent($url, $postorget = 'GET', $param = '', $followlocation = 
 		}
 	}
 
-	$newtimeoutconnect = $timeoutconnect ? $timeoutconnect : getDolGlobalInt('MAIN_USE_CONNECT_TIMEOUT', 5);
-	$newtimeoutresponse = $timeoutresponse ? $timeoutresponse : getDolGlobalInt('MAIN_USE_RESPONSE_TIMEOUT', 30);
+	$newtimeoutconnect = ($timeoutconnect ? $timeoutconnect : getDolGlobalInt('MAIN_USE_CONNECT_TIMEOUT', 5));
+	$newtimeoutresponse = ($timeoutresponse ? $timeoutresponse : getDolGlobalInt('MAIN_USE_RESPONSE_TIMEOUT', 30));
 
 	dol_syslog("getURLContent newtimeoutconnect=".$newtimeoutconnect." newtimeoutresponse=".$newtimeoutresponse);
 
