@@ -254,7 +254,7 @@ $head = datapolicyAdminPrepareHead();
 print dol_get_fiche_head($head, 'settings', '', -1, '');
 
 print '<span class="opacitymedium">'.$langs->trans("datapolicySetupPage").'</span>';
-print $form->textwithpicto('', $langs->trans('DATAPOLICY_Tooltip_SETUP', $langs->trans("DATAPOLICYJob"), $langs->transnoentities("CronList")));
+print $form->textwithpicto('', $langs->trans('DATAPOLICY_Tooltip_SETUP', $langs->transnoentitiesnoconv("DATAPOLICYJob"), $langs->transnoentitiesnoconv("CronList")));
 print '<br><br><br>';
 
 if ($action == 'edit') {
