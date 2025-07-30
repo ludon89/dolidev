@@ -24,7 +24,8 @@
 }
 
 #compare li {
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   overflow: auto;
   border-bottom: 2px solid #98b880;
 }
