@@ -27,12 +27,11 @@
   padding-top: 10px;
   padding-bottom: 10px;
   overflow: auto;
-  border-bottom: 2px solid #98b880;
+  border-bottom: 2px solid #ccc;
 }
 #compare ul.competence li,#compare ul.note li {
   height:48px;
   overflow: hidden;
-  border-bottom: 2px solid #6C286C;
 }
 
 #compare li:hover {
