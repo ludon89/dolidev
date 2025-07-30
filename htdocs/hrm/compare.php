@@ -219,18 +219,18 @@ $fk_usergroup1 = GETPOSTINT('fk_usergroup1');
 			<div id="compare" width="100%" style="position:relative;">
 
 				<?php if ($fk_usergroup1 > 0 || $fk_usergroup2 > 0 || $fk_job > 0) { ?>
-					<table width="100%">
+					<table class="centpercent">
 						<tr>
-							<th></th>
-							<th><?php print $langs->trans('Skill'); ?></th>
-							<th><?php print $langs->trans('rank'); ?></th>
+							<th class="left"><?php print $langs->trans('Employees'); ?></th>
+							<th class="left"><?php print $langs->trans('Skill'); ?></th>
+							<th><?php print $langs->trans('HighestRank'); ?></th>
 							<th><?php print $langs->trans('difference'); ?></th>
-							<th><?php print $langs->trans('rank'); ?></th>
+							<th><?php print $langs->trans('ExpectedRank'); ?></th>
 							<th></th>
 						</tr>
 
 						<?php
-						echo '<tr><td id="list-user-left" style="width:30%" valign="top">';
+						echo '<tr><td id="list-user-left" style="width:25%; padding-right: 10px; border-right: 1px solid #ccc" class="valigntop">';
 
 						$TUser1 = $TUser2 = array();
 
@@ -263,11 +263,11 @@ $fk_usergroup1 = GETPOSTINT('fk_usergroup1');
 						echo '</td>';
 
 						echo '<td id="" style="width:20%" valign="top">' . skillList($TMergedSkills) . '</td>';
-						echo '<td id="" style="width:5%" valign="top">' . rate($TMergedSkills, 'rate1') . '</td>';
+						echo '<td id="" style="width:10%" valign="top">' . rate($TMergedSkills, 'rate1') . '</td>';
 						echo '<td id="" style="width:10%" valign="top">' . diff($TMergedSkills) . '</td>';
-						echo '<td id="" style="width:5%" valign="top">' . rate($TMergedSkills, 'rate2') . '</td>';
+						echo '<td id="" style="width:10%" valign="top">' . rate($TMergedSkills, 'rate2') . '</td>';
 
-						echo '<td id="list-user-right" style="width:30%" valign="top">';
+						echo '<td id="list-user-right" style="width:25%; padding-left: 10px; border-left: 1px solid #ccc;" class="valigntop">';
 
 						echo $userlist2;
 
@@ -330,10 +330,11 @@ function diff(&$TMergedSkills)
 }
 
 /**
- * 	Return a html list with rank information
- * 		@param array<int,stdClass> $TMergedSkills skill list for display
- * 		@param string $field which column of comparison we are working with
- * 		@return string
+ * Return a html list with rank information
+ *
+ * @param 	array<int,stdClass> $TMergedSkills 	Skill list for display
+ * @param 	string 				$field 			Which column of comparison we are working with ('rate1' or 'rate2')
+ * @return 	string								String to show for level
  */
 function rate(&$TMergedSkills, $field)
 {
@@ -348,7 +349,7 @@ function rate(&$TMergedSkills, $field)
 			$note = 'x';
 			$class .= ' none';
 		} else {
-			$note = $sk->$field;
+			$note = $sk->$field < 0 ? $langs->trans("NA") : $sk->$field;
 			$how_many = ($field === 'rate1') ? $sk->how_many_max1 : $sk->how_many_max2;
 		}
 
@@ -358,8 +359,8 @@ function rate(&$TMergedSkills, $field)
 			$trad = $langs->trans('HighestRank');
 		}
 
-		$out .= '<li fk_skill="' . $id . '" style="text-align:center;">
-	      <p><span class="' . $class . ' classfortooltip" title="' . $trad . '">' . $note . '</span>' . ($how_many > 0 ? '<span class="bubble classfortooltip" title="' . $langs->trans('HowManyUserWithThisMaxNote') . '">' . $how_many . '</span>' : '') . '</p>
+		$out .= '<li fk_skill="' . $id . '" class="center">
+	      <p class="nowraponall"><span class="' . $class . ' classfortooltip" title="' . $trad . '">' . $note . '</span>' . ($how_many > 0 ? '<span class="bubble classfortooltip" title="' . $langs->trans('HowManyUserWithThisMaxNote') . '">' . $how_many . '</span>' : '') . '</p>
 	    </li>';
 	}
 
