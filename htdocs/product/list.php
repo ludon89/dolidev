@@ -713,6 +713,8 @@ $reshook = $hookmanager->executeHooks('printFieldListGroupBy', $parameters, $obj
 $sql .= $hookmanager->resPrint;
 //if (GETPOST("toolowstock")) $sql.= " HAVING SUM(s.reel) < p.seuil_stock_alerte";    // Not used yet
 
+print $sql;
+
 $nbtotalofrecords = '';
 if (!getDolGlobalInt('MAIN_DISABLE_FULL_SCANLIST')) {
 	/* The fast and low memory method to get and count full list converts the sql into a sql count */
