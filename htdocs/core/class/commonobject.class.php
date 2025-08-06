@@ -55,7 +55,7 @@ abstract class CommonObject
 	use CommonTrigger;
 
 	// Should be in Commontrigger but Traits can not have constant.
-	const TRIGGER_PREFIX = ''; // to be overridden in child class implementations, i.e. 'BILL', 'TASK', 'PROPAL', etc.
+	const TRIGGER_PREFIX = ''; // to be overridden in child class implementations, i.e. 'BILL', 'TASK', 'PROPAL', etc. It is used to check that trigger code matches object name.
 
 
 	/**
