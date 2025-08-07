@@ -74,7 +74,7 @@ if ($object->fetch($id) >= 0) {
 	$morehtmlref .= '</div>';
 
 	$morehtmlstatus = '';
-	$nbtry = $nbok = 0;
+	$nbtry = $nbko = 0;
 	if ($object->status == 2 || $object->status == 3) {
 		$nbtry = $object->countNbOfTargets('alreadysent');
 		$nbko  = $object->countNbOfTargets('alreadysentko');
@@ -88,11 +88,13 @@ if ($object->fetch($id) >= 0) {
 
 	dol_banner_tab($object, 'id', $linkback, 1, 'rowid', 'ref', $morehtmlref, '', 0, '', $morehtmlstatus);
 
-	print '<div class="underbanner clearboth"></div><br>';
+	print '<div class="fichecenter">';
 
-	//print '<table width="100%"><tr><td>';
-	dol_print_object_info($object, 0);
-	//print '</td></tr></table>';
+	print '<div class="underbanner clearboth"></div>';
+
+	dol_print_object_info($object, 1);
+
+	print '</div>';
 
 	print dol_get_fiche_end();
 }
