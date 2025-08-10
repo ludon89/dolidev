@@ -40,6 +40,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/geturl.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/events.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
 require_once DOL_DOCUMENT_ROOT.'/admin/remotestore/class/externalModules.class.php';
 
@@ -374,10 +375,10 @@ if ($action == 'install' && $allowonlineinstall) {
 	$securityevent = new Events($db);
 	if ($error) {
 		$text = $langs->trans("SecurityModuleDeploymentError", dol_sanitizePathName($_FILES["fileinstall"]["name"]));
-		$securityevent->type = 'SECURITY_MODULE_DEPLOYMENT_ERROR';
+		$securityevent->type = 'MODULE_DEPLOYMENT_ERROR';
 	} else {
 		$text = $langs->trans("SecurityModuleDeploymentSuccess", dol_sanitizePathName($_FILES["fileinstall"]["name"]));
-		$securityevent->type = 'SECURITY_MODULE_DEPLOYMENT_SUCCESS';
+		$securityevent->type = 'MODULE_DEPLOYMENT_SUCCESS';
 	}
 	$securityevent->dateevent = $now;
 	$securityevent->description = $text;

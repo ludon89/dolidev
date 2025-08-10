@@ -472,7 +472,7 @@ if ($result) {
 		print '<td class="nowrap left">'.dol_print_date($db->jdate($obj->dateevent), '%Y-%m-%d %H:%M:%S', 'tzuserrel').'</td>';
 
 		// Code
-		print '<td>'.dol_escape_htmltag($obj->type).'</td>';
+		print '<td class="tdoverflowmax200" title="'.dolPrintLabel($obj->type).'">'.dolPrintLabel($obj->type).'</td>';
 
 		// IP
 		print '<td class="nowraponall">';
