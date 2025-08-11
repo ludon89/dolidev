@@ -286,6 +286,7 @@ if (isModEnabled('propal')) {
 		print $form->selectarray("MAIN_GENERATE_PROPOSALS_WITH_PICTURE", $arrval, getDolGlobalString('MAIN_GENERATE_PROPOSALS_WITH_PICTURE'));
 	}
 	print '</td></tr>';
+
 	// Add delivery address option for proposals
 	print '<tr class="oddeven"><td>';
 	print $form->textwithpicto($langs->trans("PROPOSAL_SHOW_SHIPPING_ADDRESS"), $langs->trans("PROPOSAL_SHOW_SHIPPING_ADDRESSMore"));
@@ -297,6 +298,7 @@ if (isModEnabled('propal')) {
 		print $form->selectarray("PROPOSAL_SHOW_SHIPPING_ADDRESS", $arrval, getDolGlobalString('PROPOSAL_SHOW_SHIPPING_ADDRESS'));
 	}
 	print '</td></tr>';
+
 	// Concat PDF
 	print '<tr class="oddeven"><td>';
 	print $form->textwithpicto($langs->trans("MAIN_PDF_ADD_TERMSOFSALE_PROPAL"), $tooltipconcatpdf);
@@ -322,7 +324,6 @@ if (isModEnabled('propal')) {
 		}
 		print '</div>';
 	}
-
 	print '</td></tr>';
 
 	print '</table>';
