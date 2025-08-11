@@ -521,15 +521,15 @@ if ($result) {
 			}
 		}
 		print '<td class="tdoverflowmax400" title="'.dol_escape_htmltag($text).'">';
-		print dol_escape_htmltag($text);
+		print '<span class="small">'.dol_escape_htmltag($text).'</span>';
 		print '</td>';
 
 		// User agent
 		print '<td class="tdoverflowmax150" title="'.dol_escape_htmltag($obj->user_agent).'">';
-		print dol_escape_htmltag($obj->user_agent);
+		print '<span class="small">'.dol_escape_htmltag($obj->user_agent).'</span>';
 		print '</td>';
 
-		// Prefix
+		// Prefix (the name of the session is DOLSESSID_
 		if (!empty($arrayfields['e.prefix_session']['checked'])) {
 			print '<td class="tdoverflowmax150" title="'.dol_escape_htmltag($obj->prefix_session).'">';
 			print dol_escape_htmltag($obj->prefix_session);
