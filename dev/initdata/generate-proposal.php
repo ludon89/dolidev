@@ -166,7 +166,9 @@ if ($resql) {
 }
 
 $user->rights->propal->creer=1;
-$user->rights->propal->propal_advance->validate=1;
+if (getDolGlobalString('MAIN_USE_ADVANCED_PERMS')) {
+	$user->rights->propal->propal_advance->validate=1;
+}
 
 
 if (getDolGlobalString('PROPALE_ADDON') && is_readable(DOL_DOCUMENT_ROOT ."/core/modules/propale/" . getDolGlobalString('PROPALE_ADDON').".php")) {
