@@ -148,12 +148,6 @@ if ($absolute_creditnote > 0) {
 	}
 }
 
-if ($nb_creditnote_notyetavailable > 0) {
-	print '<!-- absolute_creditnote not yet converted -->';
-	$translationKey = 'SomeNotConvertedCreditNoteExists';
-	print '<br><span class="opacitymedium">'.$langs->trans($translationKey, $nb_creditnote_notyetavailable).'</span>';
-}
-
 if ($absolute_discount <= 0 && $absolute_creditnote <= 0) {
 	if ($conf->dol_optimize_smallscreen) {
 		$translationKey = 'AbsoluteDiscount';
@@ -165,6 +159,12 @@ if ($absolute_discount <= 0 && $absolute_creditnote <= 0) {
 	if ($isInvoice && $object->statut == $objclassname::STATUS_DRAFT && $object->type != $objclassname::TYPE_CREDIT_NOTE && $object->type != $objclassname::TYPE_DEPOSIT) {
 		print ' '.$addabsolutediscount;
 	}
+}
+
+if ($nb_creditnote_notyetavailable > 0) {
+	print '<!-- absolute_creditnote not yet converted -->';
+	$translationKey = 'SomeNotConvertedCreditNoteExists';
+	print '<br><span class="opacitymedium">'.$langs->trans($translationKey, $nb_creditnote_notyetavailable).'</span>';
 }
 
 print '<!-- END template -->';

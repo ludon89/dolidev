@@ -2837,9 +2837,9 @@ class Societe extends CommonObject
 		} else {
 			$sql .= " AND rc.fk_facture = f.rowid";
 		}
-		$sql .= " AND rc.fk_soc = ".((int) $this->socid);
+		$sql .= " AND rc.fk_soc = ".((int) $this->id);
 		$sql .= ")";
-		$sql .= " AND f.fk_soc = ".((int) $this->socid);
+		$sql .= " AND f.fk_soc = ".((int) $this->id);
 
 		$resql = $this->db->query($sql);
 		if ($resql) {
