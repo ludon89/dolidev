@@ -889,7 +889,7 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 	$statusdispute = $object->status;
 
 	// Get the amount of fees for the dispute
-	$balance_transactions_array = $object->balance_transaction;
+	$balance_transactions_array = $object->balance_transactions;
 	$feesstripe = 0;
 	if (!empty($balance_transactions_array) && is_array($balance_transactions_array)) {
 		foreach ($balance_transactions_array as $tmpval) {
