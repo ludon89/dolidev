@@ -1016,8 +1016,11 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 			$error++;
 		}
 
+		dol_syslog("The dispute_status of invoice ".$tmpinvoice->ref." has been modified to 1");
+		dol_syslog("The dispute_status of invoice ".$tmpinvoice->ref." has been modified to 1", LOG_DEBUG, 0, '_payment');
+
 		http_response_code(200);
-		print "Payment dispute received for ".$TRANSACTIONID.". We have recorded a notice.";
+		print "Payment dispute received for ".$TRANSACTIONID.". We have changed the status of dispute_status to 1 for invoice ".$tmpinvoice->ref;
 		return 1;
 	} else {
 		// Payment dispute is confirmed and refunded.
