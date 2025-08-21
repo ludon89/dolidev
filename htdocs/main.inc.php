@@ -1557,10 +1557,34 @@ function top_httphead($contenttype = 'text/html', $forcenocache = 0)
 	// Note that we do not use 'strict-origin' as this breaks feature to restore filters when clicking on "back to page" link on some cases.
 	if (!defined('MAIN_SECURITY_FORCERP')) {
 		$referrerpolicy = getDolGlobalString('MAIN_SECURITY_FORCERP', "same-origin");
-
-		header("Referrer-Policy: ".$referrerpolicy);
+		if (!empty($referrerpolicy)) {
+			header("Referrer-Policy: ".$referrerpolicy);
+		}
+	} else {
+		header("Referrer-Policy: ".constant('MAIN_SECURITY_FORCERP'));
 	}
 
+	// Strict-Transport-Security
+	if (!defined('MAIN_SECURITY_FORCESTS')) {
+		$sts = getDolGlobalString('MAIN_SECURITY_FORCESTS', "");
+		if (!empty($sts)) {
+			header("Strict-Transport-Security: ".$sts);
+		}
+	} else {
+		header("Strict-Transport-Security: ".constant('MAIN_SECURITY_FORCESTS'));
+	}
+
+	// Permissions-Policy (old name was Feature-Policy)
+	if (!defined('MAIN_SECURITY_FORCEPP')) {
+		$pp = getDolGlobalString('MAIN_SECURITY_FORCEPP', "");
+		if (!empty($pp)) {
+			header("Permissions-Policy: ".$pp);
+		}
+	} else {
+		header("Permissions-Policy: ".constant('MAIN_SECURITY_FORCEPP'));
+	}
+
+	// Cache
 	if ($forcenocache) {
 		header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
 	}
