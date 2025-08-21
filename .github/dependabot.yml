@@ -1,8 +1,12 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directories:
+      - "/htdocs"
+      - "/script"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-type: "development"
+    allow:
+      # Allow both direct and indirect updates for all packages.
+      - dependency-type: "production"
+
