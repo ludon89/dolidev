@@ -11,5 +11,5 @@ updates:
       # Allow both direct and indirect updates for all packages.
       - dependency-type: "production"
     exclude-paths:
-      - '/tests/acceptance'
-      - '/tests/selenium'
+      - 'tests/acceptance'
+      - 'tests/selenium'
