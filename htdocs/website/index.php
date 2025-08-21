@@ -5331,14 +5331,15 @@ if ($action == 'editsource') {
 	//$contentforedit.=$csscontent;
 	//$contentforedit.='</style>'."\n";
 	$contentforedit .= $objectpage->content;
-	//var_dump($_SESSION["dol_screenheight"]);
+
+	// We set maxheightwin in px. We take the height of screen in px and we remove a part for the top banner and more
 	$maxheightwin = 480;
 	if (isset($_SESSION["dol_screenheight"])) {
 		if ($_SESSION["dol_screenheight"] > 680) {
-			$maxheightwin = $_SESSION["dol_screenheight"] - 400;
+			$maxheightwin = $_SESSION["dol_screenheight"] - 300;	// We remove a height for header
 		}
 		if ($_SESSION["dol_screenheight"] > 800) {
-			$maxheightwin = $_SESSION["dol_screenheight"] - 490;
+			$maxheightwin = $_SESSION["dol_screenheight"] - 250;	// We remove a height for header (on large width, risk to have header on 2 lines is lower)
 		}
 	}
 
