@@ -5,8 +5,9 @@ updates:
     schedule:
       interval: "weekly"
     allow:
-      # Allow both direct and indirect updates for all packages.
+      # Allow production updates only (can do a AND, several entries are doing a OR)
       - dependency-type: "production"
+      #- dependency-type: "direct"
     exclude-paths:
       - 'dev'
       - 'tests/acceptance'
