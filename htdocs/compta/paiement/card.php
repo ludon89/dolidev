@@ -466,7 +466,7 @@ if (!empty($object->ext_payment_id)) {
 				$url = 'https://dashboard.stripe.com/'.$connect.'customers/'.$stripecu;
 			}
 		} else {
-			$url = 'https://dashboard.stripe.com/'.($object->ext_payment_site == 'Stripe' ? 'test/' : '').$object->ext_payment_id;
+			$url = 'https://dashboard.stripe.com/'.($object->ext_payment_site == 'Stripe' ? 'test/' : '').'payments/'.$object->ext_payment_id;
 		}
 
 		print ' <a href="'.$url.'" target="_stripe">'.img_picto($langs->trans('ShowInStripe').' - Publishable key = '.$site_account_payment, 'globe').'</a>';
