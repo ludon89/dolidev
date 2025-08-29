@@ -97,8 +97,11 @@ ALTER TABLE llx_product_customer_price CHANGE COLUMN localtax2_tx localtax2_tx v
 ALTER TABLE llx_product_customer_price_log CHANGE COLUMN localtax1_tx localtax1_tx varchar(20) DEFAULT '0';
 ALTER TABLE llx_product_customer_price_log CHANGE COLUMN localtax2_tx localtax2_tx varchar(20) DEFAULT '0';
 
-ALTER TABLE llx_subscription ADD UNIQUE INDEX idx_subscription_fk_adherent (fk_adherent);
-ALTER TABLE llx_subscription ADD UNIQUE INDEX idx_subscription_fk_bank (fk_bank);
-ALTER TABLE llx_subscription ADD UNIQUE INDEX idx_subscription_dateadh (dateadh);
+ALTER TABLE llx_subscription DROP INDEX idx_subscription_fk_adherent;
+ALTER TABLE llx_subscription DROP INDEX idx_subscription_fk_bank;
+ALTER TABLE llx_subscription DROP INDEX idx_subscription_dateadh;
+ALTER TABLE llx_subscription ADD INDEX idx_subscription_fk_adherent (fk_adherent);
+ALTER TABLE llx_subscription ADD INDEX idx_subscription_fk_bank (fk_bank);
+ALTER TABLE llx_subscription ADD INDEX idx_subscription_dateadh (dateadh);
 
 -- end of migration
