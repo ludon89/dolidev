@@ -187,7 +187,7 @@ class CommandeTest extends CommonClassTest
 		$langs = $this->savlangs;
 		$db = $this->savdb;
 
-		$result = $localobject->cancel();
+		$result = $localobject->cancel($user);
 
 		print __METHOD__." id=".$localobject->id." result=".$result."\n";
 		$this->assertLessThan($result, 0);
