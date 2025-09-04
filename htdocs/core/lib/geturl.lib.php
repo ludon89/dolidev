@@ -150,10 +150,10 @@ function getURLContent($url, $postorget = 'GET', $param = '', $followlocation = 
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST'); // HTTP request is 'POST' but param string is taken as it is
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $param); // param = content of post, like a xml string
 	} elseif ($postorget == 'PUT') {
-		$array_param = null;
+		$array_param = array();
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT'); // HTTP request is 'PUT'
 		if (!is_array($param)) {
-			parse_str($param, $array_param);  // @phan-suppress-current-line PhanPluginConstantVariableNull
+			parse_str($param, $array_param);
 		} else {
 			dol_syslog("parameter param must be a string", LOG_WARNING);
 			$array_param = $param;
@@ -163,10 +163,10 @@ function getURLContent($url, $postorget = 'GET', $param = '', $followlocation = 
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT'); // HTTP request is 'PUT'
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $param); // param = content of post, like a xml string
 	} elseif ($postorget == 'PATCH') {
-		$array_param = null;
+		$array_param = array();
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH'); // RFC 5789
 		if (!is_array($param)) {
-			parse_str($param, $array_param);  // @phan-suppress-current-line PhanPluginConstantVariableNull
+			parse_str($param, $array_param);
 		} else {
 			dol_syslog("parameter param must be a string", LOG_WARNING);
 			$array_param = $param;
