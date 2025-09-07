@@ -283,7 +283,7 @@ foreach ($output_arrglpu as $valgitlog) {		// The most recent lines are first.
 	if (preg_match('/(#yogosha|CVE|Sec:|Sec\s|Sec$)/i', $tmpval['title'])) {	// Recommended git comment:  "Sec: Fix #..."
 		$alreadyfound = '';
 		$alreadyfoundcommitid = '';
-		foreach ($arrayofalerts as $val) {
+		foreach ($arrayofalerts as $val) {	// Loop on already found alerts
 			if ($val['issueidyogosha'] && $val['issueidyogosha'] == $tmpval['issueidyogosha']) {	// Already in list
 				$alreadyfound = 'yogosha';
 				$alreadyfoundcommitid = $val['commitid'];
@@ -347,6 +347,11 @@ foreach ($output_arrglpu as $valgitlog) {		// The most recent lines are first.
 			/*var_dump($tmpval['commitid'].' '.$alreadyfoundcommitid);
 			var_dump($arrayofalerts[$alreadyfoundcommitid]['branch']);
 			var_dump($tmpval);*/
+
+			if (empty($arrayofalerts[$alreadyfoundcommitid]['issueid']) && !empty($tmpval['issueid'])) {
+				$arrayofalerts[$alreadyfoundcommitid]['issueid'] = $tmpval['issueid'];
+			}
+
 			$arrayofalerts[$alreadyfoundcommitid]['branch'] = array_merge($arrayofalerts[$alreadyfoundcommitid]['branch'], $tmpval['branch']);
 
 			$arrayofalerts[$alreadyfoundcommitid]['commitidbis'][] = $tmpval['commitid'];
