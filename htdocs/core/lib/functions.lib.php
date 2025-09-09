@@ -7128,6 +7128,8 @@ function getTitleFieldOfList($name, $thead = 0, $file = "", $field = "", $begin 
 		$prefix .= 'right '; // For backward compatibility
 	}
 
+	$tooltip = (string) $tooltip;	// In case $tooltip is null
+
 	$sortorder = strtoupper((string) $sortorder);
 	$out = '';
 	$sortimg = '';
