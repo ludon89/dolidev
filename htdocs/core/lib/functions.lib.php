@@ -1680,7 +1680,7 @@ function dol_get_object_properties($obj, $properties = [])
 
 /**
  *  Create a clone of instance of object (new instance with same value for each properties)
- *  With native = 0: Property that are references are different memory area in the new object (full isolation clone). This means $this->objectproperty of the new object may not be valid (except this->db that is voluntarly kept).
+ *  With native = 0: Deprecated. Property that are references are different memory area in the new object (full isolation clone). This means $this->objectproperty of the new object may not be valid (except this->db that is voluntarly kept).
  *  With native = 1: Use PHP clone. Property that are reference are same pointer. This means $this->db of new object is still valid but point to same this->db than original object.
  *  With native = 2: Property that are reference are different memory area in the new object (full isolation clone). Only scalar and array values are cloned. This means method are not availables and $this->db of new object is not valid.
  *
@@ -1697,6 +1697,8 @@ function dol_clone($object, $native = 2)
 {
 	if ($native == 0) {
 		// deprecated method, use the method with native = 2 instead
+		dol_syslog("Warning, call to dol_clone() with the deprecated parameter native=0, use 2 instead", LOG_WARNING);
+
 		$tmpsavdb = null;
 		if (isset($object->db) && isset($object->db->db) && is_object($object->db->db) && get_class($object->db->db) == 'PgSql\Connection') {
 			$tmpsavdb = $object->db;
@@ -1709,7 +1711,7 @@ function dol_clone($object, $native = 2)
 			$object->db = $tmpsavdb;
 		}
 	} elseif ($native == 2) {
-		// recommended method to have a full isolated cloned object
+		// recommended method to have a full secured isolated cloned object
 		$myclone = new stdClass();
 		$tmparray = get_object_vars($object);	// return only public properties
 
