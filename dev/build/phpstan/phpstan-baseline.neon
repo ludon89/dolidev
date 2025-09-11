@@ -5035,60 +5035,6 @@ parameters:
 			path: ../../../htdocs/contact/card.php
 
 		-
-			message: '#^Call to function method_exists\(\) with \$this\(Contact\) and ''getLibStatut'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
-			message: '#^Call to function method_exists\(\) with \$this\(Contact\) and ''getNomUrl'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
-			message: '#^Call to function property_exists\(\) with \$this\(Contact\) and ''photo'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
-			message: '#^Call to function property_exists\(\) with \$this\(Contact\) and ''thirdparty'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
-			message: '#^Negated boolean expression is always true\.$#'
-			identifier: booleanNot.alwaysTrue
-			count: 3
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
-			message: '#^Property Contact\:\:\$roles \(array\<int, array\<string, int\|string\>\>\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
-			message: '#^Property Contact\:\:\$stcomm_id \(int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
-			message: '#^Variable \$url in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 2
-			path: ../../../htdocs/contact/class/contact.class.php
-
-		-
 			message: '#^Loose comparison using \=\= between 0 and 1 will always evaluate to false\.$#'
 			identifier: equal.alwaysFalse
 			count: 1
@@ -18571,7 +18517,7 @@ parameters:
 			path: ../../../htdocs/societe/class/societe.class.php
 
 		-
-			message: '#^Property Contact\:\:\$roles \(array\<int, array\{id\: int, socid\: int, element\: string, source\: string, code\: string, label\: string\}\>\) does not accept non\-empty\-list\<string\>\.$#'
+			message: '#^Property Contact\:\:\$roles \(array\<int, array\{id\: int, socid\: int, element\: string, source\: string, code\: string, label\: string\}\>|null\) does not accept non\-empty\-list\<string\>\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: ../../../htdocs/societe/class/societe.class.php
