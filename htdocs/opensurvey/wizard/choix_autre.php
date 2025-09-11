@@ -167,6 +167,7 @@ if ($conf->use_javascript_ajax) {
 	// jQuery code to handle the div click event
 	$(document).ready(function() {
 		$("#addchoice").on("click", function() {
+			console.log("Click on adchoice");
 			$("#ajoutcases").val("ajoutcases");
 			$("#surveyform").submit();
 		});
