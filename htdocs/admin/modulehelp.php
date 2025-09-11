@@ -294,7 +294,7 @@ if ($ip) {
 	$text .= $ip;
 }
 $lastactivationversion = (empty($tmp['lastactivationversion']) ? '' : $tmp['lastactivationversion']);
-if ($lastactivationversion) {
+if ($lastactivationversion && $lastactivationversion != 'dolibarr') {
 	$text .= '<br><span class="opacitymedium">'.$langs->trans("LastActivationVersion").':</span> ';
 	$text .= $lastactivationversion;
 }
