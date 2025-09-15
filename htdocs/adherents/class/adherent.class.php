@@ -998,7 +998,7 @@ class Adherent extends CommonObject
 				}
 
 				// Update information on linked thirdparty if it is an update
-				if (!$error && $this->fk_soc > 0 && !$nosyncthirdparty) {
+				if (!$error && $this->socid > 0 && !$nosyncthirdparty) {
 					require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 
 					dol_syslog(get_class($this)."::update update linked thirdparty");
@@ -1006,7 +1006,7 @@ class Adherent extends CommonObject
 					// This member is linked with a thirdparty, so we also update thirdparty information
 					// if this is an update.
 					$lthirdparty = new Societe($this->db);
-					$result = $lthirdparty->fetch($this->fk_soc);
+					$result = $lthirdparty->fetch($this->socid);
 
 					if ($result > 0) {
 						$lthirdparty->address = $this->address;
@@ -1020,7 +1020,7 @@ class Adherent extends CommonObject
 						//$lthirdparty->phone_mobile=$this->phone_mobile;
 						$lthirdparty->default_lang = $this->default_lang;
 
-						$result = $lthirdparty->update($this->fk_soc, $user, 0, 1, 1, 'update'); // Use sync to 0 to avoid cyclic updates
+						$result = $lthirdparty->update($this->socid, $user, 0, 1, 1, 'update'); // Use sync to 0 to avoid cyclic updates
 
 						if ($result < 0) {
 							$this->error = $lthirdparty->error;
@@ -1200,6 +1200,150 @@ class Adherent extends CommonObject
 		}
 	}
 
+	/**
+	 *  Merge a member with current one, deleting the given company $member_origin_id.
+	 *    The member given in parameter will be removed.
+	 *    This is called for example by the adherent/card.php file.
+	 *    It calls the method replaceMember() of each object with relation with member,
+	 *    including hook 'replaceMember' for external modules.
+	 *
+	 *	@param	int     $member_origin_id	Member to merge the data from
+	 *  @return	int							-1 if error, >=0 if OK
+	 */
+	public function mergeMembers($member_origin_id)
+	{
+		global $conf, $langs, $hookmanager, $user, $action;
+
+		$error = 0;
+		$member_origin = new Adherent($this->db);		// The member that we will delete
+
+		dol_syslog("mergeMembers merge member id=".$member_origin_id." (will be deleted) into the member id=".$this->id);
+		if ($member_origin->fetch($member_origin_id) < 1) {
+			$this->error = $langs->trans('ErrorRecordNotFound');
+			$error++;
+		}
+
+		if (!$error) {
+			$this->db->begin();
+			$listofproperties = array(
+				'ref_ext', 'civility', 'lastname', 'firstname', 'morphy', 'societe', 'socid', 'user_id','address',
+				'zip', 'town', 'state_id', 'country', 'phone', 'phone_perso', 'phone_mobile', 'email',
+				'url', 'socialnetworks', 'birth', 'gender', 'photo', 'public', 'datefin', 'default_lang',
+				'canvas', 'model_pdf', 'import_key'
+			);
+			foreach ($listofproperties as $property) {
+				if (empty($this->$property)) {
+					$this->$property = $member_origin->$property;
+				}
+			}
+
+			// Concat some data
+			$listofproperties = array(
+				'note_public', 'note_private'
+			);
+			foreach ($listofproperties as $property) {
+				$this->$property = dol_concatdesc($this->$property, $member_origin->$property);
+			}
+
+			// Merge extrafields
+			if (is_array($member_origin->array_options)) {
+				foreach ($member_origin->array_options as $key => $val) {
+					if (empty($this->array_options[$key])) {
+						$this->array_options[$key] = $val;
+					}
+				}
+			}
+
+			// Merge categories
+			include_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
+			$static_cat = new Categorie($this->db);
+			$custcats_ori = $static_cat->containing($member_origin->id, 'member', 'id');
+			$custcats = $static_cat->containing($this->id, 'member', 'id');
+			$custcats = array_merge($custcats, $custcats_ori);
+			$this->setCategories($custcats);
+
+			$result = $this->update($user, 1, 1, 1, 1, 'merge');
+			if ($result < 0) {
+				$error++;
+			}
+
+			// Merge subscriptions
+			if (!$error && $member_origin->fetch_subscriptions() < 1) {
+				$error++;
+			}
+
+			if (!$error) {
+				foreach ($member_origin->subscriptions as $key => $subscription) {
+					$subscription->fk_adherent = $this->id;
+					$result = $subscription->update($user);
+					if ($result < 0) {
+						$error++;
+						break;
+					}
+				}
+			}
+
+			// External modules should update their ones too
+			if (!$error) {
+				$parameters = array('member_origin' => $member_origin->id, 'member_dest' => $this->id);
+				$reshook = $hookmanager->executeHooks('replaceMember', $parameters, $this, $action);
+
+				if ($reshook < 0) {
+					$this->setErrorsFromObject($hookmanager);
+					$error++;
+				}
+			}
+
+			if (!$error) {
+				$this->context = array('merge' => 1, 'mergefromid' => $member_origin->id);
+
+				// Call trigger
+				$result = $this->call_trigger('MEMBER_MODIFY', $user);
+				if ($result < 0) {
+					$error++;
+				}
+				// End call triggers
+			}
+
+			if (!$error) {
+				// We finally remove the old member
+				if ($member_origin->delete($user) < 1) {
+					$this->setErrorsFromObject($member_origin);
+					$error++;
+				}
+			}
+
+			if (!$error) {
+				// Move files from the dir of the third party to delete into the dir of the third party to keep
+				if (!empty($conf->adherent->multidir_output[$this->entity])) {
+					$srcdir = $conf->adherent->multidir_output[$this->entity]."/".$member_origin->id;
+					$destdir = $conf->adherent->multidir_output[$this->entity]."/".$this->id;
+
+					if (dol_is_dir($srcdir)) {
+						$dirlist = dol_dir_list($srcdir, 'files', 1);
+						foreach ($dirlist as $filetomove) {
+							$destfile = $destdir.'/'.$filetomove['relativename'];
+							$result = dol_move($filetomove['fullname'], $destfile, '0', 0, 0, 1);
+							if (!$result) {
+								$error++;
+							}
+						}
+					}
+				}
+			}
+
+			if (!$error) {
+				$this->db->commit();
+				return 0;
+			} else {
+				$langs->load("errors");
+				$this->error = $langs->trans('ErrorMembersMerge');
+				$this->db->rollback();
+				return -1;
+			}
+		}
+		return -1;
+	}
 
 	/**
 	 *    Change password of a user
@@ -1442,18 +1586,18 @@ class Adherent extends CommonObject
 	 *
 	 *	@param	int		$rowid      			Id of object to load
 	 * 	@param	string	$ref					To load member from its ref
-	 * 	@param	int		$fk_soc					To load member from its link to third party
+	 * 	@param	int		$socid					To load member from its link to third party
 	 * 	@param	string	$ref_ext				External reference
 	 *  @param	bool	$fetch_optionals		To load optionals (extrafields)
 	 *  @param	bool	$fetch_subscriptions	To load member subscriptions
 	 *	@return int								>0 if OK, 0 if not found, <0 if KO
 	 */
-	public function fetch($rowid, $ref = '', $fk_soc = 0, $ref_ext = '', $fetch_optionals = true, $fetch_subscriptions = true)
+	public function fetch($rowid, $ref = '', $socid = 0, $ref_ext = '', $fetch_optionals = true, $fetch_subscriptions = true)
 	{
 		global $langs;
 
 		$sql = "SELECT d.rowid, d.ref, d.ref_ext, d.civility as civility_code, d.gender, d.firstname, d.lastname,";
-		$sql .= " d.societe as company, d.fk_soc, d.statut, d.public, d.address, d.zip, d.town, d.note_private,";
+		$sql .= " d.societe as company, d.fk_soc as socid, d.statut, d.public, d.address, d.zip, d.town, d.note_private,";
 		$sql .= " d.note_public,";
 		$sql .= " d.email, d.url, d.socialnetworks, d.phone, d.phone_perso, d.phone_mobile, d.login, d.pass, d.pass_crypted,";
 		$sql .= " d.photo, d.fk_adherent_type, d.morphy, d.entity,";
@@ -1477,12 +1621,12 @@ class Adherent extends CommonObject
 		$sql .= " WHERE d.fk_adherent_type = t.rowid";
 		if ($rowid) {
 			$sql .= " AND d.rowid=".((int) $rowid);
-		} elseif ($ref || $fk_soc) {
+		} elseif ($ref || $socid) {
 			$sql .= " AND d.entity IN (".getEntity('adherent').")";
 			if ($ref) {
 				$sql .= " AND d.ref='".$this->db->escape($ref)."'";
-			} elseif ($fk_soc > 0) {
-				$sql .= " AND d.fk_soc=".((int) $fk_soc);
+			} elseif ($socid > 0) {
+				$sql .= " AND d.fk_soc=".((int) $socid);
 			}
 		} elseif ($ref_ext) {
 			$sql .= " AND d.ref_ext='".$this->db->escape($ref_ext)."'";
@@ -1509,8 +1653,8 @@ class Adherent extends CommonObject
 				$this->login = $obj->login;
 				$this->societe = $obj->company;
 				$this->company = $obj->company;
-				$this->socid = $obj->fk_soc;
-				$this->fk_soc = $obj->fk_soc; // For backward compatibility
+				$this->socid = $obj->socid;
+				$this->fk_soc = $obj->socid; // For backward compatibility
 				$this->address = $obj->address;
 				$this->zip = $obj->zip;
 				$this->town = $obj->town;
@@ -1832,7 +1976,7 @@ class Adherent extends CommonObject
 			$customer = new Societe($this->db);
 
 			if (!$error) {
-				if (!($this->fk_soc > 0)) { // If not yet linked to a company
+				if (!($this->socid > 0)) { // If not yet linked to a company
 					if ($autocreatethirdparty) {
 						// Create a linked thirdparty to member
 						$companyalias = '';
@@ -1857,6 +2001,7 @@ class Adherent extends CommonObject
 							$error++;
 						} else {
 							$this->fk_soc = $result;
+							$this->socid = $result;
 						}
 					} else {
 						$langs->load("errors");
@@ -1867,7 +2012,7 @@ class Adherent extends CommonObject
 				}
 			}
 			if (!$error) {
-				$result = $customer->fetch($this->fk_soc);
+				$result = $customer->fetch($this->socid);
 				if ($result <= 0) {
 					$this->error = $customer->error;
 					$this->errors = $customer->errors;
@@ -1888,7 +2033,7 @@ class Adherent extends CommonObject
 						$this->errors[] = $this->error;
 					}
 				}
-				$invoice->socid = $this->fk_soc;
+				$invoice->socid = $this->socid;
 				// set customer's payment bank account on the invoice
 				if (!empty($customer->fk_account)) {
 					$invoice->fk_account = $customer->fk_account;
@@ -3006,7 +3151,7 @@ class Adherent extends CommonObject
 		$resql = $this->db->query($sql);
 		if ($resql) {
 			$obj = $this->db->fetch_object($resql);
-			$nb = $obj->nb;
+			$nb = (int) $obj->nb;
 
 			$this->db->free($resql);
 			return $nb;
