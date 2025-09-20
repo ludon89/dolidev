@@ -8501,20 +8501,26 @@ function get_product_localtax_for_country($idprod, $local, $thirdpartytouseforco
  */
 function get_default_tva(Societe $thirdparty_seller, Societe $thirdparty_buyer, $idprod = 0, $idprodfournprice = 0)
 {
-	global $conf, $db;
+	global $mysoc, $db;
 
 	require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 
 	// Note: possible values for tva_assuj are 0/1 or franchise/reel
 	$seller_use_vat = ((is_numeric($thirdparty_seller->tva_assuj) && !$thirdparty_seller->tva_assuj) || (!is_numeric($thirdparty_seller->tva_assuj) && $thirdparty_seller->tva_assuj == 'franchise')) ? 0 : 1;
 
+	if (empty($thirdparty_seller->country_code)) {
+		$thirdparty_seller->country_code = $mysoc->country_code;
+	}
 	$seller_country_code = $thirdparty_seller->country_code;
 	$seller_in_cee = isInEEC($thirdparty_seller);
 
+	if (empty($thirdparty_buyer->country_code)) {
+		$thirdparty_buyer->country_code = $mysoc->country_code;
+	}
 	$buyer_country_code = $thirdparty_buyer->country_code;
 	$buyer_in_cee = isInEEC($thirdparty_buyer);
 
-	dol_syslog("get_default_tva: seller use vat=" . $seller_use_vat . ", seller country=" . $seller_country_code . ", seller in cee=" . ((string) (int) $seller_in_cee) . ", buyer vat number=" . $thirdparty_buyer->tva_intra . " buyer country=" . $buyer_country_code . ", buyer in cee=" . ((string) (int) $buyer_in_cee) . ", idprod=" . $idprod . ", idprodfournprice=" . $idprodfournprice . ", SERVICE_ARE_ECOMMERCE_200238EC=" . (getDolGlobalString('SERVICE_ARE_ECOMMERCE_200238EC') ? $conf->global->SERVICE_ARE_ECOMMERCE_200238EC : ''));
+	dol_syslog("get_default_tva: seller use vat=".$seller_use_vat.", seller country=".$seller_country_code.", seller in cee=".((string) (int) $seller_in_cee).", buyer vat number=".$thirdparty_buyer->tva_intra." buyer country=".$buyer_country_code.", buyer state=".$thirdparty_buyer->state_id." buyer in cee=".((string) (int) $buyer_in_cee).", idprod=".$idprod.", idprodfournprice=".$idprodfournprice.", SERVICE_ARE_ECOMMERCE_200238EC=".getDolGlobalString('SERVICE_ARE_ECOMMERCE_200238EC'));
 
 	// If services are eServices according to EU Council Directive 2002/38/EC (http://ec.europa.eu/taxation_customs/taxation/vat/traders/e-commerce/article_1610_en.htm)
 	// we use the buyer VAT.
@@ -8680,6 +8686,18 @@ function get_default_localtax($thirdparty_seller, $thirdparty_buyer, $local, $id
 		return -1;
 	}
 
+	if (empty($thirdparty_seller->country_code)) {
+		$thirdparty_seller->country_code = $mysoc->country_code;
+	}
+	$seller_country_code = $thirdparty_seller->country_code;
+	//$seller_in_cee = isInEEC($thirdparty_seller);
+
+	if (empty($thirdparty_buyer->country_code)) {
+		$thirdparty_buyer->country_code = $mysoc->country_code;
+	}
+	$buyer_country_code = $thirdparty_buyer->country_code;
+	//$buyer_in_cee = isInEEC($thirdparty_buyer);
+
 	if ($local == 1) { // Localtax 1
 		if ($mysoc->country_code == 'ES') {
 			if (is_numeric($thirdparty_buyer->localtax1_assuj) && !$thirdparty_buyer->localtax1_assuj) {
@@ -8704,7 +8722,7 @@ function get_default_localtax($thirdparty_seller, $thirdparty_buyer, $local, $id
 		}
 	}
 
-	if ($thirdparty_seller->country_code == $thirdparty_buyer->country_code) {
+	if ($seller_country_code == $buyer_country_code) {
 		return get_product_localtax_for_country($idprod, $local, $thirdparty_seller);
 	}
 
