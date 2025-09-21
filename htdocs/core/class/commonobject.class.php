@@ -698,33 +698,9 @@ abstract class CommonObject
 	public $date_cloture;
 
 	/**
-	 * @var User		User author/creation
-	 * @deprecated		Store only id in user_creation_id
-	 */
-	public $user_author;
-
-	/**
-	 * @var User		User author/creation
-	 * @deprecated
-	 */
-	public $user_creation;
-
-	/**
 	 * @var int|null	User id author/creation
 	 */
 	public $user_creation_id;
-
-	/**
-	 * @var User		User of validation
-	 * @deprecated
-	 */
-	public $user_valid;
-
-	/**
-	 * @var User		User of validation
-	 * @deprecated
-	 */
-	public $user_validation;
 
 	/**
 	 * @var int|null		User id of validation
@@ -735,12 +711,6 @@ abstract class CommonObject
 	 * @var int|null		User id closing object
 	 */
 	public $user_closing_id;
-
-	/**
-	 * @var User	User last modifier
-	 * @deprecated
-	 */
-	public $user_modification;
 
 	/**
 	 * @var int|null		User ID who last modified the object

@@ -145,7 +145,7 @@ class Contrat extends CommonObject
 	public $fk_user_author;
 
 	/**
-	 * TODO: Which is the correct one?
+	 * TODO: Which is the correct one? user_author_id or user_creation_id ?
 	 * Author of the contract
 	 * @var int
 	 */
