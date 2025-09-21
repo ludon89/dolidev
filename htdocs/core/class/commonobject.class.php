@@ -238,13 +238,6 @@ abstract class CommonObject
 	public $fk_project;
 
 	/**
-	 * @var ?Project	 	The related project object
-	 * @deprecated  Use $project instead.
-	 * @see $project
-	 */
-	private $projet;
-
-	/**
 	 * @var int
 	 * @deprecated  		Use $fk_project instead.
 	 * @see $fk_project
@@ -274,6 +267,12 @@ abstract class CommonObject
 	 * @see fetch_user()
 	 */
 	public $user;
+
+	/**
+	 * @var Product 	Populated by fetch_product()
+	 * @see fetch_product()
+	 */
+	public $product;
 
 	/**
 	 * @var string 		The type of originating object. Combined with `$origin_type`, it allows to reload `$origin_object`
@@ -817,11 +816,6 @@ abstract class CommonObject
 	 *               call method deleteByParentField(parentId, ParentFkFieldName) to fetch and delete child object.
 	 */
 	protected $childtablesoncascade = array();
-
-	/**
-	 * @var Product 	Populated by fetch_product()
-	 */
-	public $product;
 
 	/**
 	 * @var int 		Populated by setPaymentTerms()
