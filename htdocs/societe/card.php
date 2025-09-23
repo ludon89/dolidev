@@ -310,12 +310,12 @@ if (empty($reshook)) {
 			$error++;
 		}
 
-		if (isModEnabled('mailing') && getDolGlobalInt('MAILING_CONTACT_DEFAULT_BULK_STATUS') == 2 && GETPOSTINT('contact_no_email') == -1 && !empty(GETPOST('email', 'custom', 0, FILTER_SANITIZE_EMAIL))) {
+		if (isModEnabled('mailing') && getDolGlobalInt('MAILING_CONTACT_DEFAULT_BULK_STATUS') == 2 && GETPOSTINT('contact_no_email') == -1 && !empty(GETPOST('email', 'email'))) {
 			$error++;
 			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentities("No_Email")), null, 'errors');
 		}
 
-		if (isModEnabled('mailing') && GETPOSTINT("private") == 1 && getDolGlobalInt('MAILING_CONTACT_DEFAULT_BULK_STATUS') == 2 && GETPOSTINT('contact_no_email') == -1 && !empty(GETPOST('email', 'custom', 0, FILTER_SANITIZE_EMAIL))) {
+		if (isModEnabled('mailing') && GETPOSTINT("private") == 1 && getDolGlobalInt('MAILING_CONTACT_DEFAULT_BULK_STATUS') == 2 && GETPOSTINT('contact_no_email') == -1 && !empty(GETPOST('email', 'email'))) {
 			$error++;
 			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentities("No_Email")), null, 'errors');
 		}
@@ -361,9 +361,9 @@ if (empty($reshook)) {
 			$object->phone					= GETPOST('phone', 'alpha');
 			$object->phone_mobile 			= (string) GETPOST("phone_mobile", 'alpha');
 			$object->fax					= GETPOST('fax', 'alpha');
-			$object->email					= trim(GETPOST('email', 'custom', 0, FILTER_SANITIZE_EMAIL));
+			$object->email					= trim(GETPOST('email', 'email'));
 			$object->no_email 				= GETPOSTINT("no_email");
-			$object->url					= trim(GETPOST('url', 'custom', 0, FILTER_SANITIZE_URL));
+			$object->url					= trim(GETPOST('url', 'url'));
 			$object->idprof1				= trim(GETPOST('idprof1', 'alphanohtml'));
 			$object->idprof2				= trim(GETPOST('idprof2', 'alphanohtml'));
 			$object->idprof3				= trim(GETPOST('idprof3', 'alphanohtml'));
@@ -404,7 +404,7 @@ if (empty($reshook)) {
 			$object->client					= $prospectcustomer;
 			$object->fournisseur			= (GETPOSTINT('supplier') > 0 ? 1 : 0);
 
-			if ($action == 'add') {
+			if ($action == 'add') {		// Test on permission already done
 				// for prospect, customer or supplier
 				if ($object->client > 0 || $object->fournisseur > 0) {
 					$form = new Form($db);
@@ -436,7 +436,7 @@ if (empty($reshook)) {
 			$object->default_lang			= GETPOST('default_lang');
 
 			// Webservices url/key
-			$object->webservices_url		= GETPOST('webservices_url', 'custom', 0, FILTER_SANITIZE_URL);
+			$object->webservices_url		= GETPOST('webservices_url', 'url');
 			$object->webservices_key		= GETPOST('webservices_key', 'san_alpha');
 
 			if (GETPOSTISSET('accountancy_code_sell')) {
@@ -867,7 +867,7 @@ if (empty($reshook)) {
 		$result = $object->setWarehouse(GETPOSTINT('fk_warehouse'));
 	}
 
-	if ($action == 'confirm_clone' && $confirm != 'yes') {
+	if ($action == 'confirm_clone' && $confirm != 'yes') {	// Test on permission not required here
 		$action = '';
 	}
 	//clone company essential info
@@ -1086,8 +1086,8 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 		$object->phone				= GETPOST('phone', 'alpha');
 		$object->phone_mobile       = (string) GETPOST("phone_mobile", 'alpha');
 		$object->fax				= GETPOST('fax', 'alpha');
-		$object->email				= GETPOST('email', 'custom', 0, FILTER_SANITIZE_EMAIL);
-		$object->url				= GETPOST('url', 'custom', 0, FILTER_SANITIZE_URL);
+		$object->email				= GETPOST('email', 'email');
+		$object->url				= GETPOST('url', 'url');
 		$object->capital			= GETPOSTFLOAT('capital');
 		$paymentTermId = GETPOSTINT('cond_reglement_id'); // can be set by default values on create page and not already in get or post variables
 		if (empty($paymentTermId) && !GETPOSTISSET('cond_reglement_id')) {
@@ -2090,9 +2090,9 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 				$object->phone					= GETPOST('phone', 'alpha');
 				$object->phone_mobile			= (string) GETPOST('phone_mobile', 'alpha');
 				$object->fax					= GETPOST('fax', 'alpha');
-				$object->email					= GETPOST('email', 'custom', 0, FILTER_SANITIZE_EMAIL);
+				$object->email					= GETPOST('email', 'email');
 				$object->no_email				= GETPOSTINT("no_email");
-				$object->url					= GETPOST('url', 'custom', 0, FILTER_SANITIZE_URL);
+				$object->url					= GETPOST('url', 'url');
 				$object->capital				= GETPOSTFLOAT('capital');
 				$object->idprof1				= GETPOST('idprof1', 'alphanohtml');
 				$object->idprof2				= GETPOST('idprof2', 'alphanohtml');
@@ -2112,7 +2112,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 				$object->status =				GETPOSTINT('status');
 
 				// Webservices url/key
-				$object->webservices_url        = GETPOST('webservices_url', 'custom', 0, FILTER_SANITIZE_URL);
+				$object->webservices_url        = GETPOST('webservices_url', 'url');
 				$object->webservices_key        = GETPOST('webservices_key', 'san_alpha');
 
 				if (GETPOSTISSET('accountancy_code_sell')) {
