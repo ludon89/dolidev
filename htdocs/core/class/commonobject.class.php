@@ -3872,9 +3872,6 @@ abstract class CommonObject
 					case 'societe':
 						$triggerName = 'COMPANY_MODIFY';
 						break;
-					case 'commande':
-						$triggerName = 'ORDER_MODIFY';
-						break;
 					case 'facture':
 						$triggerName = 'BILL_MODIFY';
 						break;
