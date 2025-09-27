@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2017 Laurent Destailleur	<eldy@users.sourceforge.net>
- * Copyright (C) 2024       Frédéric France             <frederic.france@free.fr>
+ * Copyright (C) 2024-2025  Frédéric France             <frederic.france@free.fr>
  * Copyright (C) 2024-2025	MDW							<mdeweerd@users.noreply.github.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -1227,6 +1227,7 @@ function getPagesFromSearchCriterias($type, $algo, $searchstring, $max = 25, $so
 {
 	global $conf, $db, $hookmanager, $langs, $mysoc, $user, $website, $websitepage, $weblangs; // Very important. Required to have var available when running included containers.
 	'@phan-var-force Website $website';
+	/** @var Website $website */
 
 	$error = 0;
 	$arrayresult = array('code' => '', 'list' => array());
