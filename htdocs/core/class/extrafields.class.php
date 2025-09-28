@@ -1613,7 +1613,7 @@ class ExtraFields
 								$nameFields = $InfoFieldList[1];
 								// If text is "field1|f(a,b,c) as xxx|field2", we must convert string into 'field1|xxx|field2'
 								$nameFields = preg_replace('/[a-z_]+\([^\)]*\) as ([\w]+)/i', '\1', $nameFields);
-								// Sanitize field names to avoid sql injection
+								// Sanitize field names to avoid error when doing $obj->field
 								$nameFields = preg_replace('/[^0-9a-z_\.\|]/i', '', $nameFields);
 
 								// Several fields into label (eq table:code|label:rowid)
@@ -1646,7 +1646,7 @@ class ExtraFields
 									}
 
 									if (!empty($InfoFieldList[3]) && $parentField) {
-										// Sanitize parent field name to avoid sql injection
+										// Sanitize parent field name to avoid when doing $obj->field
 										$parentField = preg_replace('/[^a-zA-Z0-9_\-]/', '', $parentField);
 										$parent = $parentName.':'.$obj->{$parentField};
 									}
