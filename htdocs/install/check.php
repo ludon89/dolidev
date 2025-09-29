@@ -114,7 +114,10 @@ if (versioncompare(versionphparray(), $arrayphpminversionerror) < 0) {        //
 	print $langs->trans("PHPVersion")." ".versiontostring(versionphparray());
 }
 if (empty($force_install_nophpinfo)) {
-	print ' (<a href="phpinfo.php" target="_blank" rel="noopener noreferrer">'.$langs->trans("MoreInformation").'</a>)';
+	print ' (<a href="phpinfo.php" target="_blank" rel="noopener noreferrer">';
+	$conf->use_javascript_ajax = 1;		// We suppose javascript is on for install process
+	print dolButtonToOpenUrlInDialogPopup('phpinfo', $langs->trans("MoreInformation"), $langs->trans("MoreInformation"), '/install/phpinfo.php', '', '');
+	print '</a>)';
 }
 print "<br>\n";
 
