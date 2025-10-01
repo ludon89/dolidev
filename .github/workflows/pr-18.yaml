@@ -34,8 +34,10 @@ jobs:
     - name: Assign reviewer
       env:
         GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-        url: ${{ github.event.pull_request_target.html_url }}
+        url: ${{ github.event.pull_request.html_url }}
       run: |
+        echo "url=$url""
+        echo "env.url=${{env.url}}"
         gh pr edit "$url" --add-reviewer rycks
         gh pr edit "$url" --add-reviewer lvessiller-opendsi
         gh pr edit "$url" --add-reviewer eldy
