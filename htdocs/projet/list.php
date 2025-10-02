@@ -1321,13 +1321,13 @@ if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
 // Project ref
 if (!empty($arrayfields['p.ref']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input type="text" class="flat" name="search_ref" value="'.dol_escape_htmltag($search_ref).'" size="6">';
+	print '<input type="text" class="flat width50" name="search_ref" value="'.dol_escape_htmltag($search_ref).'">';
 	print '</td>';
 }
 // Project label
 if (!empty($arrayfields['p.title']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input type="text" class="flat" name="search_label" size="8" value="'.dol_escape_htmltag($search_label).'">';
+	print '<input type="text" class="flat width100" name="search_label" value="'.dol_escape_htmltag($search_label).'">';
 	print '</td>';
 }
 // Third party
@@ -1338,7 +1338,7 @@ if (!empty($arrayfields['s.nom']['checked'])) {
 		$tmpthirdparty->fetch($socid);
 		$search_societe = $tmpthirdparty->name;
 	}
-	print '<input type="text" class="flat" name="search_societe" size="8" value="'.dol_escape_htmltag((string) $search_societe).'">';
+	print '<input type="text" class="flat width100" name="search_societe" value="'.dol_escape_htmltag((string) $search_societe).'">';
 	print '</td>';
 }
 
@@ -1350,20 +1350,20 @@ if (!empty($arrayfields['s.name_alias']['checked'])) {
 		$tmpthirdparty->fetch($socid);
 		$search_societe_alias = $tmpthirdparty->name_alias;
 	}
-	print '<input type="text" class="flat" name="search_societe_alias" size="8" value="'.dol_escape_htmltag($search_societe_alias).'">';
+	print '<input type="text" class="flat width100" name="search_societe_alias" value="'.dol_escape_htmltag($search_societe_alias).'">';
 	print '</td>';
 }
 
 // Ref customer
 if (!empty($arrayfields['s.code_client']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input type="text" class="flat" name="search_societe_ref_customer" size="8" value="'.dol_escape_htmltag($search_societe_ref_customer).'">';
+	print '<input type="text" class="flat width75" name="search_societe_ref_customer" value="'.dol_escape_htmltag($search_societe_ref_customer).'">';
 	print '</td>';
 }
 // Ref supplier
 if (!empty($arrayfields['s.code_fournisseur']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input type="text" class="flat" name="search_societe_ref_supplier" size="8" value="'.dol_escape_htmltag($search_societe_ref_supplier).'">';
+	print '<input type="text" class="flat width75" name="search_societe_ref_supplier" value="'.dol_escape_htmltag($search_societe_ref_supplier).'">';
 	print '</td>';
 }
 
