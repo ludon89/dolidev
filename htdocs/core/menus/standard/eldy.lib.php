@@ -56,7 +56,7 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 	$id = 'mainmenu';
 	$listofmodulesforexternal = explode(',', getDolGlobalString('MAIN_MODULES_FOR_EXTERNAL'));
 
-	$substitarray = getCommonSubstitutionArray($langs, 0, null, null);
+	$substitarray = getCommonSubstitutionArray($langs, 0, null, null, array('system', 'mycompany', 'date', 'user'));
 
 	global $usemenuhider;
 	$usemenuhider = 1;
@@ -791,7 +791,7 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 		print "<!-- End Bookmarks -->\n";
 	}
 
-	$substitarray = getCommonSubstitutionArray($langs, 0, null, null);
+	$substitarray = getCommonSubstitutionArray($langs, 0, null, null, array('system', 'mycompany', 'date', 'user'));
 
 	$listofmodulesforexternal = explode(',', getDolGlobalString('MAIN_MODULES_FOR_EXTERNAL'));
 
