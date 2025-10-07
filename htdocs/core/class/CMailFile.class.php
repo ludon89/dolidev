@@ -2038,6 +2038,7 @@ class CMailFile
 
 	/**
 	 * Search images into html message and init array this->images_encoded if found
+	 * This is called only if MAIN_MAIL_ADD_INLINE_IMAGES_IF_IN_MEDIAS is set (Off by default)
 	 *
 	 * @param	string	$images_dir		Path to store physical images files. For example $dolibarr_main_data_root.'/medias'
 	 * @return	int 		        	>0 if OK, <0 if KO
@@ -2047,8 +2048,8 @@ class CMailFile
 		// Build the array of image extensions
 		$extensions = array_keys($this->image_types);
 
-		// We search (into mail body this->html), if we find some strings like "... file=xxx.img"
-		// For example when:
+		// We search (into mail body this->html), if we find some strings like "... .imgext" or '... .imgext' to detect strings like "...file=xxx.img"
+		// For example to detect:
 		// <img alt="" src="/viewimage.php?modulepart=medias&amp;entity=1&amp;file=image/picture.jpg" style="height:356px; width:1040px" />
 		$matches = array();
 		preg_match_all('/(?:"|\')([^"\']+\.('.implode('|', $extensions).'))(?:"|\')/Ui', $this->html, $matches); // If "xxx.ext" or 'xxx.ext' found
@@ -2093,7 +2094,7 @@ class CMailFile
 				foreach ($this->html_images as $img) {
 					$fullpath = $images_dir.'/'.$img["name"];
 
-					// If duplicate images are embedded, they may show up as attachments, so remove them.
+					// If referenced image is found on disk (src link), it may show up as attachments, so we remove it by storing it into images_encoded
 					if (!in_array($fullpath, $inline)) {
 						// Read image file
 						if ($image = file_get_contents($fullpath)) {
@@ -2123,8 +2124,8 @@ class CMailFile
 	}
 
 	/**
-	 * Seearch images with data:image format into html message.
-	 * If we find some, we create it on disk.
+	 * Search images with src="data:image..." format into html message.
+	 * If we find some, we create them on disk.
 	 *
 	 * @param	string	$images_dir		Location of where to store physically images files. For example $dolibarr_main_data_root.'/medias'
 	 * @return	int 		        	>0 if OK, <0 if KO
