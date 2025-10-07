@@ -343,7 +343,7 @@ class CMailFile
 				}
 			}
 
-			if (getDolGlobalString('MAIN_MAIL_ADD_INLINE_IMAGES_IF_DATA')) {
+			if (getDolGlobalString('MAIN_MAIL_ADD_INLINE_IMAGES_IF_DATA')) {	// On by default
 				// Search into the body for <img src="data:image/ext;base64,..." to replace them with an embedded file
 				// This convert an embedded file with src="data:image... into a cid link + attached file
 				$resultImageData = $this->findHtmlImagesIsSrcData($upload_dir_tmp);
