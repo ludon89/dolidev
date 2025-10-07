@@ -659,8 +659,6 @@ class CMailFile
 
 			$smtps->setMessageID($this->msgid);
 
-			$smtps->setMessageID($this->msgid);
-
 			$this->smtps = $smtps;
 		} elseif ($this->sendmode == 'swiftmailer') {
 			// Use Swift Mailer library
@@ -2038,7 +2036,7 @@ class CMailFile
 
 	/**
 	 * Search images into html message and init array this->images_encoded if found
-	 * This is called only if MAIN_MAIL_ADD_INLINE_IMAGES_IF_IN_MEDIAS is set (Off by default)
+	 * This is called in the CMailfile constructor but only if MAIN_MAIL_ADD_INLINE_IMAGES_IF_IN_MEDIAS is set (Off by default)
 	 *
 	 * @param	string	$images_dir		Path to store physical images files. For example $dolibarr_main_data_root.'/medias'
 	 * @return	int 		        	>0 if OK, <0 if KO
@@ -2126,6 +2124,7 @@ class CMailFile
 	/**
 	 * Search images with src="data:image..." format into html message.
 	 * If we find some, we create them on disk.
+	 * This is called in the CMailfile constructor.
 	 *
 	 * @param	string	$images_dir		Location of where to store physically images files. For example $dolibarr_main_data_root.'/medias'
 	 * @return	int 		        	>0 if OK, <0 if KO
