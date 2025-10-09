@@ -173,7 +173,7 @@ if ($mode == 'marketplace') {
 	if (GETPOSTINT('dol_resetcache')) {
 		dol_delete_file($remotestore->cache_file);
 	}
-	$remotestore->loadRemoteSources(false, $clearcache);
+	$remotestore->loadRemoteSources(false);
 }
 
 $object = new stdClass();
