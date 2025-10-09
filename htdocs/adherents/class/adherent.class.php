@@ -836,6 +836,7 @@ class Adherent extends CommonObject
 
 		$sql = "UPDATE ".MAIN_DB_PREFIX."adherent SET";
 		$sql .= " ref = '".$this->db->escape($this->ref)."'";
+		$sql .= ", ref_ext = ".(empty($this->ref_ext) ? "null" : "'".$this->db->escape($this->ref_ext)."'");
 		$sql .= ", civility = ".($this->civility_id ? "'".$this->db->escape($this->civility_id)."'" : "null");
 		$sql .= ", firstname = ".($this->firstname ? "'".$this->db->escape($this->firstname)."'" : "null");
 		$sql .= ", lastname = ".($this->lastname ? "'".$this->db->escape($this->lastname)."'" : "null");
