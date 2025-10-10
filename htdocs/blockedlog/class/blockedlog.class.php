@@ -180,6 +180,9 @@ class BlockedLog
 
 		// Customer Invoice/Facture / Payment
 		if (isModEnabled('invoice')) {
+			$sep++;
+			$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">----- '.$langs->trans("Invoices").' | '.$langs->trans("Payments").'</span>', 'disabled' => 1);
+
 			$this->trackedevents['BILL_VALIDATE']           = array('id' => 'BILL_VALIDATE', 'label' => 'logBILL_VALIDATE', 'labelhtml' => img_picto('', 'bill', 'class="pictofixedwidth").').$langs->trans('logBILL_VALIDATE'));
 			//$this->trackedevents['BILL_UPDATE']           = array('id' => 'BILL_VALIDATE', 'label' => 'logBILL_UPDATE', 'labelhtml' => img_picto('', 'bill', 'class="pictofixedwidth").').$langs->trans('logBILL_UPDATE'));
 			$this->trackedevents['BILL_SENTBYMAIL']         = array('id' => 'BILL_SENTBYMAIL', 'label' => 'logBILL_SENTBYMAIL', 'labelhtml' => img_picto('', 'bill', 'class="pictofixedwidth").').$langs->trans('logBILL_SENTBYMAIL'));
@@ -206,7 +209,7 @@ class BlockedLog
 		if (isModEnabled('don')) {
 			if (!empty($this->trackedevents)) {
 				$sep++;
-				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">----------</span>', 'disabled' => 1);
+				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">-----  '.$langs->trans("Donations").' | '.$langs->trans("Payments").'</span>', 'disabled' => 1);
 			}
 
 			$this->trackedevents['DON_VALIDATE'] = array('id' => 'DON_VALIDATE', 'label' => 'logDON_VALIDATE', 'labelhtml' => img_picto('', 'donation', 'class="pictofixedwidth").').$langs->trans('logDON_VALIDATE'));
@@ -229,7 +232,7 @@ class BlockedLog
 		if (isModEnabled('member')) {
 			if (!empty($this->trackedevents)) {
 				$sep++;
-				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">----------</span>', 'disabled' => 1);
+				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">----- '.$langs->trans("MenuMembers").'</span>', 'disabled' => 1);
 			}
 
 			$this->trackedevents['MEMBER_SUBSCRIPTION_CREATE'] = array('id' => 'MEMBER_SUBSCRIPTION_CREATE', 'label' => 'logMEMBER_SUBSCRIPTION_CREATE', 'labelhtml' => img_picto('', 'member', 'class="pictofixedwidth").').$langs->trans('logMEMBER_SUBSCRIPTION_CREATE'));
@@ -241,7 +244,7 @@ class BlockedLog
 		if (isModEnabled("bank")) {
 			if (!empty($this->trackedevents)) {
 				$sep++;
-				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">----------</span>', 'disabled' => 1);
+				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">-----  '.$langs->trans("VariousPayment").'</span>', 'disabled' => 1);
 			}
 
 			$this->trackedevents['PAYMENT_VARIOUS_CREATE'] = array('id' => 'PAYMENT_VARIOUS_CREATE', 'label' => 'logPAYMENT_VARIOUS_CREATE', 'labelhtml' => img_picto('', 'bank', 'class="pictofixedwidth").').$langs->trans('logPAYMENT_VARIOUS_CREATE'));
@@ -255,7 +258,7 @@ class BlockedLog
 		if ($moduleposenabled) {
 			if (!empty($this->trackedevents)) {
 				$sep++;
-				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">----------</span>', 'disabled' => 1);
+				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">-----   '.$langs->trans("CashControl").'</span>', 'disabled' => 1);
 			}
 
 			$this->trackedevents['CASHCONTROL_VALIDATE'] = array('id' => 'CASHCONTROL_VALIDATE', 'label' => 'logCASHCONTROL_VALIDATE', 'labelhtml' => img_picto('', 'pos', 'class="pictofixedwidth").').$langs->trans('logCASHCONTROL_VALIDATE'));
@@ -277,7 +280,7 @@ class BlockedLog
 
 		if (!empty($this->trackedevents)) {
 			$sep++;
-			$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">----------</span>', 'disabled' => 1);
+			$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">----- '.$langs->trans("Other").'</span>', 'disabled' => 1);
 		}
 		$this->trackedevents['BLOCKEDLOG_EXPORT'] = array('id' => 'BLOCKEDLOG_EXPORT', 'label' => 'logBLOCKEDLOG_EXPORT', 'labelhtml' => img_picto('', 'generic', 'class="pictofixedwidth").').$langs->trans('logBLOCKEDLOG_EXPORT'));
 
