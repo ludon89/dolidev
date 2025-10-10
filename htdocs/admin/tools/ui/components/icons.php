@@ -70,8 +70,6 @@ if (!GETPOST('hidenavmenu')) {
 		}
 		?>
 
-		<br>
-
 		<div class="doc-content-wrapper">
 
 			<h1 class="documentation-title"><?php echo $langs->trans('DocIconsTitle'); ?></h1>
@@ -79,6 +77,8 @@ if (!GETPOST('hidenavmenu')) {
 
 			<!-- Summary -->
 			<?php $documentation->showSummary(); ?>
+
+			<br>
 
 			<!-- List of usage font awesome icon -->
 			<div class="documentation-section" id="img-picto-section-list">
