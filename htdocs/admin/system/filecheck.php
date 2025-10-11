@@ -282,7 +282,7 @@ if (empty($error) && !empty($xml)) {
 
 	// Scan htdocs
 	if (is_object($listoffilestoanalyze)) {
-		//var_dump($xml->dolibarr_htdocs_dir[0]['includecustom']);exit;
+		// @phan-suppress-next-line PhanTypeArraySuspicious
 		$includecustom = (empty($listoffilestoanalyze['includecustom']) ? 0 : $listoffilestoanalyze['includecustom']);
 
 		// Define qualified files (must be same than into generate_filelist_xml.php and in api_setup.class.php)
