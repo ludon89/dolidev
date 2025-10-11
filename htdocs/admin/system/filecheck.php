@@ -32,6 +32,7 @@ require '../../main.inc.php';
  * @var DoliDB $db
  * @var Form $form
  * @var HookManager $hookmanager
+ * @var Societe $mysoc
  * @var Translate $langs
  * @var User $user
  */
@@ -290,12 +291,12 @@ if (empty($error) && !empty($xml)) {
 		$scanfiles = dol_dir_list(DOL_DOCUMENT_ROOT, 'files', 1, $regextoinclude, $regextoexclude);
 
 		// Fill file_list with files in signature, new files, modified files
-		$ret = getFilesUpdated($file_list, $listoffilestoanalyze, '', DOL_DOCUMENT_ROOT, $checksumconcat); // Fill array $file_list
+		getFilesUpdated($file_list, $listoffilestoanalyze, '', DOL_DOCUMENT_ROOT, $checksumconcat); // Fill array $file_list
 		'@phan-var-force array{insignature:string[],missing?:array<array{filename:string,expectedmd5:string,expectedsize:string}>,updated:array<array{filename:string,expectedmd5:string,expectedsize:string,md5:string}>} $file_list';
 
 		// Complete with list of new files into $file_list['added']
 		if ($onlymodifiedorremoved) {
-			foreach ($scanfiles as $keyfile => $valfile) {
+			foreach ($scanfiles as $valfile) {
 				$tmprelativefilename = preg_replace('/^'.preg_quote(DOL_DOCUMENT_ROOT, '/').'/', '', $valfile['fullname']);
 				if (!in_array($tmprelativefilename, $file_list['insignature'])) {
 					$md5newfile = @md5_file($valfile['fullname']); // Can fails if we don't have permission to open/read file
