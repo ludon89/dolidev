@@ -188,7 +188,7 @@ if (empty($reshook)) {
 		$action = '';
 
 		// For backward compatibility
-		$object->statut = $object::STATUS_DRAFT;	// this already set for $object->status by $object->setStatut()
+		$object->statut = $object::STATUS_DRAFT;	// this is already set for $object->status by $object->setStatut()
 	}
 
 	// Action add
@@ -419,6 +419,7 @@ if (empty($reshook)) {
 		}
 	}
 
+	// Set opportunity status
 	if ($action == 'set_opp_status' && $user->hasRight('projet', 'creer')) {
 		if (GETPOSTISSET('opp_status')) {
 			$object->opp_status   = $opp_status;
@@ -435,6 +436,8 @@ if (empty($reshook)) {
 		}
 
 		if (!$error) {
+			$db->begin();
+
 			$result = $object->update($user);
 			if ($result < 0) {
 				$error++;
@@ -444,13 +447,28 @@ if (empty($reshook)) {
 					setEventMessages($object->error, $object->errors, 'errors');
 				}
 			}
-		}
 
-		if ($error) {
-			$db->rollback();
-			$action = 'edit';
+			// If opportunities are used and the customer is not yet a customer
+			if (getDolGlobalString('PROJECT_USE_OPPORTUNITIES') && $object->usage_opportunity) {
+				if ((int) $object->thirdparty->client == 0 || (int) $object->thirdparty->client == 2) {		// If not yet customer
+					// Get ID of the special opportunity status code 'WON'
+					$idoppstatuswon = (int) dol_getIdFromCode($db, 'WON', 'c_lead_status', 'code', 'rowid');
+
+					if (!$error && $object->opp_status == $idoppstatuswon) {
+						// Switch the thirdparty into a customer
+						$object->thirdparty->setAsCustomer();
+					}
+				}
+			}
+
+			if ($error) {
+				$db->rollback();
+				$action = 'edit';
+			} else {
+				$db->commit();
+			}
 		} else {
-			$db->commit();
+			$action = 'edit';
 		}
 	}
 
@@ -1246,8 +1264,8 @@ if ($action == 'create' && $user->hasRight('projet', 'creer')) {
 			print '</div>';
 
 			print '<div id="divtocloseproject" class="inline-block valign clearboth paddingtop" style="display: none;">';
-			print '<input type="checkbox" id="inputcloseproject" name="closeproject" />';
-			print '<label for="inputcloseproject">';
+			print '<input type="checkbox" id="inputcloseproject" name="closeproject" class="valignmiddle" />';
+			print '<label for="inputcloseproject" class="opacitymedium">';
 			print $form->textwithpicto($langs->trans("AlsoCloseAProject"), $langs->trans("AlsoCloseAProjectTooltip")).'</label>';
 			print ' </div>';
 
