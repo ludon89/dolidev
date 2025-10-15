@@ -9,7 +9,7 @@
  * Copyright (C) 2015-2024  Alexandre Spangaro          <alexandre@inovea-conseil.com>
  * Copyright (C) 2021       Gauthier VERDOL             <gauthier.verdol@atm-consulting.fr>
  * Copyright (C) 2024-2025	MDW							<mdeweerd@users.noreply.github.com>
- * Copyright (C) 2024       Frédéric France             <frederic.france@free.fr>
+ * Copyright (C) 2024-2025  Frédéric France             <frederic.france@free.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ $permissiontosimpleedit = ($selfpermission || $usercanadd);
 $childids = $user->getAllChildIds(1);
 
 // Ok if user->hasRight('salaries', 'readall') or user->hasRight('hrm', 'read')
-//$result = restrictedArea($user, 'salaries|hrm', $object->id, 'user&user', $feature2);
+//restrictedArea($user, 'salaries|hrm', $object->id, 'user&user', $feature2);
 $ok = false;
 if ($user->id == $id) {
 	$ok = true; // A user can always read its own card
@@ -372,7 +372,7 @@ if ($action != 'edit' && $action != 'create') {		// If not bank account yet, $ac
 	}
 
 	$morehtmlref = '<a href="'.DOL_URL_ROOT.'/user/vcard.php?id='.$object->id.'&output=file&file='.urlencode(dol_sanitizeFileName($object->getFullName($langs).'.vcf')).'" class="refid" rel="noopener">';
-	$morehtmlref .= img_picto($langs->trans("Download").' '.$langs->trans("VCard"), 'vcard.png', 'class="valignmiddle marginleftonly paddingrightonly"');
+	$morehtmlref .= img_picto($langs->trans("Download").' '.$langs->trans("VCard"), 'vcard', 'class="valignmiddle marginleftonly paddingrightonly"');
 	$morehtmlref .= '</a>';
 
 	$urltovirtualcard = '/user/virtualcard.php?id='.((int) $object->id);
@@ -663,7 +663,7 @@ if ($action != 'edit' && $action != 'create') {		// If not bank account yet, $ac
 	print '</div><div class="fichehalfright">';
 
 	// Max number of elements in small lists
-	$MAXLIST = getDolGlobalString('MAIN_SIZE_SHORTLIST_LIMIT');
+	$MAXLIST = getDolGlobalInt('MAIN_SIZE_SHORTLIST_LIMIT', 5);
 
 	// Latest payments of salaries
 	if (isModEnabled('salaries') &&

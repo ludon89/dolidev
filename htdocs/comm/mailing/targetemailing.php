@@ -49,7 +49,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/ajax.lib.php';
 $langs->loadLangs(array("mails", "admin"));
 
 $action = GETPOST('action', 'aZ09');
-$toselect   = GETPOST('toselect', 'array'); // Array of ids of elements selected into a list
+$toselect   = GETPOST('toselect', 'array:int'); // Array of ids of elements selected into a list
 $massaction = GETPOST('massaction', 'alpha'); // The bulk action (combo box choice into lists)
 $mode       = GETPOST('mode', 'aZ'); // The display mode ('list', 'kanban', 'hierarchy', 'calendar', 'gantt', ...)
 
@@ -109,7 +109,7 @@ if (empty($action) && empty($object->id)) {
 	accessforbidden('Object not found');
 }
 
-$permissiontoread = $user->hasRight('maling', 'lire');
+$permissiontoread = $user->hasRight('mailing', 'lire');
 $permissiontocreate = $user->hasRight('mailing', 'creer');
 $permissiontovalidatesend = $user->hasRight('mailing', 'valider');
 $permissiontodelete = $user->hasRight('mailing', 'supprimer');
@@ -188,7 +188,7 @@ if (GETPOSTINT('clearlist') && $permissiontocreate) {
 	*/
 }
 
-if (GETPOSTINT('exportcsv') && $permissiontoread) {
+if (GETPOSTINT('exportcsv') && $permissiontoread) {	// @phpstan-ignore-line
 	$completefilename = 'targets_emailing'.$object->id.'_'.dol_print_date(dol_now(), 'dayhourlog').'.csv';
 	header('Content-Type: text/csv');
 	header('Content-Disposition: attachment;filename='.$completefilename);
@@ -285,7 +285,7 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
 
 // Action update description of emailing
 if (($action == 'settitle' || $action == 'setemail_from' || $action == 'setreplyto' || $action == 'setemail_errorsto' || $action == 'setevenunsubscribe') && $permissiontocreate) {
-	$upload_dir = $conf->mailing->dir_output."/".get_exdir($object->id, 2, 0, 1, $object, 'mailing');
+	$upload_dir = $conf->mailing->dir_output."/".get_exdir($object->id, getDolGlobalInt('MAILING_USE_NEW_PATH_FOR_FILES') ? 0 : 2, 0, 1, $object, 'mailing');
 
 	if ($action == 'settitle') {					// Test on permission already done
 		$object->title = trim(GETPOST('title', 'alpha'));
@@ -782,7 +782,7 @@ if ($object->fetch($id) >= 0) {
 
 		print '</form>';
 
-		print "\n<!-- List o selected targets -->\n";
+		print "\n<!-- List of selected targets -->\n";
 		print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
@@ -874,16 +874,16 @@ if ($object->fetch($id) >= 0) {
 			print getTitleFieldOfList($selectedfields, 0, $_SERVER["PHP_SELF"], '', '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ')."\n";
 			$totalarray['nbfield']++;
 		}
-		print_liste_field_titre("EMail", $_SERVER["PHP_SELF"], "mc.email", $param, "", "", $sortfield, $sortorder);
-		print_liste_field_titre("Lastname", $_SERVER["PHP_SELF"], "mc.lastname", $param, "", "", $sortfield, $sortorder);
-		print_liste_field_titre("Firstname", $_SERVER["PHP_SELF"], "mc.firstname", $param, "", "", $sortfield, $sortorder);
-		print_liste_field_titre("OtherInformations", $_SERVER["PHP_SELF"], "", $param, "", "", $sortfield, $sortorder);
-		print_liste_field_titre("Source", $_SERVER["PHP_SELF"], "", $param, "", '', $sortfield, $sortorder, 'center ');
+		print_liste_field_titre("EMail", $_SERVER["PHP_SELF"], "mc.email", '', $param, "", $sortfield, $sortorder);
+		print_liste_field_titre("Lastname", $_SERVER["PHP_SELF"], "mc.lastname", '', $param, "", $sortfield, $sortorder);
+		print_liste_field_titre("Firstname", $_SERVER["PHP_SELF"], "mc.firstname", '', $param, "", $sortfield, $sortorder);
+		print_liste_field_titre("OtherInformations", $_SERVER["PHP_SELF"], '', $param, "", "", $sortfield, $sortorder);
+		print_liste_field_titre("Source", $_SERVER["PHP_SELF"], '', $param, "", '', $sortfield, $sortorder, 'center ');
 		// Date last update
-		print_liste_field_titre("DateLastModification", $_SERVER["PHP_SELF"], "mc.tms", $param, "", '', $sortfield, $sortorder, 'center ');
+		print_liste_field_titre("DateLastModification", $_SERVER["PHP_SELF"], "mc.tms", '', $param, '', $sortfield, $sortorder, 'center ');
 		// Date sending
-		print_liste_field_titre("DateSending", $_SERVER["PHP_SELF"], "mc.date_envoi", $param, '', '', $sortfield, $sortorder, 'center ');
-		print_liste_field_titre("Status", $_SERVER["PHP_SELF"], "mc.statut", $param, '', '', $sortfield, $sortorder, 'center ');
+		print_liste_field_titre("DateSending", $_SERVER["PHP_SELF"], "mc.date_envoi", '', $param, '', $sortfield, $sortorder, 'center ');
+		print_liste_field_titre("Status", $_SERVER["PHP_SELF"], "mc.statut", '', $param, '', $sortfield, $sortorder, 'center ');
 		// Action column
 		if (!$conf->main_checkbox_left_column) {
 			print getTitleFieldOfList($selectedfields, 0, $_SERVER["PHP_SELF"], '', '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ')."\n";

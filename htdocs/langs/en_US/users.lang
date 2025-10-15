@@ -158,3 +158,6 @@ NewToken=New token
 BackToTokenList=Back to token list
 MyTeam=My team
 TotalAPICall=Total API Calls
+TOTP=TOTP (Time-base One-Time Password)
+UserRemovedFromGroup=User removed from group
+UserSetInGroup=User set in group

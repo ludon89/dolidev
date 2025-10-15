@@ -47,7 +47,7 @@ require_once DOL_DOCUMENT_ROOT.'/expedition/class/expedition.class.php';
  */
 
 // Load translation files required by the page
-$langs->loadLangs(array("admin", "sendings", "deliveries", "other"));
+$langs->loadLangs(array("admin", "sendings", "other"));
 
 if (!$user->admin) {
 	accessforbidden();
@@ -300,7 +300,7 @@ $def = array();
 $sql = "SELECT nom";
 $sql .= " FROM ".MAIN_DB_PREFIX."document_model";
 $sql .= " WHERE type = '".$db->escape($type)."'";
-$sql .= " AND entity = ".$conf->entity;
+$sql .= " AND entity = ".((int) $conf->entity);
 
 $resql = $db->query($sql);
 if ($resql) {
@@ -504,6 +504,21 @@ print '<td>'.$langs->trans("DontPrefillShipmentQty");
 print '</td>';
 print '<td>';
 print ajax_constantonoff('SHIPMENT_DONT_PREFILL_QTY', array(), null, 0, 0, 0, 2, 0, 1, '', '', 'inline-block', 0, '');
+print '</td></tr>';
+
+
+// Notifications
+print '<tr class="oddeven">';
+print '<td>'.img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("Notifications").'</td>';
+print '<td>';
+print $langs->trans("YouMayFindNotificationsFeaturesIntoModuleNotification");
+print '</td></tr>';
+
+// More PDF options
+print '<tr class="oddeven">';
+print '<td>'.img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("MoreOptionsRelatedToPDF").'</td>';
+print '<td>';
+print img_picto('', 'url', 'class="pictofixedwidth"').'<a href="'.DOL_URL_ROOT.'/admin/pdf_other.php">'.$langs->trans("SeeInPDFSetupPage").'</a>';
 print '</td></tr>';
 
 print '</table>';

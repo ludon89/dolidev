@@ -54,7 +54,7 @@ if (isModEnabled('project')) {
  */
 
 // Load translation files required by the page
-$langs->loadLangs(array("sendings", "companies", "bills", 'deliveries', 'orders', 'stocks', 'other', 'propal', 'receptions'));
+$langs->loadLangs(array("sendings", "companies", "bills", 'orders', 'stocks', 'other', 'propal', 'receptions'));
 
 $is_mod_batch_enabled = isModEnabled('productbatch');
 $is_eat_by_enabled = !getDolGlobalInt('PRODUCT_DISABLE_EATBY');
@@ -795,7 +795,7 @@ if ($object->id > 0 || !empty($object->ref)) {
 						print '</td>'; // Dispatch column
 						print '<td></td>'; // Warehouse column
 
-						$sql  = "SELECT ed.rowid";
+						$sql  = "SELECT ed.rowid, ed.fk_parent";
 						$sql .= ", cd.fk_product";
 						$sql .= ", ".$db->ifsql('eb.rowid IS NULL', 'ed.qty', 'eb.qty')." as qty";
 						$sql .= ", ".$db->ifsql('eb.rowid IS NULL OR eb.fk_warehouse IS NULL', 'ed.fk_entrepot', 'eb.fk_warehouse')." as fk_warehouse";
@@ -1073,7 +1073,7 @@ if ($object->id > 0 || !empty($object->ref)) {
 									print '</td>';
 									print '<td>';
 									if ($can_update_stock) {
-										print img_picto($langs->trans('AddStockLocationLine'), 'split.png', 'class="splitbutton" onClick="addDispatchLine('.$i.', \''.$type.'-'.$child_line_id.'\')"');
+										print img_picto($langs->trans('AddStockLocationLine'), 'split', 'class="splitbutton" onClick="addDispatchLine('.$i.', \''.$type.'-'.$child_line_id.'\')"');
 									}
 									print '</td>';
 
@@ -1233,10 +1233,10 @@ if ($object->id > 0 || !empty($object->ref)) {
 							print '<td>';
 							if ($is_mod_batch_enabled && $objp->tobatch > 0) {
 								$type = 'batch';
-								print img_picto($langs->trans('AddStockLocationLine'), 'split.png', 'class="splitbutton" onClick="addDispatchLine('.$i.', \''.$type.'\')"');
+								print img_picto($langs->trans('AddStockLocationLine'), 'split', 'class="splitbutton" onClick="addDispatchLine('.$i.', \''.$type.'\')"');
 							} else {
 								$type = 'dispatch';
-								print img_picto($langs->trans('AddStockLocationLine'), 'split.png', 'class="splitbutton" onClick="addDispatchLine('.$i.', \''.$type.'\')"');
+								print img_picto($langs->trans('AddStockLocationLine'), 'split', 'class="splitbutton" onClick="addDispatchLine('.$i.', \''.$type.'\')"');
 							}
 
 							print '</td>';
