@@ -2393,11 +2393,12 @@ class SupplierProposal extends CommonObject
 	 *  Used to build previews or test instances.
 	 *	id must be 0 if object instance is a specimen.
 	 *
+	 *  @param	array<string|mixed>		$param		Array of options
 	 *  @return int
 	 */
-	public function initAsSpecimen()
+	public function initAsSpecimen($param = array())
 	{
-		global $user, $langs, $conf;
+		global $langs;
 
 		// Load array of products prodids
 		$num_prods = 0;
@@ -2405,6 +2406,9 @@ class SupplierProposal extends CommonObject
 		$sql = "SELECT rowid";
 		$sql .= " FROM ".MAIN_DB_PREFIX."product";
 		$sql .= " WHERE entity IN (".getEntity('product').")";
+		if (array_key_exists('status', $param)) {
+			$sql .= " AND status = ".((int) $param['status']);
+		}
 		$sql .= $this->db->plimit(100);
 
 		$resql = $this->db->query($sql);
@@ -2421,6 +2425,7 @@ class SupplierProposal extends CommonObject
 		// Initialise parameters
 		$this->id = 0;
 		$this->ref = 'SPECIMEN';
+		$this->ref_supplier = 'NEMICEPS';
 		$this->specimen = 1;
 		$this->socid = 1;
 		$this->date = time();
