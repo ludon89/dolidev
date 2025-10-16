@@ -877,7 +877,7 @@ function checkUserAccessToObject($user, array $featuresarray, $object = 0, $tabl
 		if ($feature == 'project') {
 			$feature = 'projet';
 		}
-		if ($feature == 'projet' && !empty($feature2) && is_array($feature2) && (in_array('project_task', $feature2) || in_array('projet_task', $feature2))) {
+		if ($feature == 'projet' && !empty($feature2) && is_array($feature2) && in_array(array('project_task', 'projet_task'), $feature2)) {
 			$feature = 'project_task';
 		}
 		if ($feature == 'task' || $feature == 'projet_task') {
@@ -1037,7 +1037,7 @@ function checkUserAccessToObject($user, array $featuresarray, $object = 0, $tabl
 					return false;
 				}
 			} else {
-				$sharedelement = 'project'; // for multicomany compatibility
+				$sharedelement = 'project'; // for multicompany compatibility
 				$sql = "SELECT COUNT(dbt.".$dbt_select.") as nb";
 				$sql .= " FROM ".MAIN_DB_PREFIX.$dbtablename." as dbt";
 				$sql .= " WHERE dbt.".$dbt_select." IN (".$db->sanitize($objectid, 1).")";
