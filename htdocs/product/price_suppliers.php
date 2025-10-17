@@ -975,8 +975,8 @@ if ($id > 0 || $ref) {
 				'pfp.packaging' => array('label' => $langs->trans("PackagingForThisProduct"), 'enabled' => (string) getDolGlobalInt('PRODUCT_USE_SUPPLIER_PACKAGING'), 'checked' => '0', 'position' => 17),
 				'pfp.price' => array('label' => $langs->trans("PriceQtyMinHT"), 'enabled' => '1', 'checked' => '1', 'position' => 60),
 				'pfp.multicurrency_price' => array('label' => $langs->trans("PriceQtyMinHTCurrency"), 'enabled' => (string) (int) isModEnabled('multicurrency'), 'checked' => '1', 'position' => 70),
-				'pfp.tms' => array('label' => $langs->trans("DateModification"), 'enabled' => '1', 'checked' => '-1', 'position' => 50),
-				'pfp.status' => array('label' => $langs->trans("Status"), 'enabled' => '1', 'checked' => '0', 'position' => 40),
+				'pfp.tms' => array('label' => $langs->trans("DateModification"), 'enabled' => '1', 'checked' => '-1', 'position' => 80),
+				'pfp.status' => array('label' => $langs->trans("Status"), 'enabled' => '1', 'checked' => '0', 'position' => 200),
 			);
 
 			// fetch optionals attributes and labels
