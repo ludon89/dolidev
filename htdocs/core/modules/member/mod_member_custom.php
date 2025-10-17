@@ -32,27 +32,25 @@ require_once DOL_DOCUMENT_ROOT.'/adherents/class/adherent.class.php';
 class mod_member_custom extends ModeleNumRefMembers
 {
 	/**
+	 * @var string model name
+	 */
+	public $name = 'Custom';
+
+	/**
 	 * Dolibarr version of the loaded document
 	 * @var string Version, possible values are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'''|'development'|'dolibarr'|'experimental'
 	 */
 	public $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
 
 	/**
+	 * @var int		Position
+	 */
+	public $position = 50;
+
+	/**
 	 * @var string Error message
 	 */
 	public $error = '';
-
-	/**
-	 * @var string Nom du modele
-	 * @deprecated
-	 * @see $name
-	 */
-	public $nom = 'Custom';
-
-	/**
-	 * @var string model name
-	 */
-	public $name = 'Custom';
 
 
 	/**
