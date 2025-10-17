@@ -367,7 +367,7 @@ foreach ($arrayofmodules as $file => $modCodeMember) {
 	print '<td>'.$modCodeMember->info($langs).'</td>'."\n";
 	print '<td class="nowrap">'.$modCodeMember->getExample().'</td>'."\n";
 
-	if (getDolGlobalString('MEMBER_CODEMEMBER_ADDON') == "$file") {
+	if (getDolGlobalString('MEMBER_CODEMEMBER_ADDON', 'mod_member_simple') == "$file") {
 		print '<td class="center">'."\n";
 		print img_picto($langs->trans("Activated"), 'switch_on');
 		print "</td>\n";
