@@ -4113,38 +4113,38 @@ class Facture extends CommonInvoice
 	 *  par l'appelant par la method get_default_tva(societe_vendeuse,societe_acheteuse,produit)
 	 *  et le desc doit deja avoir la bonne valeur (a l'appelant de gerer le multilangue)
 	 *
-	 *  @param	string		$desc            	Description of line
-	 *  @param	float		$pu_ht              Unit price without tax (> 0 even for credit note)
-	 *  @param	float		$qty             	Quantity
-	 *  @param	float|string	$txtva         	Force Vat rate, -1 for auto (Can contain the vat_src_code too with syntax '9.9 (CODE)')
-	 *  @param	float		$txlocaltax1		Local tax 1 rate (deprecated, use instead txtva with code inside)
-	 *  @param	float		$txlocaltax2		Local tax 2 rate (deprecated, use instead txtva with code inside)
-	 *  @param 	int			$fk_product      	Id of predefined product/service
-	 *  @param	float		$remise_percent  	Percent of discount on line
-	 *  @param 	int|''		$date_start      	Date start of service
-	 *  @param 	int|''		$date_end        	Date end of service
-	 *  @param 	int			$fk_code_ventilation   	Code of dispatching into accountancy
-	 *  @param 	int			$info_bits			Bits of type of lines
-	 *  @param 	int			$fk_remise_except	Id discount used
-	 *  @param	string		$price_base_type	'HT' or 'TTC'
-	 *  @param	float		$pu_ttc             Unit price with tax (> 0 even for credit note)
-	 *  @param	int			$type				Type of line (0=product, 1=service). Not used if fk_product is defined, the type of product is used.
-	 *  @param 	int			$rang               Position of line (-1 means last value + 1)
-	 *  @param	int			$special_code		Special code (also used by externals modules!)
-	 *  @param	string		$origin				Depend on global conf MAIN_CREATEFROM_KEEP_LINE_ORIGIN_INFORMATION can be 'orderdet', 'propaldet'..., else 'order','propal,'....
-	 *  @param	int			$origin_id			Depend on global conf MAIN_CREATEFROM_KEEP_LINE_ORIGIN_INFORMATION can be Id of origin object (aka line id), else object id
-	 *  @param	int			$fk_parent_line		Id of parent line
-	 *  @param	int|string	$fk_fournprice		Supplier price id (to calculate margin) or a string
-	 *  @param	float|''	$pa_ht				Buying price of line (to calculate margin) (Can be '' to keep AWP unchanged or a float value)
-	 *  @param	string		$label				Label of the line (deprecated, do not use)
-	 *  @param	array<string,mixed>	$array_options		extrafields array
-	 *  @param	float       $situation_percent  Situation advance percentage
-	 *  @param	int         $fk_prev_id         Previous situation line id reference
-	 *  @param 	int|null	$fk_unit 			Code of the unit to use. Null to use the default one
-	 *  @param	float		$pu_ht_devise		Unit price in foreign currency
-	 *  @param	string		$ref_ext		    External reference of the line
-	 *  @param	int			$noupdateafterinsertline	No update after insert of line
-	 *  @return	int             				Return integer <0 if KO, Id of line if OK
+	 *  @param	string			$desc            			Description of line
+	 *  @param	float			$pu_ht              		Unit price without tax (> 0 even for credit note)
+	 *  @param	float			$qty             			Quantity
+	 *  @param	float|string	$txtva         				Force Vat rate, -1 for auto (Can contain the vat_src_code too with syntax '9.9 (CODE)')
+	 *  @param	float			$txlocaltax1				Local tax 1 rate (deprecated, use instead txtva with code inside)
+	 *  @param	float			$txlocaltax2				Local tax 2 rate (deprecated, use instead txtva with code inside)
+	 *  @param 	int				$fk_product      			Id of predefined product/service
+	 *  @param	float			$remise_percent  			Percent of discount on line
+	 *  @param 	int|''			$date_start      			Date start of service
+	 *  @param 	int|''			$date_end        			Date end of service
+	 *  @param 	int				$fk_code_ventilation   		Code of dispatching into accountancy
+	 *  @param 	int				$info_bits					Bits of type of lines
+	 *  @param 	int				$fk_remise_except			Id discount used
+	 *  @param	string			$price_base_type			'HT' or 'TTC'
+	 *  @param	float			$pu_ttc             		Unit price with tax (> 0 even for credit note)
+	 *  @param	int				$type						Type of line (0=product, 1=service). Not used if fk_product is defined, the type of product is used.
+	 *  @param 	int				$rang               		Position of line (-1 means last value + 1)
+	 *  @param	int				$special_code				Special code (also used by externals modules!)
+	 *  @param	string			$origin						Depend on global conf MAIN_CREATEFROM_KEEP_LINE_ORIGIN_INFORMATION can be 'orderdet', 'propaldet'..., else 'order','propal,'....
+	 *  @param	int				$origin_id					Depend on global conf MAIN_CREATEFROM_KEEP_LINE_ORIGIN_INFORMATION can be Id of origin object (aka line id), else object id
+	 *  @param	int				$fk_parent_line				Id of parent line
+	 *  @param	int|string		$fk_fournprice				Supplier price id (to calculate margin) or a string
+	 *  @param	float|''		$pa_ht						Buying price of line (to calculate margin) (Can be '' to keep AWP unchanged or a float value)
+	 *  @param	string			$label						Label of the line (deprecated, do not use)
+	 *  @param	array<string,mixed>	$array_options			Extrafields array
+	 *  @param	float       	$situation_percent  		Situation advance percentage
+	 *  @param	int         	$fk_prev_id         		Previous situation line id reference
+	 *  @param 	int|null		$fk_unit 					Code of the unit to use. Null to use the default one
+	 *  @param	float			$pu_ht_devise				Unit price in foreign currency
+	 *  @param	string			$ref_ext		    		External reference of the line
+	 *  @param	int				$noupdateafterinsertline	No update after insert of line
+	 *  @return	int             							Return integer <0 if KO, Id of line if OK
 	 */
 	public function addline(
 		$desc,

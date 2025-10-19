@@ -606,34 +606,34 @@ class Propal extends CommonObject
 	 *      by whose calling the method get_default_tva (societe_vendeuse, societe_acheteuse, '' product)
 	 *      and desc must already have the right value (it's up to the caller to manage multilanguage)
 	 *
-	 * 		@param    	string		$desc				Description of line
-	 * 		@param    	float		$pu_ht				Unit price
-	 * 		@param    	float		$qty             	Quantity
+	 * 		@param    	string			$desc				Description of line
+	 * 		@param    	float			$pu_ht				Unit price
+	 * 		@param    	float			$qty             	Quantity
 	 * 		@param    	float|string	$txtva           	Force Vat rate, -1 for auto (Can contain the vat_src_code too with syntax '9.9 (CODE)')
-	 * 		@param		float		$txlocaltax1		Local tax 1 rate (deprecated, use instead txtva with code inside)
-	 *  	@param		float		$txlocaltax2		Local tax 2 rate (deprecated, use instead txtva with code inside)
-	 *		@param    	int			$fk_product      	Product/Service ID predefined
-	 * 		@param    	float		$remise_percent  	Pourcentage de remise de la ligne
-	 * 		@param    	string		$price_base_type	HT or TTC
-	 * 		@param    	float		$pu_ttc             Prix unitaire TTC
-	 * 		@param    	int			$info_bits			Bits for type of lines
-	 *      @param      int			$type               Type of line (0=product, 1=service). Not used if fk_product is defined, the type of product is used.
-	 *      @param      int			$rang               Position of line
-	 *      @param		int			$special_code		Special code (also used by externals modules!)
-	 *      @param		int			$fk_parent_line		Id of parent line
-	 *      @param		int			$fk_fournprice		Id supplier price
-	 *      @param		float|string	$pa_ht			Buying price without tax ('' to keep PMP unchanged or a float)
-	 *      @param		string		$label				???
-	 *		@param      int|''		$date_start       	Start date of the line
-	 *		@param      int|''		$date_end         	End date of the line
+	 * 		@param		float			$txlocaltax1		Local tax 1 rate (deprecated, use instead txtva with code inside)
+	 *  	@param		float			$txlocaltax2		Local tax 2 rate (deprecated, use instead txtva with code inside)
+	 *		@param    	int				$fk_product      	Product/Service ID predefined
+	 * 		@param    	float			$remise_percent  	Pourcentage de remise de la ligne
+	 * 		@param    	string			$price_base_type	HT or TTC
+	 * 		@param    	float			$pu_ttc             Prix unitaire TTC
+	 * 		@param    	int				$info_bits			Bits for type of lines
+	 *      @param      int				$type               Type of line (0=product, 1=service). Not used if fk_product is defined, the type of product is used.
+	 *      @param      int				$rang               Position of line
+	 *      @param		int				$special_code		Special code (also used by externals modules!)
+	 *      @param		int				$fk_parent_line		Id of parent line
+	 *      @param		int				$fk_fournprice		Id supplier price
+	 *      @param		float|string	$pa_ht				Buying price without tax ('' to keep PMP unchanged or a float)
+	 *      @param		string			$label				???
+	 *		@param      int|''			$date_start       	Start date of the line
+	 *		@param      int|''			$date_end         	End date of the line
 	 *      @param		array<string,mixed>	$array_options	extrafields array
-	 * 		@param 		int|null	$fk_unit 			Code of the unit to use. Null to use the default one
-	 *      @param		string		$origin				Depend on global conf MAIN_CREATEFROM_KEEP_LINE_ORIGIN_INFORMATION can be 'orderdet', 'propaldet'..., else 'order','propal,'....
-	 *      @param		int			$origin_id			Depend on global conf MAIN_CREATEFROM_KEEP_LINE_ORIGIN_INFORMATION can be Id of origin object (aka line id), else object id
-	 * 		@param		float		$pu_ht_devise		Unit price in currency
-	 * 		@param		int    		$fk_remise_except	Id discount if line is from a discount
-	 *  	@param		int			$noupdateafterinsertline	No update after insert of line
-	 *    	@return    	int         	    			>0 if OK, <0 if KO
+	 * 		@param 		int|null		$fk_unit 			Code of the unit to use. Null to use the default one
+	 *      @param		string			$origin				Depend on global conf MAIN_CREATEFROM_KEEP_LINE_ORIGIN_INFORMATION can be 'orderdet', 'propaldet'..., else 'order','propal,'....
+	 *      @param		int				$origin_id			Depend on global conf MAIN_CREATEFROM_KEEP_LINE_ORIGIN_INFORMATION can be Id of origin object (aka line id), else object id
+	 * 		@param		float			$pu_ht_devise		Unit price in currency
+	 * 		@param		int    			$fk_remise_except	Id discount if line is from a discount
+	 *  	@param		int				$noupdateafterinsertline	No update after insert of line
+	 *    	@return    	int         		    			Return >0 if OK, <0 if KO
 	 *    	@see       	add_product()
 	 */
 	public function addline(
