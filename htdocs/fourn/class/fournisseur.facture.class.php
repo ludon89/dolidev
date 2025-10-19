@@ -2372,27 +2372,27 @@ class FactureFournisseur extends CommonInvoice
 	/**
 	 * Update a line detail in the database
 	 *
-	 * @param	int			$id            		Id of line invoice
-	 * @param	string		$desc         		Description of line
-	 * @param	float		$pu          		Prix unitaire (HT ou TTC selon price_base_type)
+	 * @param	int				$id            		Id of line invoice
+	 * @param	string			$desc         		Description of line
+	 * @param	float			$pu          		Prix unitaire (HT ou TTC selon price_base_type)
 	 * @param	float|string	$vatrate 		VAT Rate (Can be '8.5', '8.5 (ABC)')
-	 * @param	float		$txlocaltax1		LocalTax1 Rate
-	 * @param	float		$txlocaltax2		LocalTax2 Rate
-	 * @param	float		$qty           		Quantity
-	 * @param	int			$idproduct			Id produit
-	 * @param	string		$price_base_type	HT or TTC
-	 * @param	int			$info_bits			Miscellaneous information of line
-	 * @param	int<0,1>	$type				Type of line (0=product, 1=service)
-	 * @param	float		$remise_percent  	Percentage discount of the line
-	 * @param	int<0,1>	$notrigger			Disable triggers
-	 * @param	int|''		$date_start     	Date start of service
-	 * @param	int|''		$date_end       	Date end of service
+	 * @param	float			$txlocaltax1		LocalTax1 Rate
+	 * @param	float			$txlocaltax2		LocalTax2 Rate
+	 * @param	float			$qty           		Quantity
+	 * @param	int				$idproduct			Id produit
+	 * @param	string			$price_base_type	HT or TTC
+	 * @param	int				$info_bits			Miscellaneous information of line
+	 * @param	int<0,1>		$type				Type of line (0=product, 1=service)
+	 * @param	float			$remise_percent  	Percentage discount of the line
+	 * @param	int<0,1>		$notrigger			Disable triggers
+	 * @param	int|''			$date_start     	Date start of service
+	 * @param	int|''			$date_end       	Date end of service
 	 * @param	array<string,mixed>	$array_options	extrafields array
-	 * @param	?int		$fk_unit 			Code of the unit to use. Null to use the default one
-	 * @param	float		$pu_devise			Amount in currency
-	 * @param	string		$ref_supplier		Supplier ref
-	 * @param	int			$rang				Line rank
-	 * @return 	int<-1,1>      					Return integer <0 if KO, >0 if OK
+	 * @param	?int			$fk_unit 			Code of the unit to use. Null to use the default one
+	 * @param	float			$pu_devise			Amount in currency
+	 * @param	string			$ref_supplier		Supplier ref
+	 * @param	int				$rang				Line rank
+	 * @return 	int<-1,1>      						Return integer <0 if KO, >0 if OK
 	 */
 	public function updateline($id, $desc, $pu, $vatrate, $txlocaltax1 = 0, $txlocaltax2 = 0, $qty = 1, $idproduct = 0, $price_base_type = 'HT', $info_bits = 0, $type = 0, $remise_percent = 0, $notrigger = 0, $date_start = '', $date_end = '', $array_options = [], $fk_unit = null, $pu_devise = 0, $ref_supplier = '', $rang = 0)
 	{

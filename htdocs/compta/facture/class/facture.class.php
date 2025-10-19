@@ -4473,33 +4473,33 @@ class Facture extends CommonInvoice
 	/**
 	 *  Update a detail line
 	 *
-	 *  @param	int			$rowid           	Id of line to update
-	 *  @param	string		$desc            	Description of line
-	 *  @param	float		$pu              	Prix unitaire (HT ou TTC selon price_base_type) (> 0 even for credit note lines)
-	 *  @param	float		$qty             	Quantity
-	 *  @param	float		$remise_percent  	Percentage discount of the line
-	 *  @param	int|''		$date_start      	Date de debut de validite du service
-	 *  @param	int|''		$date_end        	Date de fin de validite du service
+	 *  @param	int				$rowid           	Id of line to update
+	 *  @param	string			$desc            	Description of line
+	 *  @param	float			$pu              	Prix unitaire (HT ou TTC selon price_base_type) (> 0 even for credit note lines)
+	 *  @param	float			$qty             	Quantity
+	 *  @param	float			$remise_percent  	Percentage discount of the line
+	 *  @param	int|''			$date_start      	Date de debut de validite du service
+	 *  @param	int|''			$date_end        	Date de fin de validite du service
 	 *  @param	float|string	$txtva          	VAT Rate (Can be '8.5', '8.5 (ABC)')
-	 * 	@param	float		$txlocaltax1		Local tax 1 rate
-	 *  @param	float		$txlocaltax2		Local tax 2 rate
-	 * 	@param	string		$price_base_type 	HT or TTC
-	 * 	@param	int			$info_bits 		    Miscellaneous information
-	 * 	@param	int			$type				Type of line (0=product, 1=service)
-	 * 	@param	int			$fk_parent_line		Id of parent line (0 in most cases, used by modules adding sublevels into lines).
-	 * 	@param	int			$skip_update_total	Keep fields total_xxx to 0 (used for special lines by some modules)
-	 * 	@param	int			$fk_fournprice		Id of origin supplier price
+	 * 	@param	float			$txlocaltax1		Local tax 1 rate
+	 *  @param	float			$txlocaltax2		Local tax 2 rate
+	 * 	@param	string			$price_base_type 	HT or TTC
+	 * 	@param	int				$info_bits 		    Miscellaneous information
+	 * 	@param	int				$type				Type of line (0=product, 1=service)
+	 * 	@param	int				$fk_parent_line		Id of parent line (0 in most cases, used by modules adding sublevels into lines).
+	 * 	@param	int				$skip_update_total	Keep fields total_xxx to 0 (used for special lines by some modules)
+	 * 	@param	int				$fk_fournprice		Id of origin supplier price
 	 * 	@param	float|string	$pa_ht				Price (without tax) of product when it was bought (Can be '' to keep AWP unchanged or a float value)
-	 * 	@param	string		$label				Label of the line (deprecated, do not use)
-	 * 	@param	int			$special_code		Special code (also used by externals modules!)
+	 * 	@param	string			$label				Label of the line (deprecated, do not use)
+	 * 	@param	int				$special_code		Special code (also used by externals modules!)
 	 *  @param	array<string,mixed>	$array_options	extrafields array
-	 * 	@param	float       $situation_percent  Situation advance percentage
-	 * 	@param	?int		$fk_unit 			Code of the unit to use. Null to use the default one
-	 * 	@param	float		$pu_ht_devise		Unit price in currency
-	 * 	@param	int<0,1>	$notrigger			disable line update trigger
-	 *  @param	string		$ref_ext		    External reference of the line
-	 *  @param	integer		$rang		    	rank of line
-	 *  @return	int								Return integer < 0 if KO, > 0 if OK
+	 * 	@param	float       	$situation_percent  Situation advance percentage
+	 * 	@param	?int			$fk_unit 			Code of the unit to use. Null to use the default one
+	 * 	@param	float			$pu_ht_devise		Unit price in currency
+	 * 	@param	int<0,1>		$notrigger			disable line update trigger
+	 *  @param	string			$ref_ext		    External reference of the line
+	 *  @param	integer			$rang		    	rank of line
+	 *  @return	int									Return integer < 0 if KO, > 0 if OK
 	 */
 	public function updateline($rowid, $desc, $pu, $qty, $remise_percent, $date_start, $date_end, $txtva, $txlocaltax1 = 0, $txlocaltax2 = 0, $price_base_type = 'HT', $info_bits = 0, $type = self::TYPE_STANDARD, $fk_parent_line = 0, $skip_update_total = 0, $fk_fournprice = null, $pa_ht = 0, $label = '', $special_code = 0, $array_options = array(), $situation_percent = 100, $fk_unit = null, $pu_ht_devise = 0, $notrigger = 0, $ref_ext = '', $rang = 0)
 	{

@@ -3075,25 +3075,25 @@ class CommandeFournisseur extends CommonOrder
 	/**
 	 *	Update line
 	 *
-	 *	@param     	int			$rowid           	ID de la ligne de facture
-	 *	@param     	string		$desc            	Line description
-	 *	@param     	int|float	$pu              	Unit price
-	 *	@param     	int|float	$qty             	Quantity
-	 *	@param     	int|float	$remise_percent  	Percent discount on line
-	 *	@param     	int|float	$txtva          	VAT rate
-	 *  @param     	int|float	$txlocaltax1	    Localtax1 tax
-	 *  @param     	int|float	$txlocaltax2   		Localtax2 tax
-	 *  @param     	string		$price_base_type 	Type of price base
-	 *	@param		int			$info_bits			Miscellaneous information
-	 *	@param		int			$type				Type of line (0=product, 1=service)
-	 *  @param		int			$notrigger			Disable triggers
-	 *  @param      int			$date_start     	Date start of service
-	 *  @param      int			$date_end       	Date end of service
+	 *	@param     	int					$rowid           	ID de la ligne de facture
+	 *	@param     	string				$desc            	Line description
+	 *	@param     	int|float			$pu              	Unit price
+	 *	@param     	int|float			$qty             	Quantity
+	 *	@param     	int|float			$remise_percent  	Percent discount on line
+	 *	@param     	int|float|string	$txtva          	VAT Rate (Can be '1.23' or '1.23 (ABC)')
+	 *  @param     	int|float			$txlocaltax1	    Localtax1 tax
+	 *  @param     	int|float			$txlocaltax2   		Localtax2 tax
+	 *  @param     	string				$price_base_type 	Type of price base
+	 *	@param		int					$info_bits			Miscellaneous information
+	 *	@param		int					$type				Type of line (0=product, 1=service)
+	 *  @param		int					$notrigger			Disable triggers
+	 *  @param      int					$date_start     	Date start of service
+	 *  @param      int					$date_end       	Date end of service
 	 *  @param		array<string,mixed|mixed[]>		$array_options		Extrafields array
-	 * 	@param 		int|null	$fk_unit 			Code of the unit to use. Null to use the default one
-	 * 	@param		int|float	$pu_ht_devise		Unit price in currency
-	 *  @param		string		$ref_supplier		Supplier ref
-	 *	@return    	int         	    			Return integer < 0 if error, > 0 if ok
+	 * 	@param 		int|null			$fk_unit 			Code of the unit to use. Null to use the default one
+	 * 	@param		int|float			$pu_ht_devise		Unit price in currency
+	 *  @param		string				$ref_supplier		Supplier ref
+	 *	@return    	int         	    					Return integer < 0 if error, > 0 if ok
 	 */
 	public function updateline($rowid, $desc, $pu, $qty, $remise_percent, $txtva, $txlocaltax1 = 0, $txlocaltax2 = 0, $price_base_type = 'HT', $info_bits = 0, $type = 0, $notrigger = 0, $date_start = 0, $date_end = 0, $array_options = [], $fk_unit = null, $pu_ht_devise = 0, $ref_supplier = '')
 	{

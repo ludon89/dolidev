@@ -1678,26 +1678,26 @@ class Contrat extends CommonObject
 	/**
 	 *  Update a contract line
 	 *
-	 *  @param	int			$rowid            	Id of contract line
-	 *  @param  string		$desc             	Description of line
-	 *  @param  float		$pu               	Prix unitaire
-	 *  @param  float		$qty              	Quantite
-	 *  @param  float		$remise_percent   	Percentage discount of the line
-	 *  @param  int			$date_start       	Date de debut prevue
-	 *  @param  int			$date_end         	Date de fin prevue
-	 *  @param  float		$tvatx            	Taux TVA
-	 *  @param  float		$localtax1tx      	Local tax 1 rate
-	 *  @param  float		$localtax2tx      	Local tax 2 rate
-	 *  @param  int|string	$date_start_real  	Date de debut reelle
-	 *  @param  int|string	$date_end_real    	Date de fin reelle
-	 *	@param	string		$price_base_type	HT or TTC
-	 * 	@param  int			$info_bits			Bits of type of lines
-	 * 	@param  int			$fk_fournprice		Fourn price id
+	 *  @param	int				$rowid            	Id of contract line
+	 *  @param  string			$desc             	Description of line
+	 *  @param  float			$pu               	Prix unitaire
+	 *  @param  float			$qty              	Quantite
+	 *  @param  float			$remise_percent   	Percentage discount of the line
+	 *  @param  int				$date_start       	Date de debut prevue
+	 *  @param  int				$date_end         	Date de fin prevue
+	 *  @param  float|string	$tvatx            	VAT Rate (Can be '1.23' or '1.23 (ABC)')
+	 *  @param  float			$localtax1tx      	Local tax 1 rate
+	 *  @param  float			$localtax2tx      	Local tax 2 rate
+	 *  @param  int|string		$date_start_real  	Date de debut reelle
+	 *  @param  int|string		$date_end_real    	Date de fin reelle
+	 *	@param	string			$price_base_type	HT or TTC
+	 * 	@param  int				$info_bits			Bits of type of lines
+	 * 	@param  int				$fk_fournprice		Fourn price id
 	 *  @param  float|string	$pa_ht				Buying price HT (Can be '' to keep AWP unchanged or a float value)
 	 *  @param	array<string,mixed>		$array_options		extrafields array
-	 * 	@param 	string		$fk_unit 			Code of the unit to use. Null to use the default one
-	 * 	@param 	int			$rang 				Position
-	 *  @return int              				Return integer <0 if KO, >0 if OK
+	 * 	@param 	string			$fk_unit 			Code of the unit to use. Null to use the default one
+	 * 	@param 	int				$rang 				Position
+	 *  @return int             	 				Return integer <0 if KO, >0 if OK
 	 */
 	public function updateline($rowid, $desc, $pu, $qty, $remise_percent, $date_start, $date_end, $tvatx, $localtax1tx = 0.0, $localtax2tx = 0.0, $date_start_real = '', $date_end_real = '', $price_base_type = 'HT', $info_bits = 0, $fk_fournprice = null, $pa_ht = 0, $array_options = array(), $fk_unit = null, $rang = 0)
 	{
