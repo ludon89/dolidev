@@ -15751,18 +15751,6 @@ parameters:
 			path: ../../../htdocs/societe/price.php
 
 		-
-			message: '#^Variable \$db might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../../../htdocs/societe/tpl/linesalesrepresentative.tpl.php
-
-		-
-			message: '#^Variable \$object might not be defined\.$#'
-			identifier: variable.undefined
-			count: 4
-			path: ../../../htdocs/societe/tpl/linesalesrepresentative.tpl.php
-
-		-
 			message: '#^Variable \$contextpage in empty\(\) always exists and is not falsy\.$#'
 			identifier: empty.variable
 			count: 1
