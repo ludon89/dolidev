@@ -167,3 +167,6 @@ Sumup=Résumé
 SumupAffiliate=Affilié Sumup
 SumupAppId=Sumup AppId
 NotAvailableForCountryWhenModuleIsOn=Non disponible pour le pays %s lorsque le module %s est activé
+SentToPrinter=Sent to printer
+FailedToSendToPrinter=Failed to send to printer
+TransactionID=Transaction ID

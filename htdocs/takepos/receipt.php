@@ -186,7 +186,7 @@ if ($object->status == Facture::STATUS_DRAFT) {
 		//$orderprinterallowed = false;
 	}
 
-	if (!$canprintifnotvalidate) {
+	if (!$canprintifnotvalidate && empty($facid)) {
 		print "Error: Printing ticket is not allowed when invoice is not validated/paid.";
 		exit;
 	}
@@ -198,14 +198,21 @@ if ($object->status == Facture::STATUS_DRAFT) {
 print $langs->trans('Date')." ".dol_print_date($object->date, 'day').'<br>';
 if (getDolGlobalString('TAKEPOS_RECEIPT_NAME')) {
 	print getDolGlobalString('TAKEPOS_RECEIPT_NAME') . " ";
+} else {
+	print $langs->trans("TransactionID")." ";
 }
-if ($object->status == Facture::STATUS_DRAFT) {
+if ($object->status == Facture::STATUS_DRAFT || empty($facid) || GETPOST('specimen')) {
 	// Printing ticket is not allowed if invoice not yet validate.
-	// This may happen if a feature to validate invoice and print it before paying is implemented.
-	print str_replace(")", "", str_replace("-", " ".$langs->trans('Place')." ", str_replace("(PROV-POS", $langs->trans("Terminal")." ", $object->ref)));
+	// Reaching this code may happen for specimen or if a feature to validate invoice and print it before paying is implemented.
+	if (empty($facid) || GETPOST('specimen')) {
+		print 'Specimen';
+	} else {
+		print $object->ref;
+	}
 } else {
 	print $object->ref;
 }
+print '<br>'.$langs->trans("Terminal").' '.$object->pos_source;
 if (getDolGlobalString('TAKEPOS_SHOW_CUSTOMER')) {
 	if ($object->socid != getDolGlobalInt('CASHDESK_ID_THIRDPARTY'.$_SESSION["takeposterminal"])) {
 		$soc = new Societe($db);
