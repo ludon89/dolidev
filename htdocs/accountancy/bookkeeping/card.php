@@ -198,6 +198,11 @@ if (empty($reshook)) {
 			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv("AccountAccountingShort")), null, 'errors');
 			$action = '';
 		}
+		$subledger_account_str = is_array($subledger_account) ? reset($subledger_account) : (string) $subledger_account;
+		if (!checkGeneralAccountAllowsAuxiliary($db, $accountingaccount_number, $subledger_account_str)) {
+			$error++;
+			setEventMessages($langs->trans("ErrorAccountNotCentralized"). ". " . $langs->trans("RemoveSubsidiaryAccountOrAdjustTheGeneralAccount"), null, 'errors');
+		}
 
 		if (!$error) {
 			if (GETPOSTINT('doc_datemonth') && GETPOSTINT('doc_dateday') && GETPOSTINT('doc_dateyear')) {
