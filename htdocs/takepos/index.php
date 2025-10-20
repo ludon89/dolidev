@@ -1342,6 +1342,11 @@ if (!getDolGlobalString('TAKEPOS_HIDE_HEAD_BAR')) {
 
 <?php
 
+// Dependency modulecheck
+if (!isModEnabled('facture')) {
+	setEventMessages($langs->trans("ErrorModuleSetupNotComplete", $langs->transnoentitiesnoconv("Invoice")), null, 'errors');
+}
+
 // TakePOS setup check
 if (isset($_SESSION["takeposterminal"]) && $_SESSION["takeposterminal"]) {
 	$sql = "SELECT code, libelle FROM " . MAIN_DB_PREFIX . "c_paiement";

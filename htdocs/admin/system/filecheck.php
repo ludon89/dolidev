@@ -225,17 +225,32 @@ if (empty($error) && !empty($xml)) {
 	$out = '';
 
 	// Forced constants
-	if (is_object($xml->dolibarr_constants[0])) {
+	if (is_object($xml->dolibarr_constants[0]) || $mode == 'unalterable') {
 		$out .= load_fiche_titre($langs->trans("ForcedConstants"));
 
 		$out .= '<div class="div-table-responsive-no-min">';
 		$out .= '<table class="noborder">';
 		$out .= '<tr class="liste_titre">';
 		$out .= '<td>#</td>';
-		$out .= '<td>'.$langs->trans("Constant").'</td>';
+		$out .= '<td>'.$langs->trans("Parameter").'</td>';
 		$out .= '<td class="center">'.$langs->trans("ExpectedValue").'</td>';
-		$out .= '<td class="center">'.$langs->trans("Value").'</td>';
+		$out .= '<td class="center">'.$langs->trans("CurrentValue").'</td>';
 		$out .= '</tr>'."\n";
+
+		if ($mode == 'unalterable') {
+			$out .= '<tr class="oddeven">';
+			$out .= '<td></td>'."\n";
+			$out .= '<td>'.$langs->trans("Country").'</td>'."\n";
+			$out .= '<td class="center"></td>'."\n";
+			$out .= '<td class="center">'.$mysoc->country_code.'</td>'."\n";
+			$out .= "</tr>\n";
+			$out .= '<tr class="oddeven">';
+			$out .= '<td></td>'."\n";
+			$out .= '<td>'.$langs->trans("ModuleMustBeEnabled", $langs->transnoentitiesnoconv("BlockedLog")).'</td>'."\n";
+			$out .= '<td class="center">'.yn(1).'</td>'."\n";
+			$out .= '<td class="center">'.yn(isModEnabled('blockedlog')).'</td>'."\n";
+			$out .= "</tr>\n";
+		}
 
 		$i = 0;
 		foreach ($xml->dolibarr_constants[0]->constant as $constant) {    // $constant is a simpleXMLElement
@@ -261,7 +276,7 @@ if (empty($error) && !empty($xml)) {
 			$out .= "</tr>\n";
 		}
 
-		if ($i == 0) {
+		if ($i == 0 && $mode != 'unalterable') {
 			$out .= '<tr class="oddeven"><td colspan="4"><span class="opacitymedium">'.$langs->trans("None").'</span></td></tr>';
 		}
 		$out .= '</table>';

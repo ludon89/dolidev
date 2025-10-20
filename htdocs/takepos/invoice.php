@@ -308,6 +308,7 @@ if (empty($reshook)) {
 			$conf->global->STOCK_CALCULATE_ON_BILL = $savconst;
 		} else {
 			// Validation of invoice with no change into stock (because param $idwarehouse is not fill)
+			dol_syslog("Call validate on invoice ".$invoice->ref, LOG_DEBUG);
 			$res = $invoice->validate($user);
 			if ($res < 0) {
 				$error++;
