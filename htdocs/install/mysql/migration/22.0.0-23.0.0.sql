@@ -265,4 +265,8 @@ ALTER TABLE llx_blockedlog ADD COLUMN linktype varchar(16);
 ALTER TABLE llx_blockedlog ADD COLUMN vat double(24,8) DEFAULT NULL;
 
 
+-- Fix a wrong migration script
+UPDATE llx_oauth_token SET tokenstring = token, token = NULL WHERE service = 'dolibarr_rest_api' AND tokenstring IS NULL AND token IS NOT NULL;
+
+
 -- end of migration
