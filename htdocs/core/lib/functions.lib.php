@@ -8238,6 +8238,7 @@ function get_product_localtax_for_country($idprod, $local, $thirdpartytouseforco
 
 /**
  *	Function that return vat rate of a product line (according to seller, buyer and product vat rate)
+ *   VATRULE 0: If we are in mode SERVICE_ARE_ECOMMERCE_200238EC and customer is not a company with a vat id, we use default product VAT in buyer country
  *   VATRULE 1: If seller does not use VAT, default VAT is 0. End of rule.
  *   VATRULE 2: If buyer department has a VAT rule from vat rates dictionary then it's the default VAT rate. End of rule.
  *	 VATRULE 3: If the (seller country = buyer country) then the default VAT = VAT of the product sold. End of rule.
@@ -8298,6 +8299,10 @@ function get_default_tva(Societe $thirdparty_seller, Societe $thirdparty_buyer, 
 	// If seller does not use VAT, default VAT is 0. End of rule.
 	if (!$seller_use_vat) {
 		//print 'VATRULE 1';
+		// TODO get the VAT Code of exemption asked into setup if country isInEEC (from an array list of possible values VATEX-EU-132-* or VATEX-FR-FRANCHISE).
+		// When we had recorded it, we also added a corresponding entry into table of vat code if it does not exists yet.
+		// If entry for the VAT exemption code exists in llx_vat, we can return '0 (VATEX-EU-132-xx)'
+		// If not, we add it and we return '0 (VATEX-EU-132-xx)'
 		return 0;
 	}
 
@@ -8362,12 +8367,15 @@ function get_default_tva(Societe $thirdparty_seller, Societe $thirdparty_buyer, 
 			return get_product_vat_for_country($idprod, $thirdparty_seller, $idprodfournprice);
 		} else {
 			//print 'VATRULE 6';
+			// TODO This is the case of VAT exemption 'VATEX-EU-IC'
+			// If entry for the VAT exemption code exists in llx_vat, we can return '0 (VATEX-EU-IC)'
+			// If not, we add it and we return '0 (VATEX-EU-IC)'
 			return 0;
 		}
 	}
 
 	// If (seller in the European Community and buyer outside the European Community and private buyer) then VAT by default = VAT of the product sold. End of rule
-	// I don't see any use case that need this rule.
+	// I don't see any use case that need this rule, this case is on only if MAIN_USE_VAT_OF_PRODUCT_FOR_INDIVIDUAL_CUSTOMER_OUT_OF_EEC set
 	if (getDolGlobalString('MAIN_USE_VAT_OF_PRODUCT_FOR_INDIVIDUAL_CUSTOMER_OUT_OF_EEC') && empty($buyer_in_cee)) {
 		$isacompany = $thirdparty_buyer->isACompany();
 		if (!$isacompany) {
@@ -8379,6 +8387,9 @@ function get_default_tva(Societe $thirdparty_seller, Societe $thirdparty_buyer, 
 	// Otherwise the VAT proposed by default=0. End of rule.
 	// Rem: This means that at least one of the 2 is outside the European Community and the country differs
 	//print 'VATRULE 7';
+	// TODO This is the case of VAT exemption 'VATEX-EU-G'
+	// If entry for the VAT exemption code exists in llx_vat, we can return '0 (VATEX-xxx)'
+	// If not, we add it and we return '0 (VATEX-xxx)'
 	return 0;
 }
 
