@@ -47,27 +47,3 @@ if (defined('DOL_INC_FOR_VERSION_ERROR')) {
 if (!defined('CERTIF_LNE')) {
 	define('CERTIF_LNE', '0');				// Set to 1 if the beta version is a candidate for certification or if the stable version has been certified
 }
-
-/**
- * Return if the version is a candidate version to get the LNE certification and if the prerequisites are OK.
- * This function can be used to avoid to show the mandatory information "Certified LNE" on tickets when it is not true.
- *
- * @return boolean		True or false
- */
-function isALNECandidateVersion()
-{
-	global $mysoc;
-
-	if (preg_match('/\-/', DOL_VERSION)) {	// This is not a stable version
-		return false;
-	}
-	if ($mysoc->country_code != 'FR') {
-		return false;
-	}
-	if (!defined('CERTIF_LNE') || !constant('CERTIF_LNE')) {
-		return false;
-	}
-	if (!isModEnabled('blockedlog')) {
-		return false;
-	}
-}
