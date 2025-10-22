@@ -29,7 +29,6 @@
 require '../../main.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/blockedlog/class/blockedlog.class.php';
-require_once DOL_DOCUMENT_ROOT.'/blockedlog/class/authority.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
@@ -153,19 +152,7 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
 	$search_array_options = array();
 }
 
-if ($action === 'downloadblockchain') {
-	$auth = new BlockedLogAuthority($db);
-
-	$bc = $auth->getLocalBlockChain();
-
-	header('Content-Type: application/octet-stream');
-	header("Content-Transfer-Encoding: Binary");
-	header("Content-disposition: attachment; filename=\"".$auth->signature.".certif\"");
-
-	echo $bc;
-
-	exit;
-} elseif (GETPOST('downloadcsv', 'alpha')) {
+if (GETPOST('downloadcsv', 'alpha')) {
 	$error = 0;
 
 	$previoushash = '';
@@ -495,9 +482,9 @@ print $formother->select_month((string) GETPOSTINT('monthtoexport'), 'monthtoexp
 print '<input type="text" name="yeartoexport" class="valignmiddle maxwidth75imp" value="'.GETPOST('yeartoexport').'" placeholder="'.$langs->trans("Year").'">';
 print '<input type="hidden" name="withtab" value="'.GETPOST('withtab', 'alpha').'">';
 print '<input type="submit" name="downloadcsv" class="button" value="'.$langs->trans('DownloadLogCSV').'">';
-if (getDolGlobalString('BLOCKEDLOG_USE_REMOTE_AUTHORITY')) {
+/*if (getDolGlobalString('BLOCKEDLOG_USE_REMOTE_AUTHORITY')) {
 	print ' | <a href="?action=downloadblockchain'.(GETPOST('withtab', 'alpha') ? '&withtab='.GETPOST('withtab', 'alpha') : '').'">'.$langs->trans('DownloadBlockChain').'</a>';
-}
+}*/
 print ' </div><br>';
 
 print '</form>';
@@ -730,9 +717,11 @@ if (is_array($blocks)) {
 				//print $form->textwithpicto('', $langs->trans('DataOfArchivedEventHelp2'));
 			}
 
+			/*
 			if (getDolGlobalString('BLOCKEDLOG_USE_REMOTE_AUTHORITY') && getDolGlobalString('BLOCKEDLOG_AUTHORITY_URL')) {
 				print ' '.($block->certified ? img_picto($langs->trans('AddedByAuthority'), 'info') : img_picto($langs->trans('NotAddedByAuthorityYet'), 'info_black'));
 			}
+			*/
 			print '</td>';
 
 			// Link to source object
@@ -799,6 +788,7 @@ jQuery(document).ready(function () {
 </script>'."\n";
 
 
+/*
 if (getDolGlobalString('BLOCKEDLOG_USE_REMOTE_AUTHORITY') && getDolGlobalString('BLOCKEDLOG_AUTHORITY_URL')) {
 	?>
 		<script type="text/javascript">
@@ -821,6 +811,7 @@ if (getDolGlobalString('BLOCKEDLOG_USE_REMOTE_AUTHORITY') && getDolGlobalString(
 		</script>
 	<?php
 }
+*/
 
 if (GETPOST('withtab', 'alpha')) {
 	print dol_get_fiche_end();
