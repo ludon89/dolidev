@@ -794,8 +794,18 @@ $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_country as country on (country.rowid = s
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_typent as typent on (typent.id = s.fk_typent)";
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_departements as state on (state.rowid = s.fk_departement)";
 $sql .= ', '.MAIN_DB_PREFIX.'facture as f';
+// Add a special index hint if we sort on datef. But only if there is not search filter set to avoid bad query plan
 if ($sortfield == "f.datef") {
-	$sql .= $db->hintindex('idx_facture_datef');
+	$hasAnotherfilter = false;
+	foreach ($search_array_options as $v) {
+		if ($v !== '' && (string) $v !== '-1') {
+			$hasAnotherfilter = true;
+			break;
+		}
+	}
+	if (!$hasAnotherfilter) {
+		$sql .= $db->hintindex('idx_facture_datef');
+	}
 }
 if (isset($extrafields->attributes[$object->table_element]['label']) && is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (f.rowid = ef.fk_object)";
