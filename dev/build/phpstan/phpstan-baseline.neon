@@ -9493,32 +9493,8 @@ parameters:
 			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
 
 		-
-			message: '#^Negated boolean expression is always true\.$#'
-			identifier: booleanNot.alwaysTrue
-			count: 3
-			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
-
-		-
 			message: '#^Parameter \#3 \$remise_percent_ligne of function calcul_price_total expects float, string given\.$#'
 			identifier: argument.type
-			count: 1
-			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
-
-		-
-			message: '#^Property CommandeFournisseur\:\:\$ref \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
-			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
-
-		-
-			message: '#^Property CommandeFournisseur\:\:\$ref_supplier \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 3
-			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
-
-		-
-			message: '#^Property CommandeFournisseur\:\:\$socid \(int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
 
@@ -9549,18 +9525,6 @@ parameters:
 		-
 			message: '#^Property CommandeFournisseur\:\:\$total_tva \(float\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
-
-		-
-			message: '#^Property CommandeFournisseur\:\:\$user_author_id \(int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
-
-		-
-			message: '#^Right side of && is always true\.$#'
-			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
 			path: ../../../htdocs/fourn/class/fournisseur.commande.class.php
 
