@@ -2887,13 +2887,19 @@ function dolButtonToOpenUrlInDialogPopup($name, $label, $buttonstring, $url, $di
 		$url .= '?dol_hide_topmenu=1&dol_hide_leftmenu=1&dol_openinpopup=' . urlencode($name);
 	}
 
+	if (preg_match('/^https/i', $url)) {
+		$urltoopen = $url;
+	} else {
+		$urltoopen = DOL_URL_ROOT . $url;
+	}
+
 	$out = '';
 
 	//print '<input type="submit" class="button bordertransp"'.$disabled.' value="'.dol_escape_htmltag($langs->trans("MediaFiles")).'" name="file_manager">';
 	$out .= '<!-- a link for button to open url into a dialog popup -->';
 	$out .= '<a ' . ($accesskey ? ' accesskey="' . $accesskey . '"' : '') . ' class="cursorpointer reposition button_' . $name . ($morecss ? ' ' . $morecss : '') . '"' . $disabled . ' title="' . dol_escape_htmltag($label) . '"';
 	if (empty($conf->use_javascript_ajax)) {
-		$out .= ' href="' . DOL_URL_ROOT . $url . '" target="_blank"';
+		$out .= ' href="' . $urltoopen . '" target="_blank"';
 	} elseif ($jsonopen) {
 		$out .= ' href="#" onclick="' . $jsonopen . '"';
 	} else {
@@ -2910,9 +2916,9 @@ function dolButtonToOpenUrlInDialogPopup($name, $label, $buttonstring, $url, $di
 		$out .= '<script nonce="' . getNonce() . '" type="text/javascript">
 					jQuery(document).ready(function () {
 						jQuery(".button_' . $name . '").click(function () {
-							console.log(\'Open popup with jQuery(...).dialog() on URL ' . dol_escape_js(DOL_URL_ROOT . $url) . '\');
+							console.log(\'Open popup with jQuery(...).dialog() on URL ' . dol_escape_js($urltoopen) . '\');
 							var $tmpdialog = $(\'#idfordialog' . $name . '\');
-							$tmpdialog.html(\'<iframe class="iframedialog" id="iframedialog' . $name . '" style="border: 0px;" src="' . DOL_URL_ROOT . $url . '" width="100%" height="98%"></iframe>\');
+							$tmpdialog.html(\'<iframe class="iframedialog" id="iframedialog' . $name . '" style="border: 0px;" src="' . $urltoopen . '" width="100%" height="98%"></iframe>\');
 							$tmpdialog.dialog({
 								autoOpen: false,
 							 	modal: true,
