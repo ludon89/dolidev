@@ -68,12 +68,12 @@ function blockedlogadmin_prepare_head()
 
 /**
  * Return if the version is a candidate version to get the LNE certification and if the prerequisites are OK.
- * The difference between isALNECandidateVersion() and isALNERunningVersion() is that the first checks if we it has a sense or not to
- * activate the restrictions (not a strict check) and the second one is a strict check that restrictions were activated so we can't disable then after.
+ * The difference between isALNEQualifiedVersion() and isALNERunningVersion() is that this one checks if has a sense or not to
+ * activate the restrictions (not a strict check) and the second one is a strict check to say restrictions are enabled and can't be disabled.
  *
  * @return boolean		True or false
  */
-function isALNECandidateVersion()
+function isALNEQualifiedVersion()
 {
 	global $mysoc;
 
@@ -113,7 +113,7 @@ function isALNERunningVersion()
 	if (defined('CERTIF_LNE') && (int) constant('CERTIF_LNE') === 2) {
 		return true;
 	}
-	if (isBlockedLogused()) {
+	if (isModEnabled('blockedlog') && isBlockedLogused()) {
 		return true;
 	}
 
