@@ -485,7 +485,7 @@ if (getDolGlobalString('TAKEPOS_FOOTER') || getDolGlobalString($constFreeText)) 
 	print $newfreetext;
 }
 
-if (isALNEQualifiedVersion('')) {
+if (isALNEQualifiedVersion()) {	// If necessary, we could replace with "if isALNERunningVersion()"
 	$langs->load("blockedlog");
 	print '<center class="small"><i>'.$langs->trans("LNECertifiedPOSSystem")."</i></center><br>\n";
 }

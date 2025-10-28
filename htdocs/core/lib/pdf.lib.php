@@ -847,6 +847,39 @@ function pdf_watermark(&$pdf, $outputlangs, $h, $w, $unit, $text)
 
 
 /**
+ *      Add legal mention
+ *
+ *      @param	TCPDF      			$pdf            	Object PDF
+ *      @param  Translate			$outputlangs		Object lang
+ *      @param  Societe				$seller         	Seller company
+ *      @param  int					$default_font_size  Default font size
+ *      @param  float				$posy            	Y position
+ *      @param  CommonDocGenerator	$pdftemplate    	PDF template
+ *      @return	int                                 	0 if nothing done, 1 if a mention was printed
+ */
+function pdfLegalMention(&$pdf, $outputlangs, $seller, $default_font_size, &$posy, $pdftemplate)
+{
+	include_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
+
+	$result = 0;
+
+	if (in_array($seller->country_code, array('FR')) && isALNEQualifiedVersion()) {	// If necessary, we could replace with "if isALNERunningVersion()"
+		$outputlangs->load("blockedlog");
+		$blockedlog_mention = $outputlangs->trans("InvoiceGeneratedWithLNECertifiedPOSSystem");
+		if ($blockedlog_mention) {
+			$pdf->SetFont('', '', $default_font_size - 2);
+			$pdf->SetXY($pdftemplate->marge_gauche, $posy);
+			$pdf->MultiCell(100, 3, $blockedlog_mention, 0, 'L', false);
+			$posy = $pdf->GetY();
+			$result = 1;
+		}
+	}
+
+	return $result;
+}
+
+
+/**
  *  Show bank information for PDF generation
  *
  *  @param	TCPDF		$pdf            		Object PDF
@@ -860,8 +893,6 @@ function pdf_watermark(&$pdf, $outputlangs, $h, $w, $unit, $text)
  */
 function pdf_bank(&$pdf, $outputlangs, $curx, $cury, $account, $onlynumber = 0, $default_font_size = 10)
 {
-	global $mysoc, $conf;
-
 	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formbank.class.php';
 
 	$diffsizetitle = getDolGlobalInt('PDF_DIFFSIZE_TITLE', 3);
@@ -1460,7 +1491,7 @@ function pdf_writeLinkedObjects(&$pdf, $object, $outputlangs, $posx, $posy, $w, 
  */
 function pdf_writelinedesc(&$pdf, $object, $i, $outputlangs, $w, $h, $posx, $posy, $hideref = 0, $hidedesc = 0, $issupplierline = 0, $align = 'J')
 {
-	global $db, $conf, $langs, $hookmanager;
+	global $hookmanager;
 
 	$reshook = 0;
 	$result = '';
@@ -2077,7 +2108,7 @@ function pdf_getlinevatrate($object, $i, $outputlangs, $hidedetails = 0)
  */
 function pdf_getlineupexcltax($object, $i, $outputlangs, $hidedetails = 0)
 {
-	global $conf, $hookmanager;
+	global $hookmanager;
 
 	$sign = 1;
 	if (isset($object->type) && $object->type == 2 && getDolGlobalString('INVOICE_POSITIVE_CREDIT_NOTE')) {
@@ -2120,7 +2151,7 @@ function pdf_getlineupexcltax($object, $i, $outputlangs, $hidedetails = 0)
  */
 function pdf_getlineupwithtax($object, $i, $outputlangs, $hidedetails = 0)
 {
-	global $hookmanager, $conf;
+	global $hookmanager;
 
 	$sign = 1;
 	if (isset($object->type) && $object->type == 2 && getDolGlobalString('INVOICE_POSITIVE_CREDIT_NOTE')) {
@@ -2411,7 +2442,6 @@ function pdf_getlineprogress($object, $i, $outputlangs, $hidedetails = 0, $hookm
 	if (empty($hookmanager)) {
 		global $hookmanager;
 	}
-	global $conf;
 
 	$reshook = 0;
 	$result = '';
@@ -2459,7 +2489,7 @@ function pdf_getlineprogress($object, $i, $outputlangs, $hidedetails = 0, $hookm
  */
 function pdf_getlinetotalexcltax($object, $i, $outputlangs, $hidedetails = 0)
 {
-	global $conf, $hookmanager;
+	global $hookmanager;
 
 	$sign = 1;
 	if (isset($object->type) && $object->type == 2 && getDolGlobalString('INVOICE_POSITIVE_CREDIT_NOTE')) {
@@ -2515,7 +2545,7 @@ function pdf_getlinetotalexcltax($object, $i, $outputlangs, $hidedetails = 0)
  */
 function pdf_getlinetotalwithtax($object, $i, $outputlangs, $hidedetails = 0)
 {
-	global $hookmanager, $conf;
+	global $hookmanager;
 
 	$sign = 1;
 	if (isset($object->type) && $object->type == 2 && getDolGlobalString('INVOICE_POSITIVE_CREDIT_NOTE')) {
