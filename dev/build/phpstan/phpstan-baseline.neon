@@ -13837,12 +13837,6 @@ parameters:
 			path: ../../../htdocs/public/fichinter/agendaexport.php
 
 		-
-			message: '#^Variable \$php_self might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../../../htdocs/public/members/new.php
-
-		-
 			message: '#^Call to function is_numeric\(\) with int will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
