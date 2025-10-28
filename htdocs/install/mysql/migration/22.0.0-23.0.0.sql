@@ -42,6 +42,7 @@ ALTER TABLE llx_opensurvey_user_studs ADD COLUMN tms timestamp DEFAULT CURRENT_T
 
 
 -- V23 migration
+ALTER TABLE llx_usergroup ADD color VARCHAR(6) AFTER tms;
 
 UPDATE llx_actioncomm SET elementtype = 'project_task' WHERE elementtype = 'task';
 
