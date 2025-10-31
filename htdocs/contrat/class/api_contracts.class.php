@@ -213,7 +213,7 @@ class Contracts extends DolibarrApi
 		}
 
 		$socid = (int) $request_data['socid'];
-		$thirdparties = new Thirdparties($this->db);
+		$thirdparties = new Thirdparties();
 		$thirdparty_result = $thirdparties->get((int) $socid);
 		// if there is no such thirdparty, then $thirdparties->get((int) $socid); returns 404 "Not Found: Thirdparty not found"
 		// if this user does not have access to this thirdparty, then $thirdparties->get((int) $socid); returns 403 Forbidden: Access not allowed for login ***** on this thirdparty"
