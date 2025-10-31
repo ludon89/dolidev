@@ -1929,7 +1929,7 @@ if ($action == 'create') {
 			print '</tr>';
 
 			// List of payments already done
-			$canSeeBankAccount = isModEnabled('banque') && $user->hasRight('banque', 'lire');
+			$canSeeBankAccount = isModEnabled('bank') && $user->hasRight('banque', 'lire');
 			$nbcols = 3;
 			$nbrows = 0;
 			if ($canSeeBankAccount) {
