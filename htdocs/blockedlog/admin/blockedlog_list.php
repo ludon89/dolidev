@@ -412,7 +412,7 @@ print '<div class="opacitymedium hideonsmartphone justify">';
 
 print $langs->trans("FingerprintsDesc")."<br>";
 $s = $langs->trans("FilesIntegrityDesc", '{s}');
-$s = str_replace('{s}', DOL_URL_ROOT.'/admin/system/filecheck.php', $s);
+$s = str_replace('{s}', DOL_URL_ROOT.'/blockedlog/admin/filecheck.php', $s);
 print $s;
 print "<br>\n";
 print "</div>\n";
