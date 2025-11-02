@@ -686,26 +686,11 @@ class Contracts extends DolibarrApi
 			throw new RestException(404, 'Contrat not found');
 		}
 
-		$socid = $this->contract->socid;
-		$deny_access = true;
-		$why_deny_access = '';
-		if (DolibarrApiAccess::$user->hasRight('societe', 'lire')) {
-			if (DolibarrApiAccess::$user->hasRight('societe', 'client', 'voir')) {
-				$deny_access = false;
-			} else {
-				$why_deny_access = 'Extend access to all third parties';
-				if (DolibarrApi::_checkAccessToResource('societe', $socid)) {
-					$deny_access = false;
-				} else {
-					$why_deny_access = $why_deny_access.' and NOT sales representative for this thirdparty='.$socid;
-				}
-			}
-		} else {
-			$why_deny_access = 'Read third parties linked to user';
-		}
-		if ($deny_access) {
-			throw new RestException(403, 'Access not allowed for login '.DolibarrApiAccess::$user->login.' - missing permissions: '.$why_deny_access);
-		}
+		$old_socid = $this->contract->socid;
+		$thirdparties = new Thirdparties();
+		$thirdparty_result = $thirdparties->get((int) $old_socid);
+		// if there is no such thirdparty, then $thirdparties->get((int) $old_socid); returns 404 "Not Found: Thirdparty not found"
+		// if this user does not have access to this thirdparty, then $thirdparties->get((int) $old_socid); returns 403 Forbidden: Access not allowed for login ***** on this thirdparty"
 
 		if (!DolibarrApi::_checkAccessToResource('contrat', $this->contract->id)) {
 			throw new RestException(403, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
@@ -724,6 +709,17 @@ class Contracts extends DolibarrApi
 					$this->contract->array_options[$index] = $this->_checkValForAPI($field, $val, $this->contract);
 				}
 				continue;
+			}
+
+			if ($field == 'socid') {
+				$new_socid = (int) $request_data['socid'];
+				$thirdparties = new Thirdparties();
+				$thirdparty_result = $thirdparties->get((int) $new_socid);
+				// if there is no such thirdparty, then $thirdparties->get((int) $old_socid); returns 404 "Not Found: Thirdparty not found"
+				// if this user does not have access to this thirdparty, then $thirdparties->get((int) $old_socid); returns 403 Forbidden: Access not allowed for login ***** on this thirdparty"
+				if ($thirdparty_result->id != $new_socid) {
+					throw new RestException(404, 'New thirdparty with id='.$new_socid.' not found OR this user/api key does not have access to the new thirdparty');
+				}
 			}
 
 			$this->contract->$field = $this->_checkValForAPI($field, $value, $this->contract);
