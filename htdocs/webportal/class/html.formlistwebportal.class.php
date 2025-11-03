@@ -116,7 +116,7 @@ class FormListWebPortal
 	public $sortorder = '';
 
 	/**
-	 * @var array<string,array{type:string,alias:string,label:string,checked:int<0,1>,visible:int<0,1>,enabled:bool|int<0,1>,position:int,help:string,searchmulti:int<0,1>}>	Array of fields
+	 * @var array<string,array{type?:string,label:string,checked:int<0,1>,visible:int<0,1>,enabled:bool|int<0,1>,position:int,help:string}>	Array of fields
 	 */
 	public $arrayfields = array();
 	/**
@@ -141,7 +141,7 @@ class FormListWebPortal
 	 */
 	public $nbtotalofrecords = 0;
 	/**
-	 * @var stdClass[] Object records from the SQL request
+	 * @var array<int,stdClass> Object records from the SQL request
 	 */
 	public $records = [];
 	/**
@@ -280,9 +280,7 @@ class FormListWebPortal
 		$this->arrayfields['download_link'] = array('type' => '', 'label' => 'File', 'checked' => 1, 'enabled' => ($this->element == 'propal' && isModEnabled('propal')) || ($this->element == 'order' && isModEnabled('order')) || ($this->element == 'invoice' && isModEnabled('invoice')), 'visible' => 1, 'position' => 10001, 'help' => '',);
 		$this->arrayfields['signature_link'] = array('type' => '', 'label' => 'Signature', 'checked' => 1, 'enabled' => $this->element == 'propal' && isModEnabled('propal') && getDolGlobalString("PROPOSAL_ALLOW_ONLINESIGN") != 0, 'visible' => 1, 'position' => 10002, 'help' => '',);
 
-		if (method_exists($this->controller, 'listSetArrayFields')) {
-			$this->controller->listSetArrayFields();
-		}
+		$this->controller->listSetArrayFields();
 	}
 
 	/**
@@ -364,9 +362,7 @@ class FormListWebPortal
 		// List of fields to search into when doing a "search in all"
 		$this->search_all = GETPOST('search_all', 'alphanohtml');
 
-		if (method_exists($this->controller, 'listSetSearchValues')) {
-			$this->controller->listSetSearchValues($clear);
-		}
+		$this->controller->listSetSearchValues($clear);
 	}
 
 	/**
@@ -642,10 +638,7 @@ class FormListWebPortal
 
 		$out = '';
 		if (is_object($this->object)) {
-			if (method_exists($this->controller, 'listPrintValueBefore')) {
-				$out = $this->controller->listPrintValueBefore($field_key, $field_spec, $record);
-			}
-
+			$out = $this->controller->listPrintValueBefore($field_key, $field_spec, $record);
 			if (empty($out)) {
 				if ($field_key == 'status' || $field_key == 'fk_statut') {
 					if ($this->element == 'invoice') {
@@ -674,9 +667,7 @@ class FormListWebPortal
 				}
 			}
 
-			if (method_exists($this->controller, 'listPrintValueAfter')) {
-				$out = $this->controller->listPrintValueAfter($field_key, $field_spec, $record, $out);
-			}
+			$out = $this->controller->listPrintValueAfter($field_key, $field_spec, $record, $out);
 		}
 
 		return $out;

@@ -24,11 +24,12 @@
  */
 
 require_once DOL_DOCUMENT_ROOT . '/webportal/class/html.formlistwebportal.class.php';
+require_once DOL_DOCUMENT_ROOT . '/webportal/controllers/abstractlist.controller.class.php';
 
 /**
  * Class for PropalListController
  */
-class PropalListController extends Controller
+class PropalListController extends AbstractListController
 {
 	/**
 	 * Check current access to controller

@@ -22,10 +22,13 @@
  * \brief       This file is a controller for invoice list
  */
 
+require_once DOL_DOCUMENT_ROOT . '/webportal/class/html.formlistwebportal.class.php';
+require_once DOL_DOCUMENT_ROOT . '/webportal/controllers/abstractlist.controller.class.php';
+
 /**
  * Class for InvoiceListController
  */
-class InvoiceListController extends Controller
+class InvoiceListController extends AbstractListController
 {
 	/**
 	 * Check current access to controller
@@ -53,8 +56,6 @@ class InvoiceListController extends Controller
 		if (!$context->controllerInstance->checkAccess()) {
 			return -1;
 		}
-
-		dol_include_once('/webportal/class/html.formlistwebportal.class.php');
 
 		// Load translation files required by the page
 		$langs->loadLangs(array('bills', 'companies', 'products', 'categories'));
