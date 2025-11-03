@@ -4869,7 +4869,7 @@ function dol_print_phone($phone, $countrycode = '', $contactid = 0, $socid = 0, 
 		}
 
 		$rep .= $newphoneastart;
-		$rep .= ($withpicto ? img_picto($titlealt, 'object_' . $picto . '.png') : '');
+		$rep .= ($withpicto ? img_picto($titlealt, $picto) : '');
 		if ($separ != 'hidenum') {
 			$rep .= ($withpicto ? ' ' : '') . $newphone;
 		}
