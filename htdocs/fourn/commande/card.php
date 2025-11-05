@@ -811,7 +811,7 @@ if (empty($reshook)) {
 			$ht,
 			(float) price2num(GETPOST('qty'), 'MS'),
 			(float) price2num(GETPOST('remise_percent'), '', 2),
-			(float) $vat_rate,
+			$vat_rate,
 			$localtax1_rate,
 			$localtax2_rate,
 			$price_base_type,
