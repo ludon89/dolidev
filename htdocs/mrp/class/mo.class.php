@@ -82,7 +82,7 @@ class Mo extends CommonObject
 	 */
 
 	/**
-	 * @var array<string,array{type:string,label:string,enabled:int<0,2>|string,position:int,notnull?:int,visible:int<-6,6>|string,alwayseditable?:int<0,1>,noteditable?:int<0,1>,default?:string,index?:int,foreignkey?:string,searchall?:int<0,1>,isameasure?:int<0,1>,css?:string,csslist?:string,help?:string,showoncombobox?:int<0,4>,disabled?:int<0,1>,arrayofkeyval?:array<int|string,string>,autofocusoncreate?:int<0,1>,comment?:string,copytoclipboard?:int<1,2>,validate?:int<0,1>,showonheader?:int<0,1>}>  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
+	 * @var array<string,array{type:string,label:string,langfile?:string,enabled:int<0,2>|string,position:int,notnull?:int,visible:int<-6,6>|string,alwayseditable?:int<0,1>|string,noteditable?:int<0,1>,default?:string,index?:int,foreignkey?:string,searchall?:int<0,1>,isameasure?:int<0,1>,css?:string,cssview?:string,csslist?:string,help?:string,showoncombobox?:int<0,4>|string,disabled?:int<0,1>,arrayofkeyval?:array<int|string,string>,autofocusoncreate?:int<0,1>,comment?:string,copytoclipboard?:int<1,2>,validate?:int<0,1>,showonheader?:int<0,1>}>  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
 	public $fields = array(
 		'rowid' => array('type' => 'integer', 'label' => 'TechnicalID', 'enabled' => 1, 'visible' => -2, 'position' => 1, 'notnull' => 1, 'index' => 1, 'comment' => "Id",),
@@ -795,14 +795,14 @@ class Mo extends CommonObject
 
 
 	/**
-	* Recurse through BOM only adding products to list to consume/produce
-	*
-	* @param  User $user      User that modifies
-	* @param  string $role    MoLine Role that products are added as
-	* @param  BOM $bom        BOM to parse lines from
-	* @param  float $quantity Quantity modifier for sub products/BOM
-	* @return int             Return integer <0 if KO, >0 if OK
-	*/
+	 * Recurse through BOM only adding products to list to consume/produce
+	 *
+	 * @param  User $user      User that modifies
+	 * @param  string $role    MoLine Role that products are added as
+	 * @param  BOM $bom        BOM to parse lines from
+	 * @param  float $quantity Quantity modifier for sub products/BOM
+	 * @return int             Return integer <0 if KO, >0 if OK
+	 */
 	public function processBOM(User $user, $role, $bom, $quantity)
 	{
 		$error = 0;
@@ -850,7 +850,9 @@ class Mo extends CommonObject
 					}
 				}
 			}
-			if ($error) break;
+			if ($error) {
+				break;
+			}
 		}
 		return $error;
 	}
@@ -968,6 +970,7 @@ class Mo extends CommonObject
 		$arrayoflines = $this->fetchLinesLinked('consumed', $idline);	// Get lines consumed under the one to delete
 
 		$result = 0;
+		$error = 0;
 
 		$this->db->begin();
 
@@ -997,7 +1000,7 @@ class Mo extends CommonObject
 					$idstockmove = $stockmove->livraison($user, $movement->product_id, $movement->warehouse_id, $qtytoprocess, 0, $labelmovementCancel, dol_now(), '', '', $movement->batch, 0, $codemovementCancel);
 				}
 				if ($idstockmove < 0) {
-					$this->error++;
+					$error++;
 					setEventMessages($stockmove->error, $stockmove->errors, 'errors');
 				} else {
 					$result = $moline->delete($user, $notrigger);
@@ -1020,7 +1023,7 @@ class Mo extends CommonObject
 						$idstockmove = $stockmove->livraison($user, $lineDetails['fk_product'], $lineDetails['fk_warehouse'], $qtytoprocess, 0, $labelmovementCancel, dol_now(), '', '', $lineDetails['batch'], 0, $codemovementCancel);
 					}
 					if ($idstockmove < 0) {
-						$this->error++;
+						$error++;
 						setEventMessages($stockmove->error, $stockmove->errors, 'errors');
 					} else {
 						$moline = new MoLine($this->db);
@@ -1028,13 +1031,13 @@ class Mo extends CommonObject
 
 						$resdel = $moline->delete($user, $notrigger);
 						if ($resdel < 0) {
-							$this->error++;
+							$error++;
 							setEventMessages($moline->error, $moline->errors, 'errors');
 						}
 					}
 				}
 
-				if (empty($this->error)) {
+				if ($error == 0) {
 					$result = $this->deleteLineCommon($user, $idline, $notrigger);
 				}
 			}
@@ -1043,7 +1046,7 @@ class Mo extends CommonObject
 			$result = $this->deleteLineCommon($user, $idline, $notrigger);
 		}
 
-		if (!empty($this->error) || $result <= 0) {
+		if ($error != 0 || $result <= 0) {
 			$this->db->rollback();
 		} else {
 			$this->db->commit();

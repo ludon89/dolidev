@@ -395,6 +395,7 @@ class Invoices extends DolibarrApi
 	 *
 	 * @throws RestException 400
 	 * @throws RestException 401
+	 * @throws RestException 403		Access not allowed for login
 	 * @throws RestException 404
 	 * @throws RestException 405
 	 */
@@ -410,6 +411,9 @@ class Invoices extends DolibarrApi
 		}
 		if (empty($orderid)) {
 			throw new RestException(400, 'Order ID is mandatory');
+		}
+		if (!DolibarrApi::_checkAccessToResource('commande', $orderid)) {
+			throw new RestException(403, 'Access not allowed on order for login '.DolibarrApiAccess::$user->login);
 		}
 
 		$order = new Commande($this->db);
@@ -1263,7 +1267,7 @@ class Invoices extends DolibarrApi
 			throw new RestException(403, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
 		}
 
-		if ($this->invoice->paye) {
+		if ($this->invoice->paye) {		// TODO Replace by a test on status
 			throw new RestException(500, 'Alreay paid');
 		}
 
@@ -1370,7 +1374,9 @@ class Invoices extends DolibarrApi
 				}
 
 				$discount->amount_ht = $discount->amount_ttc = $total_payments + $total_creditnote_and_deposit - $this->invoice->total_ttc;
+				$discount->total_ht = $discount->total_ttc = $total_payments + $total_creditnote_and_deposit - $this->invoice->total_ttc;
 				$discount->amount_tva = 0;
+				$discount->total_tva = 0;
 				$discount->tva_tx = 0;
 
 				$result = $discount->create(DolibarrApiAccess::$user);
@@ -1383,9 +1389,15 @@ class Invoices extends DolibarrApi
 					$discount->amount_ht = abs($amount_ht[$tva_tx]);
 					$discount->amount_tva = abs($amount_tva[$tva_tx]);
 					$discount->amount_ttc = abs($amount_ttc[$tva_tx]);
+					$discount->total_ht = abs($amount_ht[$tva_tx]);
+					$discount->total_tva = abs($amount_tva[$tva_tx]);
+					$discount->total_ttc = abs($amount_ttc[$tva_tx]);
 					$discount->multicurrency_amount_ht = abs($multicurrency_amount_ht[$tva_tx]);
 					$discount->multicurrency_amount_tva = abs($multicurrency_amount_tva[$tva_tx]);
 					$discount->multicurrency_amount_ttc = abs($multicurrency_amount_ttc[$tva_tx]);
+					$discount->multicurrency_total_ht = abs($multicurrency_amount_ht[$tva_tx]);
+					$discount->multicurrency_total_tva = abs($multicurrency_amount_tva[$tva_tx]);
+					$discount->multicurrency_total_ttc = abs($multicurrency_amount_ttc[$tva_tx]);
 					$discount->tva_tx = abs((float) $tva_tx);
 
 					$result = $discount->create(DolibarrApiAccess::$user);
