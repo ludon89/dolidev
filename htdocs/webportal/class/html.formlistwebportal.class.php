@@ -410,7 +410,7 @@ class FormListWebPortal
 						continue;
 					}
 					$field_spec = $this->object->fields[$key];
-					// @phan-suppress-next-line PhanTypeMismatchProperty
+					// @phan-suppress-next-line PhanTypeMismatchProperty PhanTypePossiblyInvalidDimOffset
 					$alias = $field_spec['alias'] ?? 't.';
 					$mode_search = (($this->object->isInt($field_spec) || $this->object->isFloat($field_spec)) ? 1 : 0);
 					if ((strpos($field_spec['type'], 'integer:') === 0) || (strpos($field_spec['type'], 'sellist:') === 0) || !empty($field_spec['arrayofkeyval'])) {
@@ -425,7 +425,7 @@ class FormListWebPortal
 							$val = '';
 						}
 					}
-					// @phan-suppress-next-line PhanTypeMismatchProperty
+					// @phan-suppress-next-line PhanTypeMismatchProperty PhanTypePossiblyInvalidDimOffset
 					if (empty($field_spec['searchmulti'])) {
 						if (!is_array($val) && $val != '') {
 							$this->sql_body .= natural_search($alias . $this->db->escape($key), $val, (($key == 'status') ? 2 : $mode_search));
@@ -439,7 +439,7 @@ class FormListWebPortal
 					$columnName = preg_replace('/(_dtstart|_dtend)$/', '', $key);
 					if (array_key_exists($columnName, $this->object->fields)) {
 						$field_spec = $this->object->fields[$columnName];
-						// @phan-suppress-next-line PhanTypeMismatchProperty
+						// @phan-suppress-next-line PhanTypeMismatchProperty PhanTypePossiblyInvalidDimOffset
 						$alias = $field_spec['alias'] ?? 't.';
 						if (preg_match('/^(date|timestamp|datetime)/', $field_spec['type'])) {
 							if (preg_match('/_dtstart$/', $key)) {
@@ -615,7 +615,7 @@ class FormListWebPortal
 					$remaintopay = 0;
 				}
 				if ($this->object->type == Facture::TYPE_CREDIT_NOTE && $this->object->paye == 1) {
-					// @phan-suppress-next-line PhanTypeMismatchArgument
+					// @phan-suppress-next-line PhanTypeMismatchArgumentProbablyReal
 					$remaincreditnote = $discount->getAvailableDiscounts($companyStatic, '', 'rc.fk_facture_source=' . $this->object->id);
 					$remaintopay = -$remaincreditnote;
 				}
@@ -712,10 +712,10 @@ class FormListWebPortal
 	/**
 	 * Get class css list
 	 *
-	 * @param	string		$field_key		Field key
-	 * @param	array		$field_spec		Field specification
-	 * @param	bool		$for_value		For td of value
-	 * @return	string						Class used for list <td class="xxxx">
+	 * @param	string					$field_key		Field key
+	 * @param	array<string,mixed>		$field_spec		Field specification
+	 * @param	bool					$for_value		For td of value
+	 * @return	string									Class used for list <td class="xxxx">
 	 */
 	public function getClasseCssList($field_key, $field_spec, $for_value = false)
 	{
