@@ -15312,7 +15312,7 @@ function showValueWithClipboardCPButton($valuetocopy, $showonlyonhover = 1, $tex
 
 	$tag = 'span'; 	// Using div (like any style of type 'block') does not work when using the js copy code.
 
-	$result = '<span class="clipboardCP' . ($showonlyonhover ? ' clipboardCPShowOnHover' : '') . '">';
+	$result = '<span class="clipboardCP' . ($showonlyonhover ? ' clipboardCPShowOnHover valignmiddle' : '') . '">';
 	if ($texttoshow === 'none') {
 		$result .= '<' . $tag . ' class="clipboardCPValue hidewithsize">' . dol_escape_htmltag($valuetocopy, 1, 1) . '</' . $tag . '>';
 		$result .= '<span class="clipboardCPValueToPrint"></span>';

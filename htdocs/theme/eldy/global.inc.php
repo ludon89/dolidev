@@ -430,6 +430,7 @@ input[type=checkbox], input[type=radio] {
 	background-color: var(--colortextlink, #0a58ca);
 }
 
+/* input fields */
 .kanban input.checkforselect {
 	margin-right: 0px;
 	margin-top: 5px;
@@ -437,13 +438,15 @@ input[type=checkbox], input[type=radio] {
 input {
 	padding: 5px;
 	padding-left: 5px;
-	<?php if (getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT')) { ?>
+	<?php if (!getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT')) { ?>
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 	<?php } ?>
 }
 .liste_titre input {
 	line-height: 1.3em;
+	padding: 3px;
+	padding-left: 3px;
 }
 .tableforfield input {
 	padding-left: 2px;
@@ -516,9 +519,13 @@ div.tabBar textarea:focus:not(.textarea-ai_feature):not(.cke_source) {
 input:focus:not(.button):not(.buttonwebsite):not(.buttonreset):not(.select2-search__field):not(#top-bookmark-search-input):not(.search_component_input):not(.input-nobottom),
  select:focus, .select2-container--open [aria-expanded="false"].select2-selection--single,
  .select2-container--focus span.selection span.select2-selection {
+<?php if (getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT')) { ?>
+	border: 1px solid #666 !important;
+<?php } else { ?>
 	border-bottom: 1px solid #666 !important;
 	border-bottom-left-radius: 0 !important;
 	border-bottom-right-radius: 0 !important;
+<?php } ?>
 }
 textarea.cke_source:focus
 {
@@ -6559,6 +6566,9 @@ table.jPicker tr:first-of-type td {
 	height: 2px !important;
 	line-height: 2px;
 }
+.jPicker .Icon {
+	margin-left: 2px;
+}
 .jPicker .Move {
 	background: unset !important;
 	border: unset !important;
@@ -6602,6 +6612,9 @@ span.jPicker {
 	border-radius: 4px;
 	border-collapse: collapse;
 	border: none;
+}
+.jPicker td.Text input {
+	width: 35px !important;
 }
 
 A.color, A.color:active, A.color:visited {
