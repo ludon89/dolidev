@@ -42,7 +42,7 @@ class FormListWebPortal
 	public $db;
 
 	/**
-	 * @var	Controller Controller handler
+	 * @var	AbstractListController Controller handler
 	 */
 	public $controller;
 	/**
@@ -120,7 +120,7 @@ class FormListWebPortal
 	 */
 	public $arrayfields = array();
 	/**
-	 * @var string[] Search filters
+	 * @var array<string,mixed> Search filters
 	 */
 	public $search = array();
 	/**
