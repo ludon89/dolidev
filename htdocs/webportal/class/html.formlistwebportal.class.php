@@ -169,8 +169,8 @@ class FormListWebPortal
 	/**
 	 * Init
 	 *
-	 * @param	Controller	$controller		Controller handler
-	 * @param	string		$elementEn		Element (english) : "propal", "order", "invoice"
+	 * @param	AbstractListController	$controller		Controller handler
+	 * @param	string					$elementEn		Element (english) : "propal", "order", "invoice"
 	 * @return	void
 	 */
 	public function init(&$controller, $elementEn)
@@ -406,10 +406,11 @@ class FormListWebPortal
 					if (($key == 'status' || $key == 'fk_statut') && $val == $this->emptyValueKey) {
 						continue;
 					}
-					$field_spec = $this->object->fields[$key];
-					if ($field_spec === null) {
+					if (!isset($this->object->fields[$key])) {
 						continue;
 					}
+					$field_spec = $this->object->fields[$key];
+					// @phan-suppress-next-line PhanTypeMismatchProperty
 					$alias = $field_spec['alias'] ?? 't.';
 					$mode_search = (($this->object->isInt($field_spec) || $this->object->isFloat($field_spec)) ? 1 : 0);
 					if ((strpos($field_spec['type'], 'integer:') === 0) || (strpos($field_spec['type'], 'sellist:') === 0) || !empty($field_spec['arrayofkeyval'])) {
@@ -424,6 +425,7 @@ class FormListWebPortal
 							$val = '';
 						}
 					}
+					// @phan-suppress-next-line PhanTypeMismatchProperty
 					if (empty($field_spec['searchmulti'])) {
 						if (!is_array($val) && $val != '') {
 							$this->sql_body .= natural_search($alias . $this->db->escape($key), $val, (($key == 'status') ? 2 : $mode_search));
@@ -437,6 +439,7 @@ class FormListWebPortal
 					$columnName = preg_replace('/(_dtstart|_dtend)$/', '', $key);
 					if (array_key_exists($columnName, $this->object->fields)) {
 						$field_spec = $this->object->fields[$columnName];
+						// @phan-suppress-next-line PhanTypeMismatchProperty
 						$alias = $field_spec['alias'] ?? 't.';
 						if (preg_match('/^(date|timestamp|datetime)/', $field_spec['type'])) {
 							if (preg_match('/_dtstart$/', $key)) {
@@ -549,9 +552,9 @@ class FormListWebPortal
 	/**
 	 * Print input field for search list
 	 *
-	 * @param	string		$field_key		Field key
-	 * @param	array		$field_spec		Field specification
-	 * @return	string						HTML input
+	 * @param	string					$field_key		Field key
+	 * @param	array<string,mixed>		$field_spec		Field specification
+	 * @return	string									HTML input
 	 */
 	public function printSearchInput($field_key, $field_spec)
 	{
@@ -611,7 +614,8 @@ class FormListWebPortal
 				if ($this->object->status == Facture::STATUS_CLOSED && $this->object->close_code == 'discount_vat') {        // If invoice closed with discount for anticipated payment
 					$remaintopay = 0;
 				}
-				if ($this->object->type == Facture::TYPE_CREDIT_NOTE && $this->object->paye == 1 && $discount) {
+				if ($this->object->type == Facture::TYPE_CREDIT_NOTE && $this->object->paye == 1) {
+					// @phan-suppress-next-line PhanTypeMismatchArgument
 					$remaincreditnote = $discount->getAvailableDiscounts($companyStatic, '', 'rc.fk_facture_source=' . $this->object->id);
 					$remaintopay = -$remaincreditnote;
 				}
@@ -625,12 +629,12 @@ class FormListWebPortal
 	/**
 	 * Print value for list
 	 *
-	 * @param	string		$field_key		Field key
-	 * @param	array		$field_spec		Field specification
-	 * @param	stdClass	$record			Contain data of object from database
-	 * @param	int			$i				Index line (0, 1, 2, ...)
-	 * @param	array		$totalarray		Array for total line
-	 * @return	string						HTML input
+	 * @param	string					$field_key		Field key
+	 * @param	array<string,mixed>		$field_spec		Field specification
+	 * @param	stdClass				$record			Contain data of object from database
+	 * @param	int						$i				Index line (0, 1, 2, ...)
+	 * @param	array<string,mixed>		$totalarray		Array for total line
+	 * @return	string									HTML input
 	 */
 	public function printValue($field_key, $field_spec, &$record, $i, &$totalarray)
 	{
@@ -653,7 +657,7 @@ class FormListWebPortal
 					if ($this->element == 'invoice') {
 						$out = $this->form->showOutputFieldForObject($this->object, $this->arrayfields['remain_to_pay'], 'remain_to_pay', $record->invoice_remaintopay, '');
 					}
-				} elseif ($field_key == 'signature_link') {
+				} elseif ($field_key == 'download_link') {
 					$element = $this->element;
 					$filename = dol_sanitizeFileName($this->object->ref);
 					$filedir = $conf->{$element}->multidir_output[$this->object->entity] . '/' . dol_sanitizeFileName($this->object->ref);
@@ -676,11 +680,11 @@ class FormListWebPortal
 	/**
 	 * Set total value for list
 	 *
-	 * @param	string		$field_key		Field key
-	 * @param	array		$field_spec		Field specification
-	 * @param	stdClass	$record			Contain data of object from database
-	 * @param	int			$i				Index line (0, 1, 2, ...)
-	 * @param	array		$totalarray		Array for total line
+	 * @param	string					$field_key		Field key
+	 * @param	array<string,mixed>		$field_spec		Field specification
+	 * @param	stdClass				$record			Contain data of object from database
+	 * @param	int						$i				Index line (0, 1, 2, ...)
+	 * @param	array<string,mixed>		$totalarray		Array for total line
 	 * @return	void
 	 */
 	public function setTotalValue($field_key, $field_spec, &$record, $i, &$totalarray)
