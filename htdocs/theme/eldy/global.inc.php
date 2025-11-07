@@ -1641,8 +1641,8 @@ select.flat.selectlimit {
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 }
-.marginrightonly {
-	margin-<?php echo $right; ?>: 10px !important;
+.nomarginleft {
+	margin-<?php echo $left; ?>: 0px !important;
 }
 .marginleftonly {
 	margin-<?php echo $left; ?>: 10px !important;
@@ -1650,8 +1650,8 @@ select.flat.selectlimit {
 .marginleftonlyshort {
 	margin-<?php echo $left; ?>: 4px !important;
 }
-.nomarginleft {
-	margin-<?php echo $left; ?>: 0px !important;
+.marginleftonlylarge{
+	margin-<?php echo $left; ?>: 20px !important;
 }
 .nomarginright {
 	margin-<?php echo $right; ?>: 0px !important;
