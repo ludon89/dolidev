@@ -13957,12 +13957,6 @@ parameters:
 			path: ../../../htdocs/public/recruitment/index.php
 
 		-
-			message: '#^Variable \$dolibarr_main_url_root might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../../../htdocs/public/recruitment/index.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
