@@ -573,11 +573,6 @@ input {
 	padding-right: 6px !important;
 }
 
-/*
-input, input.flat, textarea, textarea.flat, form.flat select, select, select.flat, .dataTables_length label select {
-	background-color: #FDFDFD;
-}
-*/
 select.vmenusearchselectcombo {
 	background-color: unset;
 }
@@ -631,7 +626,6 @@ input, input.flat, form.flat select, select, select.flat, .dataTables_length lab
 	border: none;
 }
 input, input.flat, textarea, textarea.flat, form.flat select, select, select.flat, .dataTables_length label select {
-	border<?php echo !getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT') ? '-bottom' : ''; ?>: solid 1px var(--inputbordercolor);
 	color: var(--colortext);
 	font-family: <?php print $fontlist ?>;
 	outline: none;
@@ -639,6 +633,9 @@ input, input.flat, textarea, textarea.flat, form.flat select, select, select.fla
 	background-color: var(--inputbackgroundcolor);
 	<?php if (!getDolGlobalString('THEME_ADD_BACKGROUND_ON_INPUT')) { ?>
 		border<?php echo !getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT') ? '-bottom' : ''; ?>: solid 1px var(--inputbordercolor);
+	<?php }
+	if (getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT')) { ?>
+		border-radius: 5px;
 	<?php } ?>
 }
 
@@ -7474,10 +7471,12 @@ select.multiselectononeline {
 	/* CSS to have the dropdown boxes larger that the input search area */
 	.select2-container.select2-container--open:not(.graphtype, .limit, .combolargeelem):not(.yesno) .select2-dropdown.ui-dialog {
 		min-width: 260px !important;
+		padding: 8px;
 	}
 	.select2-container.select2-container--open:not(.graphtype, .limit, .combolargeelem):not(.yesno) .select2-dropdown--below:not(.onrightofpage),
 	.select2-container.select2-container--open:not(.graphtype, .limit, .combolargeelem):not(.yesno) .select2-dropdown--above:not(.onrightofpage) {
 		min-width: 260px !important;
+		padding: 8px;
 	}
 	.onrightofpage span.select2-dropdown.ui-dialog.select2-dropdown--below,
 	.onrightofpage span.select2-dropdown.ui-dialog.select2-dropdown--above {
