@@ -9149,6 +9149,9 @@ table.jPicker {
 	.navselectiondate {
 		width: 220px;
 	}
+	.maxwidthdate  {
+		max-width: 105px;	/* lower than 105, text is truncated with some smartphone resolution */
+	}
 
 	#tooltip {
 		position: absolute;
