@@ -7780,11 +7780,16 @@ class Form
 		if ($d) {
 			// Show date with popup
 			if ($usecalendar != 'combo') {
+				// Set formatted_date (for example: '%d/%m/%Y', '%m-%d-%y', ...
 				$formatted_date = '';
-				//print "e".$set_time." t ".$conf->format_date_short;
 				if (strval($set_time) != '' && $set_time != -1) {
-					//$formatted_date=dol_print_date($set_time,$conf->format_date_short);
-					$formatted_date = dol_print_date($set_time, $langs->trans("FormatDateShortInput"), $gm); // FormatDateShortInput for dol_print_date / FormatDateShortJavaInput that is same for javascript
+					$reduceformat = (!empty($conf->dol_optimize_smallscreen) ? 1 : 0);	// Test on original $format param.
+					if ($reduceformat) {
+						$format = str_replace('%Y', '%y', $langs->transnoentitiesnoconv("FormatDateShortInput")); // FormatDateShortInput for dol_print_date / FormatDateShortJavaInput that is same for javascript
+					} else {
+						$format = $langs->transnoentitiesnoconv("FormatDateShortInput"); // FormatDateShortInput for dol_print_date / FormatDateShortJavaInput that is same for javascript
+					}
+					$formatted_date = dol_print_date($set_time, $format, $gm); // FormatDateShortInput for dol_print_date / FormatDateShortJavaInput that is same for javascript
 				}
 
 				// Calendrier popup version eldy
