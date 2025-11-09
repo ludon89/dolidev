@@ -7785,8 +7785,7 @@ class Form
 				if ($reduceformat) {
 					$format = str_replace('%Y', '%y', $langs->transnoentitiesnoconv("FormatDateShortInput")); // FormatDateShortInput for dol_print_date / FormatDateShortJavaInput that is same for javascript
 					$formatjs = str_replace('yyyy', 'yy', $langs->transnoentitiesnoconv("FormatDateShortJavaInput"));
-					//$formatjquery = str_replace('yyyy', 'yy', $langs->trans("FormatDateShortJQueryInput"));
-					$formatjquery = $langs->trans("FormatDateShortJQueryInput");
+					$formatjquery = str_replace('yyyy', 'yy', $langs->trans("FormatDateShortJQueryInput"));
 				} else {
 					$format = $langs->transnoentitiesnoconv("FormatDateShortInput"); // FormatDateShortInput for dol_print_date / FormatDateShortJavaInput that is same for javascript
 					$formatjs = $langs->transnoentitiesnoconv("FormatDateShortJavaInput"); // FormatDateShortInput for dol_print_date / FormatDateShortJavaInput that is same for javascript
