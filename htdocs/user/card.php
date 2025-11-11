@@ -1079,9 +1079,9 @@ if ($action == 'create' || $action == 'adduserldap') {
 					lastname = $("#lastname").val().toLowerCase();
 			';
 		if (getDolGlobalString('MAIN_BUILD_LOGIN_RULE') == 'f.lastname') {
-			print '			firstname = $("#firstname").val().toLowerCase()[0];';
+			print '			firstname = $("#firstname").val().toLowerCase().replace(/\s+/g, \'\').trim()[0];';
 		} else {
-			print '			firstname = $("#firstname").val().toLowerCase();';
+			print '			firstname = $("#firstname").val().toLowerCase().replace(/\s+/g, \'\').trim();';
 		}
 		print '
 					login = "";
@@ -1089,7 +1089,7 @@ if ($action == 'create' || $action == 'adduserldap') {
 						if (firstname) {
 							login = firstname + \''. dol_escape_js($charforseparator).'\';
 						}
-						login += lastname;
+						login += lastname.replace(/\s+/g, \'\').trim();
 					}
 					$("#login").val(login);
 				})
