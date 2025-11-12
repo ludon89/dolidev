@@ -38,6 +38,7 @@ require '../main.inc.php';
  * @var Conf $conf
  * @var DoliDB $db
  * @var HookManager $hookmanager
+ * @var MenuManager $menumanager
  * @var Translate $langs
  * @var User $user
  */
@@ -96,6 +97,7 @@ $object->loadRights();
 
 $entity = $conf->entity;
 
+
 /*
  * Actions
  */
@@ -148,24 +150,6 @@ if (empty($reshook)) {
 	}
 }
 
-
-/*
- *	View
- */
-
-$form = new Form($db);
-
-$person_name = !empty($object->firstname) ? $object->lastname.", ".$object->firstname : $object->lastname;
-$title = $person_name." - ".$langs->trans('Permissions');
-$help_url = '';
-llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-user page-card_perms');
-
-$head = user_prepare_head($object);
-
-$title = $langs->trans("User");
-print dol_get_fiche_head($head, 'rights', $title, -1, 'user');
-
-
 $db->begin();
 
 // Search all modules with permission and reload permissions def.
@@ -193,7 +177,7 @@ foreach ($modulesdir as $dir) {
 					}
 					// Load all permissions
 					if ($objMod->rights_class) {
-						$ret = $objMod->insert_permissions(0, $entity);
+						$objMod->insert_permissions(0, $entity);
 						$modules[$objMod->rights_class] = $objMod;
 						//print "modules[".$objMod->rights_class."]=$objMod;";
 					}
@@ -207,10 +191,102 @@ $db->commit();
 
 '@phan-var-force DolibarrModules[] $modules';
 
+
+// Fix bad value for module_position in table
+// ------------------------------------------
+$sql = "SELECT r.id, r.libelle as label, r.module, r.perms, r.subperms, r.module_position, r.family, r.family_position, r.bydefault";
+$sql .= " FROM ".MAIN_DB_PREFIX."rights_def as r";
+$sql .= " WHERE r.libelle NOT LIKE 'tou%'"; // We ignore permission "tous les tiers". Why ?
+$sql .= " AND r.entity = ".((int) $entity);
+$sql .= " ORDER BY r.family_position, r.module_position, r.module, r.id";
+
+$result = $db->query($sql);
+if ($result) {
+	$num = $db->num_rows($result);
+	$i = 0;
+	$oldmod = '';
+
+	while ($i < $num) {
+		$obj = $db->fetch_object($result);
+
+		// If line is for a module that does not exist anymore (absent of includes/module), we ignore it
+		if (!isset($obj->module) || empty($modules[$obj->module])) {
+			$i++;
+			continue;
+		}
+
+		// Special cases
+		if (isModEnabled("reception")) {
+			// The 2 permissions in vendor modules are replaced by the 2 permissions into reception module
+			if ($obj->module == 'fournisseur' && $obj->perms == 'commande' && $obj->subperms == 'receptionner') {
+				$i++;
+				continue;
+			}
+			if ($obj->module == 'fournisseur' && $obj->perms == 'commande_advance' && $obj->subperms == 'check') {
+				$i++;
+				continue;
+			}
+		}
+
+		$objMod = $modules[$obj->module];
+
+		// Save field module_position in database if value is undefined or wrong (old data/version)
+		if (empty($obj->module_position) || (is_object($objMod) && $objMod->isCoreOrExternalModule() == 'external' && $obj->module_position < 100000)) {
+			if (is_object($modules[$obj->module]) && ($modules[$obj->module]->module_position > 0)) {
+				// TODO Define familyposition
+				//$familyposition = $modules[$obj->module]->family_position;
+				$familyposition = 0;
+
+				$newmoduleposition = $modules[$obj->module]->module_position;
+
+				// Correct $newmoduleposition position for external modules
+				$objMod = $modules[$obj->module];
+				if (is_object($objMod) && $objMod->isCoreOrExternalModule() == 'external' && $newmoduleposition < 100000) {
+					$newmoduleposition += 100000;
+				}
+
+				$sqlupdate = 'UPDATE '.MAIN_DB_PREFIX."rights_def SET module_position = ".((int) $newmoduleposition).",";
+				$sqlupdate .= " family_position = ".((int) $familyposition);
+				$sqlupdate .= " WHERE module_position = ".((int) $obj->module_position)." AND module = '".$db->escape($obj->module)."'";
+
+				$db->query($sqlupdate);
+			}
+		}
+
+		// Save field family in database if value is undefined (old data/version)
+		if (empty($obj->family) && is_object($objMod) && !empty($objMod->family)) {
+			$newfamily = $objMod->family;
+			$sqlupdate = 'UPDATE '.MAIN_DB_PREFIX."rights_def SET family = '".$db->escape($newfamily)."'";
+			$sqlupdate .= " WHERE id = ".((int) $obj->id);
+
+			$db->query($sqlupdate);
+		}
+	}
+} else {
+	dol_print_error($db);
+}
+
+
+/*
+ *	View
+ */
+
+$form = new Form($db);
+
+$person_name = !empty($object->firstname) ? $object->lastname.", ".$object->firstname : $object->lastname;
+$title = $person_name." - ".$langs->trans('Permissions');
+$help_url = '';
+llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-user page-card_perms');
+
+$head = user_prepare_head($object);
+
+$title = $langs->trans("User");
+print dol_get_fiche_head($head, 'rights', $title, -1, 'user');
+
 // Read permissions of edited user
 $permsuser = array();
 
-$sql = "SELECT DISTINCT ur.fk_id";
+$sql = "SELECT ur.fk_id";
 $sql .= " FROM ".MAIN_DB_PREFIX."user_rights as ur";
 $sql .= " WHERE ur.entity = ".((int) $entity);
 $sql .= " AND ur.fk_user = ".((int) $object->id);
@@ -385,71 +461,6 @@ print ' | ';
 print '<a class="hideallperms" title="'.dol_escape_htmltag($langs->trans("HideAllPerms")).'" alt="'.dol_escape_htmltag($langs->trans("HideAllPerms")).'" href="#">'.img_picto('', 'folder', 'class="paddingright"').'<span class="hideonsmartphone">'.$langs->trans("UndoExpandAll").'</span></a>';
 print '</td>';
 print '</tr>'."\n";
-
-
-// Fix bad value for module_position in table
-// ------------------------------------------
-$sql = "SELECT r.id, r.libelle as label, r.module, r.perms, r.subperms, r.module_position, r.bydefault";
-$sql .= " FROM ".MAIN_DB_PREFIX."rights_def as r";
-$sql .= " WHERE r.libelle NOT LIKE 'tou%'"; // On ignore droits "tous"
-$sql .= " AND r.entity = ".((int) $entity);
-$sql .= " ORDER BY r.family_position, r.module_position, r.module, r.id";
-
-$result = $db->query($sql);
-if ($result) {
-	$num = $db->num_rows($result);
-	$i = 0;
-	$oldmod = '';
-
-	while ($i < $num) {
-		$obj = $db->fetch_object($result);
-
-		// If line is for a module that does not exist anymore (absent of includes/module), we ignore it
-		if (!isset($obj->module) || empty($modules[$obj->module])) {
-			$i++;
-			continue;
-		}
-
-		// Special cases
-		if (isModEnabled("reception")) {
-			// The 2 permissions in fournisseur modules are replaced by permissions into reception module
-			if ($obj->module == 'fournisseur' && $obj->perms == 'commande' && $obj->subperms == 'receptionner') {
-				$i++;
-				continue;
-			}
-			if ($obj->module == 'fournisseur' && $obj->perms == 'commande_advance' && $obj->subperms == 'check') {
-				$i++;
-				continue;
-			}
-		}
-
-		$objMod = $modules[$obj->module];
-
-		// Save field module_position in database if value is wrong
-		if (empty($obj->module_position) || (is_object($objMod) && $objMod->isCoreOrExternalModule() == 'external' && $obj->module_position < 100000)) {
-			if (is_object($modules[$obj->module]) && ($modules[$obj->module]->module_position > 0)) {
-				// TODO Define familyposition
-				//$familyposition = $modules[$obj->module]->family_position;
-				$familyposition = 0;
-
-				$newmoduleposition = $modules[$obj->module]->module_position;
-
-				// Correct $newmoduleposition position for external modules
-				$objMod = $modules[$obj->module];
-				if (is_object($objMod) && $objMod->isCoreOrExternalModule() == 'external' && $newmoduleposition < 100000) {
-					$newmoduleposition += 100000;
-				}
-
-				$sqlupdate = 'UPDATE '.MAIN_DB_PREFIX."rights_def SET module_position = ".((int) $newmoduleposition).",";
-				$sqlupdate .= " family_position = ".((int) $familyposition);
-				$sqlupdate .= " WHERE module_position = ".((int) $obj->module_position)." AND module = '".$db->escape($obj->module)."'";
-
-				$db->query($sqlupdate);
-			}
-		}
-	}
-}
-
 
 
 //print "xx".$conf->global->MAIN_USE_ADVANCED_PERMS;
