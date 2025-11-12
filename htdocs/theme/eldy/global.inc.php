@@ -9147,6 +9147,9 @@ table.jPicker {
 
 @media only screen and (max-width: 768px)
 {
+	.body {
+		font-size: 0.91em;
+	}
 	.pictofixedwidth {
 		text-align: start;
 		width: 1.5em;
