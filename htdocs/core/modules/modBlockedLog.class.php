@@ -170,6 +170,9 @@ class modBlockedLog extends DolibarrModules
 
 		$this->db->begin();
 
+		include_once DOL_DOCUMENT_ROOT.'/core/lib/security.lib.php';
+		include_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
+
 		// Create HMAC if it does not exists yet
 		$hmac_encoded_secret_key = getDolGlobalString('BLOCKEDLOG_HMAC_KEY');
 		if (empty($hmac_encoded_secret_key)) {
