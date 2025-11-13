@@ -1449,7 +1449,7 @@ if ($action == 'create' && $permissiontoadd) {
 			// Weight
 			print '<tr><td>';
 			print $langs->trans("Weight");
-			print '</td><td colspan="3"><input name="weight" size="4" value="'.GETPOSTINT('weight').'"> ';
+			print '</td><td colspan="3"><input name="weight" size="4" value="'.GETPOST('weight').'"> ';
 			$text = $formproduct->selectMeasuringUnits("weight_units", "weight", (string) GETPOSTINT('weight_units'), 0, 2);
 			$htmltext = $langs->trans("KeepEmptyForAutoCalculation");
 			print $form->textwithpicto($text, $htmltext);
@@ -1457,9 +1457,9 @@ if ($action == 'create' && $permissiontoadd) {
 			// Dim
 			print '<tr><td>';
 			print $langs->trans("Width").' x '.$langs->trans("Height").' x '.$langs->trans("Depth");
-			print ' </td><td colspan="3"><input name="trueWidth" size="4" value="'.GETPOSTINT('trueWidth').'">';
-			print ' x <input name="trueHeight" size="4" value="'.GETPOSTINT('trueHeight').'">';
-			print ' x <input name="trueDepth" size="4" value="'.GETPOSTINT('trueDepth').'">';
+			print ' </td><td colspan="3"><input name="trueWidth" size="4" value="'.GETPOST('trueWidth').'">';
+			print ' x <input name="trueHeight" size="4" value="'.GETPOST('trueHeight').'">';
+			print ' x <input name="trueDepth" size="4" value="'.GETPOST('trueDepth').'">';
 			print ' ';
 			$text = $formproduct->selectMeasuringUnits("size_units", "size", (string) GETPOSTINT('size_units'), 0, 2);
 			$htmltext = $langs->trans("KeepEmptyForAutoCalculation");
