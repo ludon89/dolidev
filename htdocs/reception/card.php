@@ -1127,7 +1127,7 @@ $product_static = new Product($db);
 $reception_static = new Reception($db);
 $warehousestatic = new Entrepot($db);
 
-if ($action == 'create' && !getDolGlobalString('RECEPTION_STANDALONE')) {
+if ($action == 'create' && $origin != 'supplierorder' && !getDolGlobalString('RECEPTION_STANDALONE')) {
 	print load_fiche_titre($langs->trans("CreateReception"), '', 'dollyrevert');
 
 	print '<br>'.$langs->trans("ReceptionCreationIsDoneFromOrder");
@@ -1384,7 +1384,7 @@ if ($action == 'create' && $permissiontoadd) {
 			print '</td>';
 			print '</tr>';
 
-			// Tiers
+			// Thirdparty provider
 			print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans('Company').'</td>';
 			print '<td colspan="3">'.$soc->getNomUrl(1).'</td>';
 			print '</tr>';
@@ -1421,6 +1421,7 @@ if ($action == 'create' && $permissiontoadd) {
 			// Date delivery planned
 			print '<tr><td>'.$langs->trans("DateDeliveryPlanned").'</td>';
 			print '<td colspan="3">';
+			print img_picto('', 'action', 'class="pictofixedwidth"');
 			$date_delivery = ($date_delivery ? $date_delivery : $objectsrc->delivery_date); // $date_delivery comes from GETPOST
 			print $form->selectDate($date_delivery ? $date_delivery : -1, 'date_delivery', 1, 1, 1);
 			print "</td>\n";
