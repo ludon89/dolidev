@@ -98,7 +98,7 @@ if (empty($origin_id) && !empty($origin)) {
 $ref = GETPOST('ref', 'alpha');
 $line_id = GETPOSTINT('lineid') ? GETPOSTINT('lineid') : 0;
 $facid = GETPOSTINT('facid');
-$socid  =  GETPOSTINT('socid');
+$socid = GETPOSTINT('socid');
 $action	= GETPOST('action', 'alpha');
 //Select mail models is same action as presend
 if (GETPOST('modelselected')) {
@@ -139,7 +139,6 @@ $hookmanager->initHooks(array('receptioncard', 'globalcard'));
 
 $date_delivery = dol_mktime(GETPOSTINT('date_deliveryhour'), GETPOSTINT('date_deliverymin'), 0, GETPOSTINT('date_deliverymonth'), GETPOSTINT('date_deliveryday'), GETPOSTINT('date_deliveryyear'));
 $date_reception = dol_mktime(GETPOSTINT('date_receptionhour'), GETPOSTINT('date_receptionmin'), 0, GETPOSTINT('date_receptionmonth'), GETPOSTINT('date_receptionday'), GETPOSTINT('date_receptionyear'));
-
 
 // Security check
 if ($user->socid) {
@@ -313,13 +312,13 @@ if (empty($reshook)) {
 	if ($action == 'add' && $permissiontoadd) {
 		$db->begin();
 
-		if (GETPOSTINT('socid') < 1) {
-			$error++;
-			setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ThirdParty")), null, 'errors');
-			$action = 'create';
-		}
+		if (!$error && !$origin && getDolGlobalString('RECEPTION_STANDALONE')) {
+			if (GETPOSTINT('socid') < 1) {
+				$error++;
+				setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ThirdParty")), null, 'errors');
+				$action = 'create';
+			}
 
-		if (!$origin && getDolGlobalString('RECEPTION_STANDALONE')) {
 			$object->socid = GETPOSTINT('socid');
 			$object->fetch_thirdparty();
 			$object->note = GETPOST('note', 'alpha');
@@ -365,12 +364,13 @@ if (empty($reshook)) {
 			$object->note = GETPOST('note', 'alpha');
 			$object->note_private = GETPOST('note', 'alpha');
 			$object->origin = $origin;
+			$object->origin_type = $origin;
 			$object->origin_id = $origin_id;
 			$object->fk_project = GETPOSTINT('projectid');
-			$object->weight = GETPOSTINT('weight') == '' ? null : GETPOSTINT('weight');
-			$object->trueHeight = GETPOSTINT('trueHeight') == '' ? null : GETPOSTINT('trueHeight');
-			$object->trueWidth = GETPOSTINT('trueWidth') == '' ? null : GETPOSTINT('trueWidth');
-			$object->trueDepth = GETPOSTINT('trueDepth') == '' ? null : GETPOSTINT('trueDepth');
+			$object->weight = GETPOST('weight') == '' ? null : GETPOSTINT('weight');
+			$object->trueHeight = GETPOST('trueHeight') == '' ? null : GETPOSTINT('trueHeight');
+			$object->trueWidth = GETPOST('trueWidth') == '' ? null : GETPOSTINT('trueWidth');
+			$object->trueDepth = GETPOST('trueDepth') == '' ? null : GETPOSTINT('trueDepth');
 			$object->size_units = GETPOSTINT('size_units');
 			$object->weight_units = GETPOSTINT('weight_units');
 
@@ -384,14 +384,17 @@ if (empty($reshook)) {
 			$object->note_public = GETPOST('note_public', 'restricthtml');
 			$object->fk_incoterms = GETPOSTINT('incoterm_id');
 			$object->location_incoterms = GETPOST('location_incoterms', 'alpha');
+
 			if ($object->origin == "supplierorder") {
 				$object->origin = 'order_supplier';
+				$object->origin_type = 'order_supplier';
 				$classname = 'CommandeFournisseur';
 			} else {
 				$classname = ucfirst($object->origin);
 			}
 			$objectsrc = new $classname($db);
 			$objectsrc->fetch($object->origin_id);
+
 			$object->socid = $objectsrc->socid;
 			$object->fk_delivery_address = $objectsrc->fk_delivery_address;
 
@@ -650,18 +653,18 @@ if (empty($reshook)) {
 			$object->tracking_url = trim(GETPOST('tracking_url', 'restricthtml'));
 		}
 		if ($action == 'settrueWeight') {			// Test on permission already done
-			$object->trueWeight = GETPOSTINT('trueWeight');
-			$object->weight_units = GETPOSTINT('weight_units');
+			$object->trueWeight = GETPOST('trueWeight');
+			$object->weight_units = GETPOST('weight_units');
 		}
 		if ($action == 'settrueWidth') {			// Test on permission already done
-			$object->trueWidth = GETPOSTINT('trueWidth');
+			$object->trueWidth = GETPOST('trueWidth');
 		}
 		if ($action == 'settrueHeight') {			// Test on permission already done
-			$object->trueHeight = GETPOSTINT('trueHeight');
-			$object->size_units = GETPOSTINT('size_units');
+			$object->trueHeight = GETPOST('trueHeight');
+			$object->size_units = GETPOST('size_units');
 		}
 		if ($action == 'settrueDepth') {			// Test on permission already done
-			$object->trueDepth = GETPOSTINT('trueDepth');
+			$object->trueDepth = GETPOST('trueDepth');
 		}
 		if ($action == 'setshipping_method_id') {	// Test on permission already done
 			$object->shipping_method_id = GETPOSTINT('shipping_method_id');
