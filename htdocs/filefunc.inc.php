@@ -35,6 +35,10 @@
 
 define('DOL_MINOR_VERSION', '0.0-alpha');
 
+if (!defined('DOL_APPLICATION_TITLE')) {
+	define('DOL_APPLICATION_TITLE', 'Dolibarr');
+}
+
 require_once 'version.inc.php';		// Define the DOL_VERSION
 
 
