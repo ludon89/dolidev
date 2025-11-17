@@ -298,6 +298,17 @@ function getDolCurrency()
 }
 
 /**
+ * Return the default context page string
+ *
+ * @param	string		$s					Page path
+ * @return 	string							Value returned
+ */
+function getDolDefaultContextPage($s)
+{
+	return str_replace('_', '', basename(dirname($s)).basename($s, '.php'));
+}
+
+/**
  * Return Dolibarr user constant string value
  *
  * @param string 			$key 		Key to return value, return '' if not set
