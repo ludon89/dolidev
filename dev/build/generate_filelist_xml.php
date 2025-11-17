@@ -469,7 +469,7 @@ if ($checklock) {
 		}
 	}
 	if (empty($checksuminlockedfile)) {
-		print "The major version ".$checklockmajorversion." is not locked on scope ".$md5unalterable_files.".\n";
+		print "The major version ".$checklockmajorversion." is not locked on the scope ".$checksource." (no entry found into dev/lockedfiles.txt).\n";
 	} elseif ($checksuminlockedfile != $md5unalterable_files) {
 		print "The major version ".$checklockmajorversion." is locked on scope '".$checksource."' to checksum ".$checksuminlockedfile."\n";
 		if ($checklockmajorversion != $checksource) {
