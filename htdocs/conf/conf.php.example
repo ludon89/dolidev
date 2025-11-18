@@ -314,13 +314,13 @@ $dolibarr_main_restrict_os_commands='mariadb-dump, mariadb, mysqldump, mysql, pg
 
 // dolibarr_main_restrict_eval_methods
 // ==================================
-// To restrict commands you can execute in custom calculated fields like "computed fields" of extrafields or string
-// conditions of extrafields.
-// Default value: 'getDolGlobalString,getDolGlobalInt,fetchNoCompute'
+// A whitelist of functions and methods to restrict the commands you can execute in a custom calculated fields, like "computed fields" of
+// extrafields or string conditions of extrafields.
+// Default value: 'getDolGlobalString,getDolGlobalInt,fetchNoCompute,hasRight,isModEnabled,abs,round'
 // Examples:
-// $dolibarr_main_restrict_eval_methods='getDolGlobalString,getDolGlobalInt,fetchNoCompute';
+// $dolibarr_main_restrict_eval_methods='getDolGlobalString,getDolGlobalInt,fetchNoCompute,hasRight,isModEnabled,abs,round';
 //
-//$dolibarr_main_restrict_eval_methods='getDolGlobalString,getDolGlobalInt,fetchNoCompute';
+//$dolibarr_main_restrict_eval_methods='getDolGlobalString,getDolGlobalInt,fetchNoCompute,hasRight,isModEnabled,abs,round';
 
 // dolibarr_main_disabled_modules
 // ==================================
