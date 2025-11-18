@@ -287,6 +287,28 @@ function getDolGlobalBool($key, $default = false)
 }
 
 /**
+ * Return the main currency ('EUR', 'USD', ...)
+ *
+ * @return 	string							Value returned
+ */
+function getDolCurrency()
+{
+	global $conf;
+	return (string) $conf->currency;
+}
+
+/**
+ * Return the default context page string
+ *
+ * @param	string		$s					Page path
+ * @return 	string							Value returned
+ */
+function getDolDefaultContextPage($s)
+{
+	return str_replace('_', '', basename(dirname($s)).basename($s, '.php'));
+}
+
+/**
  * Return Dolibarr user constant string value
  *
  * @param string 			$key 		Key to return value, return '' if not set
@@ -600,6 +622,7 @@ function isASecretKey($keyname)
  */
 function num2Alpha($n)
 {
+	$r = '';
 	for ($r = ""; $n >= 0; $n = intval($n / 26) - 1) {
 		$r = chr($n % 26 + 0x41) . $r;
 	}
@@ -1333,6 +1356,7 @@ function sanitizeVal($out = '', $check = 'alphanohtml', $filter = null, $options
 			}
 			break;
 		case 'san_alpha':
+			dol_syslog("Use of parameter value 'san_alpha' in GETPOST is deprecated. Use 'alphanohtml', 'aZ09comma', ...", LOG_WARNING);
 			$out = filter_var($out, FILTER_SANITIZE_STRING);
 			break;
 		case 'email':
@@ -3787,7 +3811,13 @@ function dol_print_date($time, $format = '', $tzoutput = 'auto', $outputlangs = 
 				$offsettzstring = (empty($_SESSION['dol_tz_string']) ? 'UTC' : $_SESSION['dol_tz_string']); // Example 'Europe/Berlin' or 'Indian/Reunion'
 
 				if (class_exists('DateTimeZone')) {
-					$user_date_tz = new DateTimeZone($offsettzstring);
+					try {
+						$user_date_tz = new DateTimeZone($offsettzstring);
+					} catch (Exception $e) {
+						// Bad value for $offsettzstring
+						dol_syslog("DateInvalidTimeZoneException for timezone string '".$offsettzstring."'. Falling back to UTC.", LOG_ERR);
+						$user_date_tz = new DateTimeZone('UTC'); // Force valid timezone as UTC
+					}
 					$user_dt = new DateTime();
 					$user_dt->setTimezone($user_date_tz);
 					$user_dt->setTimestamp($tzoutput == 'tzuser' ? dol_now() : (int) $time);
@@ -6635,7 +6665,7 @@ function img_searchclear($titlealt = 'default', $other = '')
  *  @param	string		$morecss			More CSS ('', 'warning', 'error')
  *  @param	string		$textfordropdown	Show a text to click to dropdown the info box.
  *  @param	string		$picto				'' or 'warning'
- *	@return	string						String with info text
+ *	@return	string							String with info text
  */
 function info_admin($text, $infoonimgalt = 0, $nodiv = 0, $admin = '1', $morecss = 'hideonsmartphone', $textfordropdown = '', $picto = '')
 {
@@ -6872,7 +6902,7 @@ function dol_print_error_email($prefixcode, $errormessage = '', $errormessages =
  *	@param	string	$file        Url used when we click on sort picto
  *	@param	string	$field       Field to use for new sorting
  *	@param	string	$begin       ("" by default)
- *	@param	string	$moreparam   Add more parameters on sort url links ("" by default)
+ *	@param	string	$param       Add more parameters on sort url links ("" by default)
  *	@param  string	$moreattrib  Options of attribute td ("" by default)
  *	@param  ?string	$sortfield   Current field used to sort
  *	@param  ?string	$sortorder   Current sort order
@@ -6881,9 +6911,9 @@ function dol_print_error_email($prefixcode, $errormessage = '', $errormessages =
  *  @param	int		$forcenowrapcolumntitle		No need to use 'wrapcolumntitle' css style
  *	@return	void
  */
-function print_liste_field_titre($name, $file = "", $field = "", $begin = "", $moreparam = "", $moreattrib = "", $sortfield = "", $sortorder = "", $prefix = "", $tooltip = "", $forcenowrapcolumntitle = 0)
+function print_liste_field_titre($name, $file = "", $field = "", $begin = "", $param = "", $moreattrib = "", $sortfield = "", $sortorder = "", $prefix = "", $tooltip = "", $forcenowrapcolumntitle = 0)
 {
-	print getTitleFieldOfList($name, 0, $file, $field, $begin, $moreparam, $moreattrib, $sortfield, $sortorder, $prefix, 0, $tooltip, $forcenowrapcolumntitle);
+	print getTitleFieldOfList($name, 0, $file, $field, $begin, $param, $moreattrib, $sortfield, $sortorder, $prefix, 0, $tooltip, $forcenowrapcolumntitle);
 }
 
 /**
@@ -11803,8 +11833,9 @@ function dol_eval_new($s)
 function dol_eval_standard($s, $returnvalue = 1, $hideerrors = 1, $onlysimplestring = '1')
 {
 	// Only this global variables can be read by eval function and returned to caller
-	global $conf;	// Read of const is done with getDolGlobalString() but we need $conf->currency for example
-	global $db, $langs, $user, $website, $websitepage;
+	//global $conf;	// Disabled. Read of const is done with getDolGlobalString() and read of $conf->currency is done with getDolCurrency()
+	global $db;
+	global $langs, $user, $website, $websitepage;
 	global $action, $mainmenu, $leftmenu;
 	global $mysoc;
 	global $objectoffield;	// To allow the use of $objectoffield in computed fields

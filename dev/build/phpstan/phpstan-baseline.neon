@@ -151,6 +151,12 @@ parameters:
 			path: ../../../htdocs/accountancy/class/bookkeeping.class.php
 
 		-
+			message: '#^Variable \$obj might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: ../../../htdocs/accountancy/class/bookkeeping.class.php
+
+		-
 			message: '#^If condition is always false\.$#'
 			identifier: if.alwaysFalse
 			count: 1
@@ -843,18 +849,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 2
-			path: ../../../htdocs/admin/stocktransfer.php
-
-		-
-			message: '#^Variable \$setupnotempty in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
-			path: ../../../htdocs/admin/stocktransfer.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
 			count: 1
 			path: ../../../htdocs/admin/system/about.php
 
@@ -1072,12 +1066,6 @@ parameters:
 			message: '#^Comparison operation "\<\=" between 0 and 0 is always true\.$#'
 			identifier: smallerOrEqual.alwaysTrue
 			count: 1
-			path: ../../../htdocs/api/class/api_setup.class.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
 			path: ../../../htdocs/api/class/api_setup.class.php
 
 		-
@@ -3601,6 +3589,12 @@ parameters:
 			path: ../../../htdocs/compta/resultat/clientfourn.php
 
 		-
+			message: '#^Variable \$annee might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: ../../../htdocs/compta/resultat/index.php
+
+		-
 			message: '#^Variable \$description might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -4387,12 +4381,6 @@ parameters:
 			path: ../../../htdocs/core/actions_massactions.inc.php
 
 		-
-			message: '#^Variable \$listofobjectthirdparties in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
-			path: ../../../htdocs/core/actions_massactions.inc.php
-
-		-
 			message: '#^Variable \$triggername in empty\(\) always exists and is not falsy\.$#'
 			identifier: empty.variable
 			count: 1
@@ -4419,6 +4407,12 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with array\<mixed\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
+			count: 1
+			path: ../../../htdocs/core/actions_setmoduleoptions.inc.php
+
+		-
+			message: '#^Variable \$tmpdir might not be defined\.$#'
+			identifier: variable.undefined
 			count: 1
 			path: ../../../htdocs/core/actions_setmoduleoptions.inc.php
 
@@ -5119,12 +5113,6 @@ parameters:
 			path: ../../../htdocs/core/class/cleadstatus.class.php
 
 		-
-			message: '#^Property CommonDict\:\:\$id \(int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/core/class/cleadstatus.class.php
-
-		-
 			message: '#^Property Comment\:\:\$description \(string\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 2
@@ -5455,40 +5443,10 @@ parameters:
 			path: ../../../htdocs/core/class/conf.class.php
 
 		-
-			message: '#^Property CommonDict\:\:\$id \(int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/core/class/cproductnature.class.php
-
-		-
 			message: '#^Property Cstate\:\:\$code_departement \(string\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 4
 			path: ../../../htdocs/core/class/cstate.class.php
-
-		-
-			message: '#^Property Cstate\:\:\$name \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
-			path: ../../../htdocs/core/class/cstate.class.php
-
-		-
-			message: '#^Property Cstate\:\:\$nom \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
-			path: ../../../htdocs/core/class/cstate.class.php
-
-		-
-			message: '#^Property Cstate\:\:\$rowid \(int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/core/class/cstate.class.php
-
-		-
-			message: '#^Property CommonDict\:\:\$id \(int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
-			path: ../../../htdocs/core/class/ctypent.class.php
 
 		-
 			message: '#^Property Ctypent\:\:\$libelle \(string\) in isset\(\) is not nullable\.$#'
@@ -5524,12 +5482,6 @@ parameters:
 			message: '#^Property CUnits\:\:\$unit_type \(string\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 4
-			path: ../../../htdocs/core/class/cunits.class.php
-
-		-
-			message: '#^Property CommonDict\:\:\$id \(int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
 			path: ../../../htdocs/core/class/cunits.class.php
 
 		-
@@ -6601,6 +6553,12 @@ parameters:
 			path: ../../../htdocs/core/lib/agenda.lib.php
 
 		-
+			message: '#^Variable \$s might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: ../../../htdocs/core/lib/bank.lib.php
+
+		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -7393,6 +7351,12 @@ parameters:
 			path: ../../../htdocs/core/modules/facture/doc/pdf_sponge.modules.php
 
 		-
+			message: '#^Variable \$fac might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: ../../../htdocs/core/modules/facture/doc/pdf_sponge.modules.php
+
+		-
 			message: '#^Access to constant TYPE_NON on an unknown class Sprain\\SwissQrBill\\DataGroup\\Element\\PaymentReference\.$#'
 			identifier: class.notFound
 			count: 1
@@ -8179,12 +8143,6 @@ parameters:
 			path: ../../../htdocs/core/modules/rapport/pdf_paiement.class.php
 
 		-
-			message: '#^Property Reception\:\:\$trueWeight \(float\|int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/core/modules/reception/doc/pdf_squille.modules.php
-
-		-
 			message: '#^Ternary operator condition is always false\.$#'
 			identifier: ternary.alwaysFalse
 			count: 1
@@ -8836,12 +8794,6 @@ parameters:
 			message: '#^Right side of \|\| is always true\.$#'
 			identifier: booleanOr.rightAlwaysTrue
 			count: 1
-			path: ../../../htdocs/eventorganization/conferenceorboothattendee_list.php
-
-		-
-			message: '#^Variable \$projectref might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
 			path: ../../../htdocs/eventorganization/conferenceorboothattendee_list.php
 
 		-
@@ -12265,6 +12217,12 @@ parameters:
 			path: ../../../htdocs/product/stats/card.php
 
 		-
+			message: '#^Variable \$year might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: ../../../htdocs/product/stats/card.php
+
+		-
 			message: '#^Variable \$sortfield in empty\(\) always exists and is not falsy\.$#'
 			identifier: empty.variable
 			count: 1
@@ -12556,6 +12514,12 @@ parameters:
 			message: '#^Variable \$month might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
+			path: ../../../htdocs/product/stock/movement_list.php
+
+		-
+			message: '#^Variable \$productlabelselected might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
 			path: ../../../htdocs/product/stock/movement_list.php
 
 		-
@@ -14227,12 +14191,6 @@ parameters:
 			path: ../../../htdocs/reception/class/reception.class.php
 
 		-
-			message: '#^Property Reception\:\:\$size_units \(int\|string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
-			path: ../../../htdocs/reception/class/reception.class.php
-
-		-
 			message: '#^Property Reception\:\:\$socid \(int\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 2
@@ -14242,30 +14200,6 @@ parameters:
 			message: '#^Property Reception\:\:\$tracking_number \(string\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 2
-			path: ../../../htdocs/reception/class/reception.class.php
-
-		-
-			message: '#^Property Reception\:\:\$trueDepth \(float\|int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/reception/class/reception.class.php
-
-		-
-			message: '#^Property Reception\:\:\$trueHeight \(float\|int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/reception/class/reception.class.php
-
-		-
-			message: '#^Property Reception\:\:\$trueWeight \(float\|int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../../../htdocs/reception/class/reception.class.php
-
-		-
-			message: '#^Property Reception\:\:\$trueWidth \(float\|int\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
 			path: ../../../htdocs/reception/class/reception.class.php
 
 		-
@@ -15391,12 +15325,6 @@ parameters:
 			path: ../../../htdocs/takepos/index.php
 
 		-
-			message: '#^Loose comparison using \=\= between 0 and 1 will always evaluate to false\.$#'
-			identifier: equal.alwaysFalse
-			count: 1
-			path: ../../../htdocs/takepos/index.php
-
-		-
 			message: '#^Property CommonInvoiceLine\:\:\$product_type \(int\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -16059,13 +15987,7 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with object will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../../../htdocs/user/perms.php
-
-		-
-			message: '#^Variable \$menumanager might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
+			count: 1
 			path: ../../../htdocs/user/perms.php
 
 		-
