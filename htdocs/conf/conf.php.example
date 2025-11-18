@@ -318,9 +318,9 @@ $dolibarr_main_restrict_os_commands='mariadb-dump, mariadb, mysqldump, mysql, pg
 // extrafields or string conditions of extrafields.
 // Default value: 'getDolGlobalString,getDolGlobalInt,fetchNoCompute,hasRight,isModEnabled,abs,round'
 // Examples:
-// $dolibarr_main_restrict_eval_methods='getDolGlobalString,getDolGlobalInt,fetchNoCompute,hasRight,isModEnabled,abs,round';
+// $dolibarr_main_restrict_eval_methods='getDolGlobalString,getDolGlobalInt,fetchNoCompute,hasRight,isModEnabled,abs,round,dol_concat';
 //
-//$dolibarr_main_restrict_eval_methods='getDolGlobalString,getDolGlobalInt,fetchNoCompute,hasRight,isModEnabled,abs,round';
+$dolibarr_main_restrict_eval_methods='getDolGlobalString,getDolGlobalInt,fetchNoCompute,hasRight,isModEnabled,abs,round';
 
 // dolibarr_main_disabled_modules
 // ==================================

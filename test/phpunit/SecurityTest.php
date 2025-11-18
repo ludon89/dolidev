@@ -615,7 +615,7 @@ class SecurityTest extends CommonClassTest
 		$conf->global->MAIN_USE_DOL_EVAL_NEW = 0;
 		//$conf->global->MAIN_USE_DOL_EVAL_NEW = 1;
 		$conf->global->MAIN_ALLOW_DOUBLE_COLON_IN_DOL_EVAL = 0;
-		$conf->global->MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL = 0;
+		$conf->global->MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL = 1;
 
 
 		//$resulttest = dol_eval('((getDolGlobalString("MAIN_USE_ADVANCED_PERMS") ? $user->hasRight("user","group_advance","read") : $user->hasRight("user","user","lire")) || $user->admin) && !(isModEnabled("multicompany") && $conf->entity > 1 && getDolGlobalString("MULTICOMPANY_TRANSVERSE_MODE"))', 1, 0);
@@ -734,7 +734,7 @@ class SecurityTest extends CommonClassTest
 		print "result8b = ".$result."\n";
 		$this->assertStringContainsString('Bad string syntax to evaluate (mode 1, found call of a function or method without using the direct name of the function)', $result, 'The string was not detected as evil');
 
-		$conf->global->MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL = 1;
+		$conf->global->MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL = 0;
 
 		$result = (string) dol_eval('$a="test"; $$a;', 1, 0);
 		print "result9 = ".$result."\n";
@@ -803,24 +803,24 @@ class SecurityTest extends CommonClassTest
 		$this->assertEquals('1', $result, 'The string was not detected as evil');
 
 
-		// Test option MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL
+		// Test option MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL
 
-		$conf->global->MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL = 0;
+		$conf->global->MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL = 1;
 
 		$mainmenu = 'ex';
 		$result = (string) dol_eval('$mainmenu.\'ec\'', 1, 0);
 		print "resultconcat1 = ".$result."\n";
-		$this->assertStringContainsString('exec', $result, 'With MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL off. we should accept concat');
+		$this->assertStringContainsString('exec', $result, 'With MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL on. we should accept concat');
 
 		$mainmenu = 'ex';
 		$leftmenu = 'ec';
 		$result = (string) dol_eval("\$mainmenu.\$leftmenu", 1, 0);
 		print "resultconcat2 = ".$result."\n";
-		$this->assertStringContainsString('exec', $result, 'With MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL off. we should accept concat');
+		$this->assertStringContainsString('exec', $result, 'With MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL on. we should accept concat');
 
-		// Test option MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL = 1
+		// Test option MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL = 0
 
-		$conf->global->MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL = 1;
+		$conf->global->MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL = 0;
 
 		$leftmenu = 'ab';
 		$result = (string) dol_eval("(\$leftmenu.'s')", 1, 0);
@@ -830,7 +830,7 @@ class SecurityTest extends CommonClassTest
 
 		// Not allowed
 
-		$conf->global->MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL = 0;
+		$conf->global->MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL = 1;
 
 		$leftmenu = 'abs';
 		$result = (string) dol_eval('$leftmenu(-5)', 1, 0);

@@ -35,7 +35,7 @@ The following changes may create regressions for some external modules, but were
 * Property ->picto of module descriptors must contains the image extension if it is not a font awesome tag. Example: $this->picto="mymoduleimg.png";
 * Stock movement API GET method output variable names has been harmonized with POST input parameter names
 * $conf is no more allowed into computed formulae. You ca replace use of $conf->currency by NEW Introduce getCurrency() and $conf->global->xxx by getDolGlobalString('xxx')
-
+* Concatenation into computed property of extrafields is off by default. You can enable it with
 
 
 ***** ChangeLog for 22.0.3 compared to 22.0.2 *****

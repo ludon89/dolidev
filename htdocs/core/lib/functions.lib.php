@@ -9837,7 +9837,18 @@ function dol_concatdesc($text1, $text2, $forxml = false, $invert = false)
 	return $ret;
 }
 
-
+/**
+ *  Concat 2 strings. Can be used for dol_eval strings for example.
+ *
+ *  @param  string  $text1          Text 1
+ *  @param  string  $text2          Text 2
+ *  @return string                  Text 1 + new line + Text2
+ *  @see    dol_textishtml()
+ */
+function dol_concat($text1, $text2)
+{
+	return $text1.$text2;
+}
 
 /**
  * Return array of possible common substitutions. This includes several families like: 'system', 'mycompany', 'object', 'objectamount', 'date', 'user'
@@ -11883,6 +11894,13 @@ function dol_eval_standard($s, $returnvalue = 1, $hideerrors = 1, $onlysimplestr
 	}
 
 	try {
+		// Set $dolibarr_main_restrict_eval_methods_array
+		global $dolibarr_main_restrict_eval_methods;
+		$dolibarr_main_restrict_eval_methods_array = array();
+		if (!empty($dolibarr_main_restrict_eval_methods)) {
+			$dolibarr_main_restrict_eval_methods_array = explode(',', $dolibarr_main_restrict_eval_methods);
+		}
+
 		// Test on dangerous char (used for RCE), we allow only characters to make PHP variable testing
 		if ($onlysimplestring == '1' || $onlysimplestring == '2') {
 			// We must accept with 1: '1 && getDolGlobalInt("doesnotexist1") && getDolGlobalString("MAIN_FEATURES_LEVEL")'
@@ -11998,7 +12016,7 @@ function dol_eval_standard($s, $returnvalue = 1, $hideerrors = 1, $onlysimplestr
 		}
 
 		// Disallow also concat
-		if (getDolGlobalString('MAIN_DISALLOW_STRING_OBFUSCATION_IN_DOL_EVAL')) {
+		if (!getDolGlobalString('MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL')) {
 			if (preg_match('/[^0-9]+\.[^0-9]+/', $s)) {    // We refuse . if not between 2 numbers
 				if ($returnvalue) {
 					return 'Bad string syntax to evaluate (dot char is forbidden): ' . $s;
@@ -12031,7 +12049,7 @@ function dol_eval_standard($s, $returnvalue = 1, $hideerrors = 1, $onlysimplestr
 
 		$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("require", "include", "require_once", "include_once"));
 		$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("exec", "passthru", "shell_exec", "system", "proc_open", "popen"));
-		$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("dol_eval", "dol_eval_new", "dol_eval_standard", "dol_concatdesc", "executeCLI", "verifCond", "GETPOST", "dolEncrypt", "dolDecrypt"));	// native dolibarr functions
+		$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("dol_eval", "dol_eval_new", "dol_eval_standard", "executeCLI", "verifCond", "GETPOST", "dolEncrypt", "dolDecrypt"));	// native dolibarr functions
 		$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("eval", "create_function", "assert", "mb_ereg_replace")); // function with eval capabilities
 		$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("readline_completion_function", "readline_callback_handler_install"));
 		$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("dol_compress_dir", "dol_decode", "dol_dir_list", "dol_dir_list_in_database", "dol_delete_file", "dol_delete_dir", "dol_delete_dir_recursive", "dol_copy", "archiveOrBackupFile")); // more dolibarr functions
@@ -12040,10 +12058,22 @@ function dol_eval_standard($s, $returnvalue = 1, $hideerrors = 1, $onlysimplestr
 		if (!getDolGlobalString('MAIN_ALLOW_OBFUSCATION_METHODS_IN_DOL_EVAL')) {	// We disallow all function that allow to obfuscate the real name of a function
 			// @phpcs:ignore
 			$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("base64" . "_" . "decode", "rawurl" . "decode", "url" . "decode", "str" . "_rot13", "hex" . "2bin")); // name of forbidden functions are split to avoid false positive
-			$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("dol_concatdesc"));		// native dolibarr functions
+			$forbiddenphpfunctions = array_merge($forbiddenphpfunctions, array("dol_concat", "dol_concatdesc"));		// native dolibarr functions
+		}
+		// Remove from blacklist the function that are into the whitelist
+		foreach ($forbiddenphpfunctions as $key => $forbiddenphpfunction) {
+			if (in_array($forbiddenphpfunction, $dolibarr_main_restrict_eval_methods_array)) {
+				unset($forbiddenphpfunctions[$key]);
+			}
 		}
 
 		$forbiddenphpmethods = array('invoke', 'invokeArgs');	// Method of ReflectionFunction to execute a function
+		// Remove from blacklist the function that are into the whitelist
+		foreach ($forbiddenphpmethods as $key => $forbiddenphpmethod) {
+			if (in_array($forbiddenphpmethod, $dolibarr_main_restrict_eval_methods_array)) {
+				unset($forbiddenphpmethods[$key]);
+			}
+		}
 
 		$forbiddenphpregex = 'global\s*\$';
 		$forbiddenphpregex .= '|';
@@ -12071,9 +12101,8 @@ function dol_eval_standard($s, $returnvalue = 1, $hideerrors = 1, $onlysimplestr
 		}
 
 
-		// Now accept only white-listed allowed function and classes
-		global $dolibarr_main_restrict_eval_methods;
-		if (!empty($dolibarr_main_restrict_os_commands)) {
+		// Accept only white-listed allowed function and classes
+		if (!empty($dolibarr_main_restrict_eval_methods)) {
 			// TODO Get all pattern '/(\w+)\(/', then check that $reg[1] is a defined class or a function into a given list
 		}
 
