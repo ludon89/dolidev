@@ -1862,9 +1862,14 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 				}
 			}
 
+			print '<tr><td colspan="'.$colspan.'"><a class="paddingtop paddingbottom morefieldslnk onreposition" id="morefieldslnk" href="#">'.$langs->trans("More").'';
+			$nbactive = '...';
+			print '<span class="badge badge-secondary socialnetworklnk marginleftonly">'.$nbactive.'</span></a>';
+			print '</td>';
+			print '</tr>';
 
 			// Type - Workforce/Staff
-			print '<tr><td>'.$form->editfieldkey('ThirdPartyType', 'typent_id', '', $object, 0).'</td><td class="maxwidthonsmartphone"'.(($conf->browser->layout == 'phone' || getDolGlobalString('SOCIETE_DISABLE_WORKFORCE')) ? ' colspan="3"' : '').'>'."\n";
+			print '<tr class="morefields"><td>'.$form->editfieldkey('ThirdPartyType', 'typent_id', '', $object, 0).'</td><td class="maxwidthonsmartphone"'.(($conf->browser->layout == 'phone' || getDolGlobalString('SOCIETE_DISABLE_WORKFORCE')) ? ' colspan="3"' : '').'>'."\n";
 			$sortparam = getDolGlobalString('SOCIETE_SORT_ON_TYPEENT', 'ASC'); // NONE means we keep sort of original array, so we sort on position. ASC, means next function will sort on label.
 			print $form->selectarray("typent_id", $formcompany->typent_array(0), $object->typent_id, 1, 0, 0, '', 0, 0, 0, $sortparam, '', 1);
 			if ($user->admin) {
@@ -1886,7 +1891,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 			print '</td></tr>';
 
 			// Legal Form
-			print '<tr><td>'.$form->editfieldkey('JuridicalStatus', 'forme_juridique_code', '', $object, 0).'</td>';
+			print '<tr class="morefields"><td>'.$form->editfieldkey('JuridicalStatus', 'forme_juridique_code', '', $object, 0).'</td>';
 			print '<td colspan="3" class="maxwidthonsmartphone">';
 			if ($object->country_id) {
 				print $formcompany->select_juridicalstatus($object->forme_juridique_code, $object->country_code, '', 'forme_juridique_code');
@@ -1896,13 +1901,13 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 			print '</td></tr>';
 
 			// Date birth
-			print '<tr><td>'.$form->editfieldkey('CompnanyBirthDate', 'birth', '', $object, 0).'</td>';
+			print '<tr class="morefields"><td>'.$form->editfieldkey('CompnanyBirthDate', 'birth', '', $object, 0).'</td>';
 			print '<td colspan="3" class="maxwidthonsmartphone">';
 			print $form->selectDate($object->birth, 'birth', 0, 0, 1, "", 1);
 			print '</td></tr>';
 
 			// Capital
-			print '<tr><td>'.$form->editfieldkey('Capital', 'capital', '', $object, 0).'</td>';
+			print '<tr class="morefields"><td>'.$form->editfieldkey('Capital', 'capital', '', $object, 0).'</td>';
 			print '<td colspan="3"><input type="text" name="capital" id="capital" class="maxwidth100" value="'.((string) $object->capital).'"> ';
 			if (isModEnabled("multicurrency")) {
 				print '<span class="hideonsmartphone">';
@@ -1916,21 +1921,21 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 				print '</span></td></tr>';
 			}
 			if (getDolGlobalInt('MAIN_MULTILANGS')) {
-				print '<tr><td>'.$form->editfieldkey('DefaultLang', 'default_lang', '', $object, 0).'</td><td colspan="3" class="maxwidthonsmartphone">'."\n";
+				print '<tr class="morefields"><td>'.$form->editfieldkey('DefaultLang', 'default_lang', '', $object, 0).'</td><td colspan="3" class="maxwidthonsmartphone">'."\n";
 				print img_picto('', 'language', 'class="pictofixedwidth"').$formadmin->select_language(GETPOST('default_lang', 'alpha') ? GETPOST('default_lang', 'alpha') : ($object->default_lang ? $object->default_lang : ''), 'default_lang', 0, array(), 1, 0, 0, 'maxwidth200onsmartphone');
 				print '</td>';
 				print '</tr>';
 			}
 
 			// Payment terms of the settlement
-			print '<tr>';
+			print '<tr class="morefields">';
 			print '<td>'.$form->editfieldkey('PaymentConditions', 'cond_reglement_id', '', $object, 0).'</td>';
 			print '<td colspan="3" class="maxwidthonsmartphone">';
 			print $form->getSelectConditionsPaiements((int) $object->cond_reglement_id, 'cond_reglement_id', 1, 1, 1, '', (float) $object->deposit_percent);
 			print '</td></tr>';
 
 			// Payment mode
-			print '<tr>';
+			print '<tr class="morefields">';
 			print '<td>'.$form->editfieldkey('PaymentMode', 'mode_reglement_id', '', $object, 0).'</td>';
 			print '<td colspan="3" class="maxwidthonsmartphone">';
 			print $form->select_types_paiements((string) $object->mode_reglement_id, 'mode_reglement_id', '', 0, 1, 1, 0, 1);
@@ -1938,7 +1943,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 
 			// Incoterms
 			if (isModEnabled('incoterm')) {
-				print '<tr>';
+				print '<tr class="morefields">';
 				print '<td>'.$form->editfieldkey('IncotermLabel', 'incoterm_id', '', $object, 0).'</td>';
 				print '<td colspan="3" class="maxwidthonsmartphone">';
 				print $form->select_incoterms((!empty($object->fk_incoterms) ? $object->fk_incoterms : ''), (!empty($object->location_incoterms) ? $object->location_incoterms : ''));
@@ -1947,7 +1952,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 
 			// Multicurrency
 			if (isModEnabled("multicurrency")) {
-				print '<tr>';
+				print '<tr class="morefields">';
 				print '<td>'.$form->editfieldkey('Currency', 'multicurrency_code', '', $object, 0).'</td>';
 				print '<td colspan="3" class="maxwidthonsmartphone">';
 				print img_picto('', 'currency', 'class="pictofixedwidth"');
@@ -1961,7 +1966,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 
 			// Parent company
 			if (!getDolGlobalString('SOCIETE_DISABLE_PARENTCOMPANY')) {
-				print '<tr>';
+				print '<tr class="morefields">';
 				print '<td>'.$langs->trans('ParentCompany').'</td>';
 				print '<td colspan="3" class="maxwidthonsmartphone">';
 				print img_picto('', 'company', 'class="paddingrightonly"');
@@ -1970,7 +1975,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 			}
 
 			// Assign a sale representative
-			print '<tr>';
+			print '<tr class="morefields">';
 			print '<td>'.$form->editfieldkey('AllocateCommercial', 'commercial_id', '', $object, 0).'</td>';
 			print '<td colspan="3" class="maxwidthonsmartphone">';
 			// TODO Use select_doluser in multiselect mode
@@ -1981,7 +1986,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 			print '</td></tr>';
 
 			// Add logo
-			print '<tr class="hideonsmartphone">';
+			print '<tr class="hideonsmartphone morefields"">';
 			print '<td>'.$form->editfieldkey('Logo', 'photoinput', '', $object, 0).'</td>';
 			print '<td colspan="3">';
 			print '<input class="flat" type="file" name="photo" id="photoinput" />';
@@ -1989,6 +1994,33 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 			print '</tr>';
 
 			print '</table>'."\n";
+
+			print '<script nonce="'.getNonce().'" type="text/javascript">
+					$("document").ready(function() { toogleMoreFields(false); });
+
+					jQuery(".morefieldslnk").click(function() {
+						console.log("Click on link");
+						toogleMoreFields(true);
+						return false;
+					});
+
+					function toogleMoreFields(chgCookieState) {
+						const lnk = $("#morefieldslnk");
+						const items = $(".morefields, .trextrafields");
+						var cookieState = document.cookie.split(";").some((item) => item.trim().startsWith("DOLUSER_MOREFIELDS_SHOW=true")) == true;
+
+						if (!chgCookieState) cookieState = !cookieState ;
+
+						if (cookieState) {
+							items.hide();
+							if (chgCookieState) { document.cookie = "DOLUSER_MOREFIELDS_SHOW=false; SameSite=Strict"};
+						} else {
+							items.show();
+							if (chgCookieState) { document.cookie = "DOLUSER_MOREFIELDS_SHOW=true; SameSite=Strict";}
+						}
+					}
+				</script>
+				';
 
 			// Accountancy codes
 			if (getDolGlobalString('ACCOUNTANCY_USE_PRODUCT_ACCOUNT_ON_THIRDPARTY')) {
@@ -2703,14 +2735,10 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 				}
 
 				print '<tr><td colspan="'.$colspan.'"><br><a class="paddingtop paddingbottom morefieldslnk onreposition" id="morefieldslnk" href="#">'.$langs->trans("More").'';
-				//print '</a>';
 				$nbactive = '...';
-				//print ' <a class="paddingtop paddingbottom socialnetworklnk onreposition" href="#">';
 				print '<span class="badge badge-secondary socialnetworklnk marginleftonly">'.$nbactive.'</span></a>';
 				print '</td>';
 				print '</tr>';
-
-				//print '<tr><td colspan="'.$colspan.'"></td></tr>';
 
 				// Type - Workforce/Staff
 				print '<tr class="morefields"><td>'.$form->editfieldkey('ThirdPartyType', 'typent_id', '', $object, 0).'</td><td class="maxwidthonsmartphone"'.(($conf->browser->layout == 'phone' || getDolGlobalString('SOCIETE_DISABLE_WORKFORCE')) ? ' colspan="3"' : '').'>';
