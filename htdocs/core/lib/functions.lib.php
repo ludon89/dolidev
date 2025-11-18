@@ -8488,7 +8488,7 @@ function get_default_tva(Societe $thirdparty_seller, Societe $thirdparty_buyer, 
 	// Allow an external module to bypass the calculation of prices
 	$parameters = array('vatvalue' => $vatvalue, 'vatrule' => $vatrule);
 	$tmpobject = null; $tmpaction = null;
-	$reshook = $hookmanager->executeHooks('get_default_tva', $parameters, $tmpobject, $tmpaction); // See description below
+	$reshook = $hookmanager->executeHooks('get_default_tva', $parameters, $tmpobject, $tmpaction);
 	if ($reshook > 0 && !empty($hookmanager->resArray['vatvalue'])) {
 		$vatvalue = $hookmanager->resArray['vatvalue'];
 		$vatrule = $hookmanager->resArray['vatrule'];	// For information
