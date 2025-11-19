@@ -2,23 +2,11 @@
 # This is a basic workflow to check the lock on major version (to lock some files on certified versions)
 name: Check lock of major version
 
-on:
-  # workflow called by the parent workflow ci.yml
-  workflow_call:
-    inputs:
-      gh_event:
-        required: true
-        type: string
-  # can run job manually
-  workflow_dispatch:
+on: [push, pull_request]
 
 concurrency:
-  group: phan-${{ github.workflow }}-${{ github.ref }}
+  group: check-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  gh_event: ${{ inputs.gh_event || github.event_name }}
-  GITHUB_JSON: ${{ toJSON(github) }} # Helps in debugging Github Action
 
 jobs:
   checkmajorversion:
