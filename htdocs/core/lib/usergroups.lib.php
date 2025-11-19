@@ -429,7 +429,7 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '</td></tr>';
 	}
 
-	print '<tr class="oddeven"><td colspan="'.$colspan.'" class="center">';
+	print '<tr class="oddeven nohover"><td colspan="'.$colspan.'" class="center">';
 
 	if (getDolGlobalString('MAIN_FORCETHEME')) {
 		$langs->load("errors");
@@ -498,9 +498,7 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 	$colorbacktitle1 = '';
 	$colortexttitle = '';
 	$colorbacklineimpair1 = '';
-	$colorbacklineimpair2 = '';
 	$colorbacklinepair1 = '';
-	$colorbacklinepair2 = '';
 	$colortextlink = '';
 	$colorbacklinepairhover = '';
 	$colorbacklinepairchecked = '';
@@ -621,13 +619,50 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 			print yn(getDolGlobalString('THEME_ELDY_USEBORDERONTABLE'));
 		}
 		print $form->textwithpicto('', $langs->trans("NotSupportedByAllThemes"), 1, 'help', 'inline-block');
+
+		if (getDolGlobalString('THEME_ELDY_USEBORDERONTABLE')) {
+			$listofborderradius = array(
+				0 => $langs->transnoentitiesnoconv("No"),
+				4 => $langs->transnoentitiesnoconv("Size").' 4',
+				6 => $langs->transnoentitiesnoconv("Size").' 6',
+				8 => $langs->transnoentitiesnoconv("Size").' 8',
+				10 => $langs->transnoentitiesnoconv("Size").' 10',
+				20 => $langs->transnoentitiesnoconv("Size").' 20',
+			);
+
+			print ' &nbsp; &nbsp; ';
+			if ($edit) {
+				print $form->selectarray('THEME_ELDY_BORDER_RADIUS', $listofborderradius, getDolGlobalInt('THEME_ELDY_BORDER_RADIUS'), 0, 0, 0, '', 0, 0, 0, '', 'widthcentpercentminusx maxwidth100');
+			} else {
+				print $listofborderradius[getDolGlobalInt('THEME_ELDY_BORDER_RADIUS')];
+			}
+			//print $form->textwithpicto('', $langs->trans("NotSupportedByAllThemes"), 1, 'help', 'inline-block');
+		}
+
 		print '</td>';
 		print '</tr>';
 	}
 
+	// Use border on input fields
 	if ($foruserprofile) {
 	} else {
-		if (getDolGlobalString('THEME_ELDY_USEBORDERONTABLE')) {
+		print '<tr class="oddeven">';
+		print '<td>'.$langs->trans("UseBorderOnInputFields").'</td>';
+		print '<td colspan="'.($colspan - 1).'" class="valignmiddle">';
+		if ($edit) {
+			print ajax_constantonoff('THEME_SHOW_BORDER_ON_INPUT', array(), null, 0, 0, 1, 2, 0, 1);
+		} else {
+			print yn(getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT'));
+		}
+		print $form->textwithpicto('', $langs->trans("NotSupportedByAllThemes"), 1, 'help', 'inline-block');
+		print '</td>';
+		print '</tr>';
+	}
+
+	/*
+	if ($foruserprofile) {
+	} else {
+		if (getDolGlobalString('THEME_ELDY_USEBORDERONTABLE') || getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT')) {
 			$listofborderradius = array(
 				0 => $langs->transnoentitiesnoconv("No"),
 				4 => $langs->transnoentitiesnoconv("Size").' 4',
@@ -650,6 +685,8 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 			print '</tr>';
 		}
 	}
+	*/
+
 	// Table line height
 	/* removed. height of column must use padding of td and not lineheight that has bad side effect
 	if ($foruserprofile) {
@@ -678,18 +715,18 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		/*
 		print '<tr class="oddeven">';
 		print '<td>'.$langs->trans("TopMenuBackgroundColor").'</td>';
-		print '<td>'.($conf->global->THEME_ELDY_TOPMENU_BACK1?$conf->global->THEME_ELDY_TOPMENU_BACK1:$langs->trans("Default")).'</td>';
+		print '<td>'.getDolGlobalString('THEME_ELDY_TOPMENU_BACK1', $langs->trans("Default")).'</td>';
 		print '<td class="nowrap left" width="20%"><input name="check_THEME_ELDY_TOPMENU_BACK1" id="check_THEME_ELDY_TOPMENU_BACK1" type="checkbox" '.(!empty($object->conf->THEME_ELDY_TOPMENU_BACK1)?" checked":"");
 		print (empty($dolibarr_main_demo) && $edit)?'':' disabled="disabled"';	// Disabled for demo
 		print '> '.$langs->trans("UsePersonalValue").'</td>';
 		print '<td>';
 		if ($edit)
 		{
-			print $formother->selectColor(colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_TOPMENU_BACK1,array()),''),'THEME_ELDY_TOPMENU_BACK1','',1).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TOPMENU_BACK1'), array()), ''), 'THEME_ELDY_TOPMENU_BACK1','',1).' ';
 		}
 		   else
 		   {
-			   $color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_TOPMENU_BACK1,array()),'');
+			   $color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TOPMENU_BACK1'), array()), '');
 			if ($color) print '<input type="text" class="colorthumb" disabled style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			else print '';
 		   }
@@ -702,9 +739,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("TopMenuBackgroundColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_TOPMENU_BACK1') ? $conf->global->THEME_ELDY_TOPMENU_BACK1 : ''), array()), ''), 'THEME_ELDY_TOPMENU_BACK1', '', 1, array(), '', 'colorbackhmenu1', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TOPMENU_BACK1'), array()), ''), 'THEME_ELDY_TOPMENU_BACK1', '', 1, array(), '', 'colorbackhmenu1', $default).' ';
 		} else {
-			$color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_TOPMENU_BACK1, array()), '');
+			$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TOPMENU_BACK1'), array()), '');
 			if ($color) {
 				print '<input type="text" class="colorthumb" disabled="disabled" style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			} else {
@@ -722,18 +759,18 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		/*
 		 print '<tr class="oddeven">';
 		 print '<td>'.$langs->trans("TopMenuBackgroundColor").'</td>';
-		 print '<td>'.($conf->global->THEME_ELDY_TOPMENU_BACK1?$conf->global->THEME_ELDY_VERMENU_BACK1:$langs->trans("Default")).'</td>';
+		 print '<td>'.getDolGlobalString('THEME_ELDY_TOPMENU_BACK1', $langs->trans("Default")).'</td>';
 		 print '<td class="nowrap left" width="20%"><input name="check_THEME_ELDY_VERMENU_BACK1" id="check_THEME_ELDY_VERMENU_BACK1" type="checkbox" '.(!empty($object->conf->THEME_ELDY_TOPMENU_BACK1)?" checked":"");
 		 print (empty($dolibarr_main_demo) && $edit)?'':' disabled="disabled"';	// Disabled for demo
 		 print '> '.$langs->trans("UsePersonalValue").'</td>';
 		 print '<td>';
 		 if ($edit)
 		 {
-		 print $formother->selectColor(colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_VERMENU_BACK1,array()),''),'THEME_ELDY_VERMENU_BACK1','',1).' ';
+		 print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_VERMENU_BACK1'), array()), ''),'THEME_ELDY_VERMENU_BACK1','',1).' ';
 		 }
 		 else
 		 {
-		 $color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_VERMENU_BACK1,array()),'');
+		 $color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_VERMENU_BACK1'), array()), '');
 		 if ($color) print '<input type="text" class="colorthumb" disabled style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 		 else print '';
 		 }
@@ -746,9 +783,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("LeftMenuBackgroundColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_VERMENU_BACK1') ? $conf->global->THEME_ELDY_VERMENU_BACK1 : ''), array()), ''), 'THEME_ELDY_VERMENU_BACK1', '', 1, array(), '', 'colorbackvmenu1', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_VERMENU_BACK1'), array()), ''), 'THEME_ELDY_VERMENU_BACK1', '', 1, array(), '', 'colorbackvmenu1', $default).' ';
 		} else {
-			$color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_VERMENU_BACK1, array()), '');
+			$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_VERMENU_BACK1'), array()), '');
 			if ($color) {
 				print '<input type="text" class="colorthumb" disabled="disabled" style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			} else {
@@ -787,9 +824,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td colspan="'.($colspan - 1).'">';
 		//var_dump($conf->global->THEME_ELDY_BACKBODY);
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_BACKBODY') ? $conf->global->THEME_ELDY_BACKBODY : ''), array()), ''), 'THEME_ELDY_BACKBODY', '', 1, array(), '', 'colorbackbody', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_BACKBODY'), array()), ''), 'THEME_ELDY_BACKBODY', '', 1, array(), '', 'colorbackbody', $default).' ';
 		} else {
-			$color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_BACKBODY, array()), '');
+			$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_BACKBODY'), array()), '');
 			if ($color) {
 				print '<input type="text" class="colorthumb" disabled="disabled" style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			} else {
@@ -811,9 +848,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("TextTitleColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_TEXTTITLENOTAB') ? $conf->global->THEME_ELDY_TEXTTITLENOTAB : ''), array()), ''), 'THEME_ELDY_TEXTTITLENOTAB', '', 1, array(), '', 'colortexttitlenotab', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TEXTTITLENOTAB'), array()), ''), 'THEME_ELDY_TEXTTITLENOTAB', '', 1, array(), '', 'colortexttitlenotab', $default).' ';
 		} else {
-			print $formother->showColor($conf->global->THEME_ELDY_TEXTTITLENOTAB, $langs->trans("Default"));
+			print $formother->showColor(getDolGlobalString('THEME_ELDY_TEXTTITLENOTAB'), $langs->trans("Default"));
 		}
 		print ' &nbsp; <span class="nowraponall opacitymedium">'.$langs->trans("Default").'</span>: <strong><span style="color: #'.$default.'">'.$default.'</span></strong> ';
 		print $form->textwithpicto('', $langs->trans("NotSupportedByAllThemes").', '.$langs->trans("PressF5AfterChangingThis"));
@@ -831,9 +868,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("BackgroundTableTitleColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_BACKTITLE1') ? $conf->global->THEME_ELDY_BACKTITLE1 : ''), array()), ''), 'THEME_ELDY_BACKTITLE1', '', 1, array(), '', 'colorbacktitle1', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_BACKTITLE1'), array()), ''), 'THEME_ELDY_BACKTITLE1', '', 1, array(), '', 'colorbacktitle1', $default).' ';
 		} else {
-			print $formother->showColor($conf->global->THEME_ELDY_BACKTITLE1, $langs->trans("Default"));
+			print $formother->showColor(getDolGlobalString('THEME_ELDY_BACKTITLE1'), $langs->trans("Default"));
 		}
 		print ' &nbsp; <span class="nowraponall opacitymedium">'.$langs->trans("Default").'</span>: <strong>'.$default.'</strong> '; // $colorbacktitle1 in CSS
 		print $form->textwithpicto('', $langs->trans("NotSupportedByAllThemes").', '.$langs->trans("PressF5AfterChangingThis"));
@@ -851,9 +888,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("BackgroundTableTitleTextColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_TEXTTITLE') ? $conf->global->THEME_ELDY_TEXTTITLE : ''), array()), ''), 'THEME_ELDY_TEXTTITLE', '', 1, array(), '', 'colortexttitle', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TEXTTITLE'), array()), ''), 'THEME_ELDY_TEXTTITLE', '', 1, array(), '', 'colortexttitle', $default).' ';
 		} else {
-			print $formother->showColor($conf->global->THEME_ELDY_TEXTTITLE, $langs->trans("Default"));
+			print $formother->showColor(getDolGlobalString('THEME_ELDY_TEXTTITLE'), $langs->trans("Default"));
 		}
 		print ' &nbsp; <span class="nowraponall opacitymedium">'.$langs->trans("Default").'</span>: <strong><span style="color: #'.$default.'">'.$default.'</span></strong> ';
 		print $form->textwithpicto('', $langs->trans("NotSupportedByAllThemes").', '.$langs->trans("PressF5AfterChangingThis"));
@@ -871,9 +908,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("BackgroundTableTitleTextlinkColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_TEXTTITLELINK') ? $conf->global->THEME_ELDY_TEXTTITLELINK : ''), array()), ''), 'THEME_ELDY_TEXTTITLELINK', '', 1, array(), '', 'colortexttitlelink', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TEXTTITLELINK'), array()), ''), 'THEME_ELDY_TEXTTITLELINK', '', 1, array(), '', 'colortexttitlelink', $default).' ';
 		} else {
-			print $formother->showColor($conf->global->THEME_ELDY_TEXTTITLELINK, $langs->trans("Default"));
+			print $formother->showColor(getDolGlobalString('THEME_ELDY_TEXTTITLELINK'), $langs->trans("Default"));
 		}
 		print ' &nbsp; <span class="nowraponall opacitymedium">'.$langs->trans("Default").'</span>: <strong><span style="color: #'.$default.'">'.$default.'</span></strong> ';
 		print $form->textwithpicto('', $langs->trans("NotSupportedByAllThemes").', '.$langs->trans("PressF5AfterChangingThis"));
@@ -892,9 +929,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("BackgroundTableLineOddColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_LINEIMPAIR1') ? $conf->global->THEME_ELDY_LINEIMPAIR1 : ''), array()), ''), 'THEME_ELDY_LINEIMPAIR1', '', 1, array(), '', 'colorbacklineimpair2', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_LINEIMPAIR1'), array()), ''), 'THEME_ELDY_LINEIMPAIR1', '', 1, array(), '', 'colorbacklineimpair2', $default).' ';
 		} else {
-			$color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_LINEIMPAIR1, array()), '');
+			$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_LINEIMPAIR1'), array()), '');
 			if ($color) {
 				print '<input type="text" class="colorthumb" disabled="disabled" style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			} else {
@@ -916,9 +953,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("BackgroundTableLineEvenColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_LINEPAIR1') ? $conf->global->THEME_ELDY_LINEPAIR1 : ''), array()), ''), 'THEME_ELDY_LINEPAIR1', '', 1, array(), '', 'colorbacklinepair2', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_LINEPAIR1'), array()), ''), 'THEME_ELDY_LINEPAIR1', '', 1, array(), '', 'colorbacklinepair2', $default).' ';
 		} else {
-			$color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_LINEPAIR1, array()), '');
+			$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_LINEPAIR1'), array()), '');
 			if ($color) {
 				print '<input type="text" class="colorthumb" disabled="disabled" style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			} else {
@@ -960,9 +997,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("LinkColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_TEXTLINK') ? $conf->global->THEME_ELDY_TEXTLINK : ''), array()), ''), 'THEME_ELDY_TEXTLINK', '', 1, array(), '', 'colortextlink', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TEXTLINK'), array()), ''), 'THEME_ELDY_TEXTLINK', '', 1, array(), '', 'colortextlink', $default).' ';
 		} else {
-			$color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_TEXTLINK, array()), '');
+			$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TEXTLINK'), array()), '');
 			if ($color) {
 				print '<input type="text" class="colorthumb" disabled="disabled" style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			} else {
@@ -1001,14 +1038,14 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 			if (getDolGlobalString('THEME_ELDY_USE_HOVER') == '1') {
 				$color = colorArrayToHex(colorStringToArray($colorbacklinepairhover));
 			} else {
-				$color = colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_USE_HOVER') ? $conf->global->THEME_ELDY_USE_HOVER : ''), array()), '');
+				$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_USE_HOVER'), array()), '');
 			}
 			print $formother->selectColor($color, 'THEME_ELDY_USE_HOVER', '', 1, array(), '', 'colorbacklinepairhover', $default).' ';
 		} else {
 			if (getDolGlobalString('THEME_ELDY_USE_HOVER') == '1') {
 				$color = colorArrayToHex(colorStringToArray($colorbacklinepairhover));
 			} else {
-				$color = colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_USE_HOVER') ? $conf->global->THEME_ELDY_USE_HOVER : ''), array()), '');
+				$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_USE_HOVER'), array()), '');
 			}
 			if ($color) {
 				if ($color != colorArrayToHex(colorStringToArray($colorbacklinepairhover))) {
@@ -1049,14 +1086,14 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 			if (getDolGlobalString('THEME_ELDY_USE_CHECKED') == '1') {
 				$color = 'e6edf0';
 			} else {
-				$color = colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_USE_CHECKED') ? $conf->global->THEME_ELDY_USE_CHECKED : ''), array()), '');
+				$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_USE_CHECKED'), array()), '');
 			}
 			print $formother->selectColor($color, 'THEME_ELDY_USE_CHECKED', '', 1, array(), '', 'colorbacklinepairchecked', $default).' ';
 		} else {
 			if (getDolGlobalString('THEME_ELDY_USE_CHECKED') == '1') {
 				$color = 'e6edf0';
 			} else {
-				$color = colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_USE_CHECKED') ? $conf->global->THEME_ELDY_USE_CHECKED : ''), array()), '');
+				$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_USE_CHECKED'), array()), '');
 			}
 			if ($color) {
 				if ($color != 'e6edf0') {
@@ -1079,18 +1116,18 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		/*
 		 print '<tr class="oddeven">';
 		 print '<td>'.$langs->trans("TopMenuBackgroundColor").'</td>';
-		 print '<td>'.($conf->global->THEME_ELDY_TOPMENU_BACK1?$conf->global->THEME_ELDY_BTNACTION:$langs->trans("Default")).'</td>';
+		 print '<td>'.(getDolGlobalString('THEME_ELDY_TOPMENU_BACK1') ? getDolGlobalString('THEME_ELDY_BTNACTION') : $langs->trans("Default")).'</td>';
 		 print '<td class="nowrap left" width="20%"><input name="check_THEME_ELDY_BTNACTION" id="check_THEME_ELDY_BTNACTION" type="checkbox" '.(!empty($object->conf->THEME_ELDY_BTNACTION)?" checked":"");
 		 print (empty($dolibarr_main_demo) && $edit)?'':' disabled="disabled"';	// Disabled for demo
 		 print '> '.$langs->trans("UsePersonalValue").'</td>';
 		 print '<td>';
 		 if ($edit)
 		 {
-		 print $formother->selectColor(colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_BTNACTION,array()),''),'THEME_ELDY_BTNACTION','',1).' ';
+		 print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_BTNACTION'), array()), ''), 'THEME_ELDY_BTNACTION','',1).' ';
 		 }
 		 else
 		 {
-		 $color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_BTNACTION,array()),'');
+		 $color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_BTNACTION'), array()), '');
 		 if ($color) print '<input type="text" class="colorthumb" disabled style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 		 else print '';
 		 }
@@ -1103,9 +1140,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("BtnActionColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_BTNACTION') ? $conf->global->THEME_ELDY_BTNACTION : ''), array()), ''), 'THEME_ELDY_BTNACTION', '', 1, array(), '', 'butactionbg', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_BTNACTION'), array()), ''), 'THEME_ELDY_BTNACTION', '', 1, array(), '', 'butactionbg', $default).' ';
 		} else {
-			$color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_BTNACTION, array()), '');
+			$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_BTNACTION'), array()), '');
 			if ($color) {
 				print '<input type="text" class="colorthumb" disabled="disabled" style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			} else {
@@ -1125,18 +1162,18 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		/*
 		 print '<tr class="oddeven">';
 		 print '<td>'.$langs->trans("TopMenuBackgroundColor").'</td>';
-		 print '<td>'.($conf->global->THEME_ELDY_TOPMENU_BACK1?$conf->global->THEME_ELDY_TEXTBTNACTION:$langs->trans("Default")).'</td>';
+		 print '<td>'.(getDolGlobalString('THEME_ELDY_TOPMENU_BACK1') ? getDolGlobalString('THEME_ELDY_TEXTBTNACTION') :$langs->trans("Default")).'</td>';
 		 print '<td class="nowrap left" width="20%"><input name="check_THEME_ELDY_TEXTBTNACTION" id="check_THEME_ELDY_TEXTBTNACTION" type="checkbox" '.(!empty($object->conf->THEME_ELDY_TEXTBTNACTION)?" checked":"");
 		 print (empty($dolibarr_main_demo) && $edit)?'':' disabled="disabled"'; // Disabled for demo
 		 print '> '.$langs->trans("UsePersonalValue").'</td>';
 		 print '<td>';
 		 if ($edit)
 		 {
-		 print $formother->selectColor(colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_TEXTBTNACTION,array()),''),'THEME_ELDY_TEXTBTNACTION','',1).' ';
+		 print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TEXTBTNACTION'), array()), ''),'THEME_ELDY_TEXTBTNACTION','',1).' ';
 		 }
 		 else
 		 {
-		 $color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_BTNACTION,array()),'');
+		 $color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_BTNACTION'), array()), '');
 		 if ($color) print '<input type="text" class="colorthumb" disabled style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 		 else print '';
 		 }
@@ -1149,9 +1186,9 @@ function showSkins($fuser, $edit = 0, $foruserprofile = false)
 		print '<td>'.$langs->trans("TextBtnActionColor").'</td>';
 		print '<td colspan="'.($colspan - 1).'">';
 		if ($edit) {
-			print $formother->selectColor(colorArrayToHex(colorStringToArray((getDolGlobalString('THEME_ELDY_TEXTBTNACTION') ? $conf->global->THEME_ELDY_TEXTBTNACTION : ''), array()), ''), 'THEME_ELDY_TEXTBTNACTION', '', 1, array(), '', 'textbutaction', $default).' ';
+			print $formother->selectColor(colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TEXTBTNACTION'), array()), ''), 'THEME_ELDY_TEXTBTNACTION', '', 1, array(), '', 'textbutaction', $default).' ';
 		} else {
-			$color = colorArrayToHex(colorStringToArray($conf->global->THEME_ELDY_TEXTBTNACTION, array()), '');
+			$color = colorArrayToHex(colorStringToArray(getDolGlobalString('THEME_ELDY_TEXTBTNACTION'), array()), '');
 			if ($color) {
 				print '<input type="text" class="colorthumb" disabled="disabled" style="padding: 1px; margin-top: 0; margin-bottom: 0; background-color: #'.$color.'" value="'.$color.'">';
 			} else {

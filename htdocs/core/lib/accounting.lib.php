@@ -1,9 +1,9 @@
 <?php
-/* Copyright (C) 2013-2014	Olivier Geffroy			<jeff@jeffinfo.com>
- * Copyright (C) 2013-2025	Alexandre Spangaro		<alexandre@inovea-conseil.com>
- * Copyright (C) 2014		Florian Henry			<florian.henry@open-concept.pro>
- * Copyright (C) 2019		Eric Seigne				<eric.seigne@cap-rel.fr>
- * Copyright (C) 2021-2024	Frédéric France			<frederic.france@free.fr>
+/* Copyright (C) 2013-2014  Olivier Geffroy         <jeff@jeffinfo.com>
+ * Copyright (C) 2013-2025  Alexandre Spangaro      <alexandre@inovea-conseil.com>
+ * Copyright (C) 2014       Florian Henry           <florian.henry@open-concept.pro>
+ * Copyright (C) 2019       Eric Seigne             <eric.seigne@cap-rel.fr>
+ * Copyright (C) 2021-2025  Frédéric France         <frederic.france@free.fr>
  * Copyright (C) 2024		MDW						<mdeweerd@users.noreply.github.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,7 +57,7 @@ function accounting_prepare_head(AccountingAccount $object)
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = DOL_URL_ROOT.'/accountancy/admin/card.php?id='.$object->id;
+	$head[$h][0] = dolBuildUrl(DOL_URL_ROOT.'/accountancy/admin/card.php', ['id' => $object->id]);
 	$head[$h][1] = $langs->trans("AccountAccounting");
 	$head[$h][2] = 'card';
 	$h++;
@@ -69,6 +69,38 @@ function accounting_prepare_head(AccountingAccount $object)
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'accounting_account');
 
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'accounting_account', 'remove');
+
+	return $head;
+}
+
+/**
+ *	Prepare array with list of tabs for accounting transaction
+ *
+ *	@param	BookKeeping	$object		Bookkeeping
+ *	@param	string		$mode		Mode _tmp if operation are drafted
+ *	@param	string		$type		Type of list "sub" (for subsidiary list) or not
+ *	@param	string		$backtopage Back to page (return on ledger by default)
+ *	@return	array<array{0:string,1:string,2:string}>	Array of tabs to show
+ */
+function accounting_transaction_prepare_head(BookKeeping $object, $mode = '', $type = '', $backtopage = '/accountancy/bookkeeping/listbyaccount.php')
+{
+	global $langs, $conf;
+
+	$h = 0;
+	$head = array();
+
+	$head[$h][0] = dolBuildUrl(DOL_URL_ROOT.'/accountancy/bookkeeping/card.php', ['piece_num' => $object->piece_num, 'mode' => $mode, 'type' => $type, 'backtopage' => $backtopage]);
+	$head[$h][1] = $langs->trans("Transaction");
+	$head[$h][2] = 'transaction';
+	$h++;
+
+	// Show more tabs from modules
+	// Entries must be declared in modules descriptor with line
+	// $this->tabs = array('entity:+tabname:Title:@mymodule:/mymodule/mypage.php?id=__ID__'); to add new tab
+	// $this->tabs = array('entity:-tabname); to remove a tab
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'accounting_transaction');
+
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'accounting_transaction', 'remove');
 
 	return $head;
 }
@@ -110,7 +142,6 @@ function length_accountg($account)
 		if ($i >= 1) {
 			while ($i < $g) {
 				$account .= '0';
-
 				$i++;
 			}
 
@@ -149,7 +180,6 @@ function length_accounta($accounta)
 		if ($i >= 1) {
 			while ($i < $a) {
 				$accounta .= '0';
-
 				$i++;
 			}
 
@@ -336,7 +366,7 @@ function getDefaultDatesForTransfer()
 			$obj = $db->fetch_object($res);
 
 			$date_start = $db->jdate($obj->date_start);
-			$date_end = $db->jdate($obj->date_end);
+			$date_end = dol_get_last_hour($db->jdate($obj->date_end));
 		} else {
 			$month_start = getDolGlobalInt('SOCIETE_FISCAL_MONTH_START', 1);
 			$year_start = (int) dol_print_date(dol_now(), '%Y');
@@ -350,7 +380,8 @@ function getDefaultDatesForTransfer()
 				$year_end--;
 			}
 			$date_start = dol_mktime(0, 0, 0, $month_start, 1, $year_start);
-			$date_end = dol_get_last_day($year_end, $month_end);
+			$lastday = dol_get_last_day($year_end, $month_end);
+			$date_end = dol_mktime(23, 59, 59, $month_end, (int) dol_print_date($lastday, '%d'), $year_end);
 		}
 	} elseif ($periodbydefaultontransfer == 1) {	// current month
 		$year_current = (int) dol_print_date(dol_now('gmt'), "%Y", 'gmt');

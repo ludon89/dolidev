@@ -181,9 +181,9 @@ if ((!empty($objUser->id) || !empty($objcon->id)) && $permok) {
 
 $morehtmlright = '';
 
-$messagingUrl = DOL_URL_ROOT.'/adherents/messaging.php?rowid='.$object->id;
+$messagingUrl = dolBuildUrl(DOL_URL_ROOT.'/adherents/messaging.php', ['rowid' => $object->id]);
 $morehtmlright .= dolGetButtonTitle($langs->trans('ShowAsConversation'), '', 'fa fa-comments imgforviewmode', $messagingUrl, '', 2);
-$messagingUrl = DOL_URL_ROOT.'/adherents/agenda.php?id='.$object->id;
+$messagingUrl = dolBuildUrl(DOL_URL_ROOT.'/adherents/agenda.php', ['id' => $object->id]);
 $morehtmlright .= dolGetButtonTitle($langs->trans('MessageListViewType'), '', 'fa fa-bars imgforviewmode', $messagingUrl, '', 1);
 
 if (isModEnabled('agenda')) {
@@ -195,7 +195,7 @@ if (isModEnabled('agenda')) {
 if (isModEnabled('agenda') && ($user->hasRight('agenda', 'myactions', 'read') || $user->hasRight('agenda', 'allaactions', 'read'))) {
 	print '<br>';
 	$param = '&userid='.urlencode((string) ($id));
-	if (!empty($contextpage) && $contextpage != $_SERVER["PHP_SELF"]) {
+	if ($contextpage != $_SERVER["PHP_SELF"]) {
 		$param .= '&contextpage='.urlencode($contextpage);
 	}
 	if ($limit > 0 && $limit != $conf->liste_limit) {

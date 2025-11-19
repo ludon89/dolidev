@@ -111,7 +111,7 @@ $permissiontoadd = $user->hasRight('societe', 'contact', 'creer');
 $permissiontoeditextra = $permissiontoadd;
 if (GETPOST('attribute', 'aZ09') && isset($extrafields->attributes[$object->table_element]['perms'][GETPOST('attribute', 'aZ09')])) {
 	// For action 'update_extras', is there a specific permission set for the attribute to update
-	$permissiontoeditextra = dol_eval($extrafields->attributes[$object->table_element]['perms'][GETPOST('attribute', 'aZ09')]);
+	$permissiontoeditextra = dol_eval((string) $extrafields->attributes[$object->table_element]['perms'][GETPOST('attribute', 'aZ09')]);
 }
 
 // Security check
@@ -183,6 +183,9 @@ if (empty($reshook)) {
 				$error = $nuser->error;
 				$errors = $nuser->errors;
 				$db->rollback();
+			}
+			if ($error) {
+				setEventMessage($langs->trans('ImpossibleToCreateUserFromContact').' : '.$nuser->errorsToString(), 'errors');
 			}
 		} else {
 			$error = $object->error;
@@ -664,7 +667,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 				print '</script>'."\n";
 			}
 
-			print '<form method="post" name="formsoc" action="'.$_SERVER["PHP_SELF"].'">';
+			print '<form method="post" name="formsoc" action="'.dolBuildUrl($_SERVER["PHP_SELF"]).'">';
 			print '<input type="hidden" name="token" value="'.newToken().'">';
 			print '<input type="hidden" name="action" value="add">';
 			print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';

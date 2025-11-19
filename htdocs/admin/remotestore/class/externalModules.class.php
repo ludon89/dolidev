@@ -101,6 +101,16 @@ class ExternalModules
 	public $githubFileStatus;
 
 	/**
+	 * @var string
+	 */
+	public $githubFileError;
+
+	/**
+	 * @var string
+	 */
+	public $error;
+
+	/**
 	 * @var int // number of online providers
 	 */
 	public $numberOfProviders;
@@ -169,6 +179,7 @@ class ExternalModules
 
 			$this->getRemoteYamlFile($this->file_source_url, $cachedelayforgithubrepo);
 
+			$this->githubFileError = $this->error;
 			$this->githubFileStatus = dol_is_file($this->cache_file) ? 1 : 0;
 		}
 
@@ -352,10 +363,13 @@ class ExternalModules
 			'lang' 			=> $this->lang
 		];
 
+
+		$this->numberTotalOfProducts = 0;
+
 		// Fetch the products from Dolistore source
+
 		$dolistoreProducts = array();
 		$dolistoreProductsTotal = 0;
-		$this->numberTotalOfProducts = 0;
 		if ($this->dolistoreApiStatus > 0 && getDolGlobalInt('MAIN_ENABLE_EXTERNALMODULES_DOLISTORE')) {
 			$getDolistoreProducts = $this->callApi('products', $data);
 
@@ -370,6 +384,7 @@ class ExternalModules
 		}
 
 		// Fetch the products from the github repo
+
 		$fileProducts = array();
 		$fileProductsTotal = 0;
 		if (!empty($this->githubFileStatus) && getDolGlobalInt('MAIN_ENABLE_EXTERNALMODULES_COMMUNITY')) {
@@ -389,8 +404,22 @@ class ExternalModules
 		// Number of pages
 		$this->numberTotalOfPages = (int) ceil(max($fileProductsTotal / $this->per_page, $dolistoreProductsTotal / $this->per_page));
 
-		// merge both sources
-		$this->products = array_values(array_merge($fileProducts, $dolistoreProducts));
+		// Merge both sources (github community modules have priority on dolistore).
+		$this->products = $dolistoreProducts;
+		foreach ($fileProducts as $fileProduct) {
+			$id = $fileProduct['id'];
+			if ($id > 0) {
+				if (empty($this->products[$id])) {		// Not already present in array
+					array_unshift($this->products, $fileProduct);
+				} else {
+					$this->products[$id] = $fileProduct;
+					$this->products[$id]['category'] = $fileProduct['category'];
+				}
+			} else {
+				array_unshift($this->products, $fileProduct);
+			}
+		}
+
 
 		$i = 0;
 		foreach ($this->products as $product) {
@@ -429,7 +458,11 @@ class ExternalModules
 					$price = '<h3><a href="'.$urlview.'" target="_blank">'.$langs->trans('SeeOnDoliStore').'</a></h3>';
 				} elseif ($product['source'] === 'githubcommunity') {
 					if (array_key_exists('price_ht', $product) && empty($product['price_ht'])) {
-						$price = '<h3>'.$langs->trans('Free').'</h3>';
+						if ($product['status'] == 'soon') {
+							$price = '<h3>'.$langs->trans('StillInDevelopment').'</h3>';
+						} else {
+							$price = '<h3>'.$langs->trans('Free').'</h3>';
+						}
 					} else {
 						if ($product["dolistore-download"]) {
 							$price = '<h3><a href="'.$product["dolistore-download"].'" target="_blank">'.$langs->trans('SeeOnDoliStore').'</a></h3>';
@@ -874,7 +907,10 @@ class ExternalModules
 			$result = getURLContent($file_source_url, 'GET', '', 1, $addheaders);	// TODO Force timeout to 5 s on both connect and response.
 			if (!empty($result) && $result['http_code'] == 200) {
 				$yaml = $result['content'];
-				file_put_contents($cache_file, $yaml);
+				$result = file_put_contents($cache_file, $yaml);
+				if ($result === false) {
+					$this->error = 'Failed to create cache file: ' . $cache_file;
+				}
 			}
 		} else {
 			$yaml = file_get_contents($cache_file);
@@ -976,7 +1012,15 @@ class ExternalModules
 					continue;
 				}
 
+				// Check if there is a known ID
+				$reg = array();
+				$id = 0;
+				if (!empty($package['dolistore-download']) && preg_match('/www\.dolistore\.com\/product\.php\?id=(\d+)/', (string) $package['dolistore-download'], $reg)) {
+					$id = $reg[1];
+				}
+
 				$adaptedPackage = [
+					'id' => $id,
 					'ref' => str_replace(' ', '', $package['modulename'] . '-' . $package['current_version'] . '@' .
 						(array_key_exists('author', $package) ? $package['author'] : 'unkownauthor')),
 					'label' => !empty($package['label'][substr($this->lang, 0, 2)])
@@ -1065,7 +1109,7 @@ class ExternalModules
 					'status' => empty($package['status']) ? '' : $package['status']
 				];
 
-				$adaptedData[] = $adaptedPackage;
+				$adaptedData[$package['id']] = $adaptedPackage;
 			}
 		}
 
