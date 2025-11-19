@@ -37,6 +37,11 @@ if (substr($sapi_type, 0, 3) == 'cgi') {
 	exit(1);
 }
 
+
+define('DOL_DOCUMENT_ROOT', dirname(dirname($path)).'/htdocs');
+define('NOREQUIREDB', 1);
+define('NOREQUIREVIRTUALURL', 1);
+
 require_once $path."../../htdocs/master.inc.php";
 require_once DOL_DOCUMENT_ROOT."/core/lib/files.lib.php";
 
@@ -461,24 +466,29 @@ if ($release) {
 if ($checklock) {
 	print "Signature for unalterable files: ".$md5unalterable_files."\n";
 
+	$lockedfile = DOL_DOCUMENT_ROOT.'/../dev/lockedfiles.txt';
 	$checksuminlockedfile = '';
 
-	// Now we check the content of lockedfiles.txt
-	$arraylocked = file(DOL_DOCUMENT_ROOT.'/../dev/lockedfiles.txt');
-	foreach ($arraylocked as $line) {
-		$tmparray = preg_split("/\s+/", $line, 3);
-		if ($tmparray[0] == $checklockmajorversion) {
-			$checksuminlockedfile = $tmparray[2];
+	if (!file_exists($lockedfile)) {
+		print "Can't find the file ".$lockedfile.". No checksum to check\n";
+	} else {
+		// Now we check the content of lockedfiles.txt
+		$arraylocked = file($lockedfile);
+		foreach ($arraylocked as $line) {
+			$tmparray = preg_split("/\s+/", $line, 3);
+			if ($tmparray[0] == $checklockmajorversion) {
+				$checksuminlockedfile = $tmparray[2];
+			}
 		}
-	}
-	if (empty($checksuminlockedfile)) {
-		print "The major version ".$checklockmajorversion." is not locked on the scope ".$checksource." (no entry found into dev/lockedfiles.txt).\n";
-	} elseif ($checksuminlockedfile != $md5unalterable_files) {
-		print "The major version ".$checklockmajorversion." is locked on scope '".$checksource."' to checksum ".$checksuminlockedfile."\n";
-		if ($checklockmajorversion != $checksource) {
-			print "The checksum now differs from the locked one, so we return an error.\n";
-			print "\n";
-			exit(10);
+		if (empty($checksuminlockedfile)) {
+			print "The major version ".$checklockmajorversion." is not locked on the scope ".$checksource." (file found but no matching entry found into dev/lockedfiles.txt).\n";
+		} elseif ($checksuminlockedfile != $md5unalterable_files) {
+			print "The major version ".$checklockmajorversion." is locked on scope '".$checksource."' to checksum ".$checksuminlockedfile."\n";
+			if ($checklockmajorversion != $checksource) {
+				print "The checksum now differs from the locked one, so we return an error.\n";
+				print "\n";
+				exit(10);
+			}
 		}
 	}
 }
