@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2006-2010 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2005-2012 Regis Houssin        <regis.houssin@inodbox.com>
- * Copyright (C) 2024		MDW						<mdeweerd@users.noreply.github.com>
+ * Copyright (C) 2024		MDW					<mdeweerd@users.noreply.github.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  */
 
 /**
- * \file       htdocs/core/lib/propal.lib.php
+ * \file       htdocs/core/lib/api.lib.php
  * \brief      Ensemble de functions de base pour le module propal
  * \ingroup    propal
  */
@@ -31,7 +31,7 @@
  */
 function api_admin_prepare_head()
 {
-	global $langs, $conf, $user, $db;
+	global $langs;
 
 	$h = 0;
 	$head = array();
@@ -41,10 +41,12 @@ function api_admin_prepare_head()
 	$head[$h][2] = 'parameter';
 	$h++;
 
-	$head[$h][0] = DOL_URL_ROOT.'/api/admin/token_list.php';
-	$head[$h][1] = $langs->trans("ListOfTokens");
-	$head[$h][2] = 'token_list';
-	$h++;
+	if (getDolGlobalString('API_IN_TOKEN_TABLE')) {
+		$head[$h][0] = DOL_URL_ROOT.'/api/admin/token_list.php';
+		$head[$h][1] = $langs->trans("ListOfTokens");
+		$head[$h][2] = 'token_list';
+		$h++;
+	}
 
 	return $head;
 }

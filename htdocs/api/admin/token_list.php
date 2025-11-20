@@ -183,7 +183,7 @@ if (!getDolGlobalInt('MAIN_DISABLE_FULL_SCANLIST')) {
 	/* The fast and low memory method to get and count full list converts the sql into a sql count */
 	$sqlforcount = 'SELECT COUNT(*) as nbtotalofrecords';
 	$sqlforcount .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
-	$sqlforcount .= " WHERE entity = ".((int) $conf->entity).")";
+	$sqlforcount .= " WHERE entity IN (0, ".((int) $conf->entity).")";
 	$sqlforcount .= " AND service = 'dolibarr_rest_api'";
 	$resql = $db->query($sqlforcount);
 	if ($resql) {
@@ -200,27 +200,16 @@ if (!getDolGlobalInt('MAIN_DISABLE_FULL_SCANLIST')) {
 	$db->free($resql);
 }
 
-$sql = "SELECT oat.rowid, oat.token, oat.entity, oat.state as rights, oat.fk_user, oat.datec as date_creation, oat.tms as date_modification";
-if (isModEnabled('multicompany')) {
-	$sql .= ", e.label as entity_name";
-}
+$sql = "SELECT oat.rowid, oat.tokenstring, oat.entity, oat.state as rights, oat.fk_user, oat.datec as date_creation, oat.tms as date_modification,";
+$sql .= " oat.lastaccess, oat.apicount_total";
 $sql .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
-if (isModEnabled('multicompany')) {
-	$sql .= " JOIN ".$db->prefix()."entity as e ON oat.entity = e.rowid";
-}
 $sql .= " WHERE service = 'dolibarr_rest_api'";
 $sql .= " AND EXISTS(SELECT 'exist' FROM llx_user as u WHERE u.api_key IS NOT NULL AND u.rowid = oat.fk_user)";
-if (!isModEnabled('multicompany') || $conf->entity > 1) {
-	$sql .= " AND oat.entity = ".((int) $conf->entity);
-}
 if ($search_user) {
 	$sql .= " AND EXISTS (SELECT 'exist' FROM ".MAIN_DB_PREFIX."user u";
 	$sql .= " WHERE (u.lastname LIKE '%".$db->escape($search_user)."%'";
 	$sql .= " OR u.firstname LIKE '%".$db->escape($search_user)."%')";
-	$sql .= " AND oat.fk_user = u.rowid)";
-}
-if ($search_entity) {
-	$sql .= natural_search('e.label', $search_entity);
+	$sql .= " AND oat.fk_user = u.rowid))";
 }
 if ($search_datec_start) {
 	$sql .= " AND oat.datec >= '".$db->idate($search_datec_start)."'";

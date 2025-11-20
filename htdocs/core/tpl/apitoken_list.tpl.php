@@ -80,13 +80,6 @@ if (!empty($arrayfields['u.login']['checked'])) {
 	print '</td>';
 }
 
-// Entity
-if (!empty($arrayfields['e.label']['checked']) && isModEnabled('multicompany')) {
-	print '<td class="liste_titre">';
-	print '<input class="flat maxwidth100" type="text" name="search_entity" value="'.dol_escape_htmltag($search_entity).'">';
-	print '</td>';
-}
-
 // Number of perms
 // We don't search out number of perms because it is a string field,
 // and we don't want to count into it with sql query
@@ -137,10 +130,7 @@ if (!empty($arrayfields['u.login']['checked'])) {
 	// @phan-suppress-next-line PhanTypeInvalidDimOffset
 	print_liste_field_titre($arrayfields['u.login']['label'], $_SERVER["PHP_SELF"], 'u.login', '', $param, '', $sortfield, $sortorder);
 }
-if (!empty($arrayfields['e.label']['checked']) && isModEnabled('multicompany')) {
-	print_liste_field_titre($arrayfields['e.label']['label'], $_SERVER["PHP_SELF"], 'e.label', '', $param, '', $sortfield, $sortorder);
-}
-print '<th class="liste_titre right">'.$langs->trans("NumberOfPermissions").'</th>';
+print '<th class="liste_titre right">'.$langs->trans("LastAccess").'</th>';
 if (!empty($arrayfields['oat.datec']['checked'])) {
 	print_liste_field_titre($arrayfields['oat.datec']['label'], $_SERVER["PHP_SELF"], 'oat.datec', '', $param, '', $sortfield, $sortorder, 'center ');
 }
@@ -161,20 +151,26 @@ if ($num > 0) {
 	while ($i < $imaxinloop) {
 		// Compute number of perms
 		$obj = $db->fetch_object($resql);
+
 		$useridparam = isset($obj->fk_user) ? $obj->fk_user : $object->id;
-		$numperms = 0;
+
 		if (isset($obj->fk_user)) {
 			$currentuser = new User($db);
 			$currentuser->fetch($obj->fk_user);
 		} else {
 			$currentuser = $object;
 		}
+
+		/*
+		$numperms = 0;
 		if (!empty($obj->rights)) {
 			$numperms = count(explode(",", $obj->rights));
 		} elseif (!(strlen($obj->rights) == 1 && substr($obj->rights, 0, 1) == 0)) {
 			$currentuser->loadRights();
 			$numperms = $currentuser->nb_rights;
 		}
+		*/
+
 		print '<tr class="oddeven">';
 		// Action column
 		if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
@@ -190,7 +186,7 @@ if ($num > 0) {
 		}
 		print '<td>';
 		print '<a href="'.DOL_URL_ROOT.'/user/api_token/card.php?id='.$useridparam.'&tokenid='.$obj->rowid.'">';
-		print dolDecrypt($obj->token);
+		print dolDecrypt($obj->tokenstring);
 		print '</a>';
 		print '</td>';
 		if (!empty($arrayfields['u.login']['checked'])) {
@@ -200,16 +196,8 @@ if ($num > 0) {
 			print '</a>';
 			print '</td>';
 		}
-		if (isModEnabled('multicompany')) {
-			print '<td>';
-			print '<span class="multicompany-entity-container">';
-			print '<span class="fa fa-globe multicompany-button-template" title="'.$langs->trans("Entity").'"></span>';
-			print $obj->entity_name;
-			print '&nbsp;</span>';
-			print '</td>';
-		}
 		print '<td class="right">';
-		print $numperms;
+		print dol_print_date($db->jdate($obj->lastaccess));
 		print '</td>';
 		print '<td class="center">';
 		print dol_print_date($db->jdate($obj->date_creation), 'dayhour');

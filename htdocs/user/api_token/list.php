@@ -21,14 +21,12 @@
  */
 
 /**
- *       \file       htdocs/user/api_toke/list.php
+ *       \file       htdocs/user/api_token/list.php
  *       \brief      Page to show user list of token
  */
 
 // Load Dolibarr environment
 require '../../main.inc.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/usergroups.lib.php';
-
 /**
  * @var Conf $conf
  * @var DoliDB $db
@@ -36,6 +34,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/usergroups.lib.php';
  * @var Translate $langs
  * @var User $user
  */
+require_once DOL_DOCUMENT_ROOT.'/core/lib/usergroups.lib.php';
 
 // Load translation files required by page
 $langs->loadLangs(array('admin', 'users'));
@@ -110,7 +109,6 @@ if (!$sortorder) {
 }
 
 $arrayfields = array(
-	'e.label' => array('label' => "Entity", 'checked' => '1'),
 	'oat.datec' => array('label' => "DateCreation", 'checked' => '1'),
 	'oat.tms' => array('label' => "DateModification", 'checked' => '1'),
 );
@@ -125,6 +123,7 @@ if (empty($object->api_key)) {
 }
 
 $form = new Form($db);
+
 
 /*
  * Actions
@@ -206,7 +205,7 @@ if (!getDolGlobalInt('MAIN_DISABLE_FULL_SCANLIST')) {
 	$sqlforcount = 'SELECT COUNT(*) as nbtotalofrecords';
 	$sqlforcount .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
 	$sqlforcount .= " WHERE entity IN (".$conf->entity.")";
-	$sqlforcount .= " AND fk_user = ".$id;
+	$sqlforcount .= " AND fk_user = ".((int) $id);
 	$sqlforcount .= " AND service = 'dolibarr_rest_api'";
 	$resql = $db->query($sqlforcount);
 	if ($resql) {
@@ -313,38 +312,6 @@ $morehtmlref .= dolButtonToOpenUrlInDialogPopup('publicvirtualcard', $langs->tra
 
 llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-user page-card_param_ihm');
 
-print dol_get_fiche_head($head, 'apitoken', $langs->trans("User"), -1, 'user');
-
-dol_banner_tab($object, 'id', $linkback, $user->hasRight("user", "user", "read") || $user->admin, 'rowid', 'ref', $morehtmlref);
-
-print '<div class="fichecenter">';
-print '<div class="underbanner clearboth"></div>';
-print '<table class="border centpercent tableforfield">';
-
-// Login
-print '<tr><td class="titlefield">'.$langs->trans("Login").'</td>';
-if (!empty($object->ldap_sid) && $object->status == 0) {
-	print '<td class="error">';
-	print $langs->trans("LoginAccountDisableInDolibarr");
-	print '</td>';
-} else {
-	print '<td>';
-	$addadmin = '';
-	if (property_exists($object, 'admin')) {
-		if (isModEnabled('multicompany') && !empty($object->admin) && empty($object->entity)) {
-			$addadmin .= img_picto($langs->trans("SuperAdministratorDesc"), "redstar", 'class="paddingleft valignmiddle"');
-		} elseif (!empty($object->admin)) {
-			$addadmin .= img_picto($langs->trans("AdministratorDesc"), "star", 'class="paddingleft valignmiddle"');
-		}
-	}
-	print showValueWithClipboardCPButton($object->login).$addadmin;
-	print '</td>';
-}
-print '</tr>'."\n";
-print '</table>';
-print '</div>';
-
-print dol_get_fiche_end();
 
 print '<!-- Token section -->'."\n";
 
