@@ -120,7 +120,8 @@ class InterfaceWebhookTriggers extends DolibarrTriggers
 					unset($resobject->object->errors);
 				}
 
-				$jsonstr = json_encode($resobject);
+				//$jsonstr = json_encode($resobject);
+				$jsonstr = json_encode(dol_clone($resobject, 2));
 
 				$headers = array(
 					'Content-Type: application/json'
