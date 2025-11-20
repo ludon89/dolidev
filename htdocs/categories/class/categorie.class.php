@@ -999,7 +999,7 @@ class Categorie extends CommonObject
 						$obj->fetch($rec['fk_object']);
 						// @phpstan-ignore-next-line
 						if ($obj->id > 0) {		// Failing fetch may happen for example when a category supplier was set and third party was moved as customer only. The object supplier can't be loaded.
-							$objs[] = $obj;
+							$objs[] = clone $obj;
 						}
 					}
 				}
