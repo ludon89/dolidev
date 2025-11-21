@@ -102,7 +102,6 @@ if (!$canreaduser) {
 }
 
 
-
 /*
  * Actions
  */
@@ -126,7 +125,7 @@ if (empty($reshook)) {
 		$action = '';
 	}
 
-	if ($action == 'add') {
+	if ($action == 'add' && $canedittoken) {
 		$tokenstring = GETPOST('api_key', 'alphanohtml');
 		$userid = GETPOSTINT('user');
 		$useridtoadd = !empty($userid) && $userid > 0 ? $userid : $id;
