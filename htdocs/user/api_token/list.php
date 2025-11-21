@@ -154,14 +154,14 @@ if (empty($reshook)) {
 		$db->begin();
 
 		$nbok = 0;
-		$TMsg = array();
 
-		//$toselect could contain duplicate entries, cf https://github.com/Dolibarr/dolibarr/issues/26244
+		// $toselect could contain duplicate entries, cf https://github.com/Dolibarr/dolibarr/issues/26244
 		$unique_arr = array_unique($toselect);
 		foreach ($unique_arr as $toselectid) {
 			$sql = "DELETE FROM ".MAIN_DB_PREFIX."oauth_token";
-			$sql .= " WHERE rowid = '".$toselectid."'";
+			$sql .= " WHERE rowid = ".((int) $toselectid);
 			$sql .= " AND service = 'dolibarr_rest_api'";
+			$sql .= " AND entity = ".((int) $conf->entity);
 
 			$result = $db->query($sql);
 
