@@ -2052,7 +2052,7 @@ if ($action == 'create' || $action == 'adduserldap') {
 				print '<span class="badge badge-info">999</span>';
 				print '<div class="left inline-block">';
 				$s = '<!-- MAIN_SECURITY_ALLOW_TOTP --><span class="fa fa-pen valignmiddle btnTitle-icon"></span>';
-				print dolButtonToOpenUrlInDialogPopup('openpopuptoaddcredential', $langs->transnoentitiesnoconv("Add2FA"), $s, '/user/credentials.php?userid='.$object->id.'&token='.newToken());
+				print dolButtonToOpenUrlInDialogPopup('openpopuptoaddcredential', $langs->transnoentitiesnoconv("Edit"), $s, '/user/credentials.php?userid='.$object->id.'&token='.newToken());
 				print '</span></span>';
 				print '</td></tr>';
 			}
