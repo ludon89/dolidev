@@ -2593,8 +2593,10 @@ class Form
 			}
 
 			$out .= '<li>';
+
 			$userstatic->fetch($value['id']);
-			$out .= $userstatic->getNomUrl(-1);
+			$out .= $userstatic->getNomUrl(-4);
+
 			if ($i == 0) {
 				$ownerid = $value['id'];
 				$out .= ' (' . $langs->trans("Owner") . ')';
@@ -7878,8 +7880,8 @@ class Form
 
 					// Icon calendar
 					if ($disabled) {
-						$retstringbutton = '<button id="' . $prefix . 'Button" type="button" class="dpInvisibleButtons">' . img_object($langs->trans("Disabled"), 'calendarday', 'class="datecallink"') . '</button>';
-						$retstring = $retstringbutton . $retstring;
+						$retstringbutton = '<button id="' . $prefix . 'Button" type="button" class="dpInvisibleButtons">' . img_object($langs->trans("Disabled"), 'calendarday', 'class="datecallink ui-datepicker-notrigger"') . '</button>';
+						$retstring = $retstring . $retstringbutton;
 					}
 
 					$retstring .= '</div>';
