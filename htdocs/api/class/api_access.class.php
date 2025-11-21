@@ -91,7 +91,7 @@ class DolibarrApiAccess implements iAuthenticate
 	public function __isAllowed()
 	{
 		// phpcs:enable
-		global $conf, $db, $langs, $user;
+		global $conf, $langs, $user;
 
 		$login = '';
 		$stored_key = '';
@@ -170,7 +170,7 @@ class DolibarrApiAccess implements iAuthenticate
 						// see master.inc.php
 						require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 
-						$fmysoc = new Societe($db);
+						$fmysoc = new Societe($this->db);
 						$fmysoc->setMysoc($conf);
 
 						// We set some specific default values according to country
@@ -284,12 +284,12 @@ class DolibarrApiAccess implements iAuthenticate
 					// Update the counter into table llx_oauth_token
 					$tmpnow = dol_getdate(dol_now('gmt'), true, 'gmt');
 
-					$sqlforcounter = "UPDATE ".$db->prefix()."oauth_token SET ";
+					$sqlforcounter = "UPDATE ".$this->db->prefix()."oauth_token SET ";
 					$sqlforcounter .= " apicount_total = apicount_total + 1,";
 					$sqlforcounter .= " apicount_month = apicount_month + 1,";
 					// if last access was done during previous month, we save pageview_month into pageviews_previous_month
-					$sqlforcounter .= " pageviews_previous_month = ".$db->ifsql("lastaccess < '".$db->idate(dol_mktime(0, 0, 0, $tmpnow['mon'], 1, $tmpnow['year'], 'gmt', 0), 'gmt')."'", 'apicount_month', 'apicount_previous_month').",";
-					$sqlforcounter .= " lastaccess = '".$db->idate(dol_now('gmt'), 'gmt')."'";
+					$sqlforcounter .= " pageviews_previous_month = ".$this->db->ifsql("lastaccess < '".$this->db->idate(dol_mktime(0, 0, 0, $tmpnow['mon'], 1, $tmpnow['year'], 'gmt', 0), 'gmt')."'", 'apicount_month', 'apicount_previous_month').",";
+					$sqlforcounter .= " lastaccess = '".$this->db->idate(dol_now('gmt'), 'gmt')."'";
 					$sqlforcounter .= " WHERE rowid = ".((int) $token_rowid);
 
 					$this->db->query($sqlforcounter);
