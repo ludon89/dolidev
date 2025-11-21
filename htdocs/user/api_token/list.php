@@ -204,7 +204,7 @@ if (!getDolGlobalInt('MAIN_DISABLE_FULL_SCANLIST')) {
 	/* The fast and low memory method to get and count full list converts the sql into a sql count */
 	$sqlforcount = 'SELECT COUNT(*) as nbtotalofrecords';
 	$sqlforcount .= " FROM ".MAIN_DB_PREFIX."oauth_token as oat";
-	$sqlforcount .= " WHERE entity IN (".$conf->entity.")";
+	$sqlforcount .= " WHERE entity =".((int) $conf->entity);
 	$sqlforcount .= " AND fk_user = ".((int) $id);
 	$sqlforcount .= " AND service = 'dolibarr_rest_api'";
 	$resql = $db->query($sqlforcount);
