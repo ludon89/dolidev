@@ -290,7 +290,7 @@ if (($action == 'updateline' || $action == 'updatesplitline') && !$cancel && $us
 	$timespent_date = dol_mktime(12, 0, 0, GETPOSTINT("timelinemonth"), GETPOSTINT("timelineday"), GETPOSTINT("timelineyear"));
 
 	if (!$error) {
-		if (GETPOSTINT('taskid') != $id) {      // GETPOSTINT('taskid') is the id of new task
+		if ($id && GETPOSTINT('taskid') != $id) {      // GETPOSTINT('taskid') is the id of new task
 			$id_temp = GETPOSTINT('taskid'); 	// should not overwrite $id
 
 			$object->fetchTimeSpent($lineid);
@@ -418,6 +418,7 @@ if (GETPOSTINT('projectid') > 0) {
 }
 // If not task selected and no project selected
 $allprojectforuser = 0;
+
 if ($id <= 0 && $projectidforalltimes == 0) {
 	$allprojectforuser = $user->id;
 }
@@ -917,9 +918,7 @@ $help_url = '';
 llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-project project-tasks page-task_time');
 
 if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser > 0) {
-	/*
-	 * Fiche projet en mode visu
-	 */
+	// Project car in view mode
 	if ($projectidforalltimes > 0) {
 		$result = $projectstatic->fetch($projectidforalltimes);
 		if (!empty($projectstatic->socid)) {
@@ -2155,7 +2154,9 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 				print '<td class="center nowraponall">';
 				if (($action == 'editline' || $action == 'splitline') && GETPOSTINT('lineid') == $task_time->rowid) {
 					print '<input type="hidden" name="lineid" value="' . GETPOSTINT('lineid') . '">';
-					print '<input type="hidden" name="id" value="' . $task_time->taskid . '">';
+					if ($id) {
+						print '<input type="hidden" name="id" value="' . $id . '">';	// If you enable this, the edit will go beack to task view
+					}
 					print '<input type="submit" class="button buttongen reposition smallpaddingimp margintoponlyshort marginbottomonlyshort button-save" name="save" value="'.$langs->trans("Save").'">';
 					print '<br>';
 					print '<input type="submit" class="button buttongen reposition smallpaddingimp margintoponlyshort marginbottomonlyshort button-cancel" name="cancel" value="'.$langs->trans("Cancel").'">';
