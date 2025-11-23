@@ -16458,14 +16458,15 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 
 			// Date
 			$out .= '<span class="time"><i class="fa fa-clock-o valignmiddle"></i> <span class="valignmiddle">';
-			$out .= dol_print_date($histo[$key]['datestart'], 'dayhour', 'tzuserrel');
+			$out .= dol_print_date($histo[$key]['datestart'], 'day', 'tzuserrel');
+			$out .= ' &nbsp; '.dol_print_date($histo[$key]['datestart'], 'hour', 'tzuserrel', null, false, 1);
 			if ($histo[$key]['dateend'] && $histo[$key]['dateend'] != $histo[$key]['datestart']) {
 				$tmpa = dol_getdate($histo[$key]['datestart'], true);
 				$tmpb = dol_getdate($histo[$key]['dateend'], true);
 				if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year']) {
-					$out .= '-' . dol_print_date($histo[$key]['dateend'], 'hour', 'tzuserrel');
+					$out .= '-' . dol_print_date($histo[$key]['dateend'], 'hour', 'tzuserrel', null, false, 1);
 				} else {
-					$out .= '-' . dol_print_date($histo[$key]['dateend'], 'dayhour', 'tzuserrel');
+					$out .= '-' . dol_print_date($histo[$key]['dateend'], 'dayhour', 'tzuserrel', null, false, 1);
 				}
 			}
 			$late = 0;
