@@ -582,7 +582,6 @@ abstract class CommonObject
 	 */
 	public $fk_user_modif;
 
-
 	public $next_prev_filter;
 
 	/**
