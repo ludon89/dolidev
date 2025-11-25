@@ -937,7 +937,6 @@ function restrictedArea(User $user, $features, $object = 0, $tableandshare = '',
  */
 function checkUserAccessToObject($user, array $featuresarray, $object = 0, $tableandshare = '', $feature2 = '', $dbt_keyfield = '', $dbt_select = 'rowid', $parenttableforentity = '')
 {
-	dol_syslog("security.lib.php::checkUserAccessToObject::begin", LOG_DEBUG);
 	global $db, $conf;
 
 	if (is_object($object)) {
@@ -1240,7 +1239,7 @@ function checkUserAccessToObject($user, array $featuresarray, $object = 0, $tabl
 					// the user can't view any evaluations
 					return false;
 				}
-				// the user can only their own evaluations or their subordinates'
+				// the user can only see their own evaluations or their subordinates'
 				return in_array($useridtocheck, $childids);
 			}
 		}
@@ -1267,6 +1266,7 @@ function checkUserAccessToObject($user, array $featuresarray, $object = 0, $tabl
 			}
 		}
 	}
+	
 	dol_syslog("security.lib.php::checkUserAccessToObject::return True", LOG_DEBUG);
 	return true;
 }
