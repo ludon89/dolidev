@@ -14186,12 +14186,14 @@ function dolGetButtonAction($label, $text = '', $actionType = 'default', $url = 
 		$class = "dropdown-item";
 	} else {
 		$class = 'butAction';
-		if ($actionType == 'email') {
+		if ($actionType == 'edit') {
+			$class = 'butAction butActionEdit';
+		} elseif ($actionType == 'email') {
 			$class = 'butAction butActionEmail';
 		} elseif ($actionType == 'clone') {
 			$class = 'butAction butActionClone';
 		} elseif ($actionType == 'danger' || $actionType == 'delete') {
-			$class = 'butActionDelete';
+			$class = 'butAction butActionDelete';
 			if (!empty($url) && strpos($url, 'token=') === false) {
 				$url .= '&token=' . newToken();
 			}
