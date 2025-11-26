@@ -14072,7 +14072,7 @@ function dolGetStatus($statusLabel = '', $statusLabelShort = '', $html = '', $st
  *
  * @param string    	$label      	Label or tooltip of button if $text is provided. Also used as tooltip in title attribute. Can be escaped HTML content or full simple text.
  * @param string    	$text       	Optional : short label on button. Can be escaped HTML content or full simple text.
- * @param string 		$actionType 	'default', 'danger', 'email', 'clone', 'cancel', 'delete', ...
+ * @param string 		$actionType 	'default', 'edit', 'danger', 'email', 'clone', 'cancel', 'delete', ...
  * @param string|array<int,array{lang:string,enabled:bool,perm:bool|int,label:string,url:string,urlroot?:string,isDropDown?:int<0,1>}> 	$url        	Url for link or array of subbutton description
  *                                                                                                                                                      Example when an array is used:
  *                                                                                                                                                      $arrayforbutaction = array(
@@ -14182,13 +14182,18 @@ function dolGetButtonAction($label, $text = '', $actionType = 'default', $url = 
 	}
 
 	// Here, $url is a simple link
-
 	if (!empty($params['isDropdown']) || !empty($params['isDropDown'])) {	// Use the dropdown-item style (not for action button)
 		$class = "dropdown-item";
 	} else {
 		$class = 'butAction';
-		if ($actionType == 'danger' || $actionType == 'delete') {
-			$class = 'butActionDelete';
+		if ($actionType == 'edit') {
+			$class = 'butAction butActionEdit';
+		} elseif ($actionType == 'email') {
+			$class = 'butAction butActionEmail';
+		} elseif ($actionType == 'clone') {
+			$class = 'butAction butActionClone';
+		} elseif ($actionType == 'danger' || $actionType == 'delete') {
+			$class = 'butAction butActionDelete';
 			if (!empty($url) && strpos($url, 'token=') === false) {
 				$url .= '&token=' . newToken();
 			}
@@ -14322,7 +14327,7 @@ function dolGetButtonAction($label, $text = '', $actionType = 'default', $url = 
  * using `dolPrintHTMLForAttributeUrl()`. All other attributes are escaped using
  * `dolPrintHTMLForAttribute()`.
  *
- * ⚠️ Note: Disabling escaping (via `$unescapedAttr`) is **not recommended** unless you
+ * Note: Disabling escaping (via `$unescapedAttr`) is **not recommended** unless you
  * fully trust the input data, as it may lead to XSS vulnerabilities.
  *
  * Example:
