@@ -14072,7 +14072,7 @@ function dolGetStatus($statusLabel = '', $statusLabelShort = '', $html = '', $st
  *
  * @param string    	$label      	Label or tooltip of button if $text is provided. Also used as tooltip in title attribute. Can be escaped HTML content or full simple text.
  * @param string    	$text       	Optional : short label on button. Can be escaped HTML content or full simple text.
- * @param string 		$actionType 	'default', 'danger', 'email', 'clone', 'cancel', 'delete', ...
+ * @param string 		$actionType 	'default', 'edit', 'danger', 'email', 'clone', 'cancel', 'delete', ...
  * @param string|array<int,array{lang:string,enabled:bool,perm:bool|int,label:string,url:string,urlroot?:string,isDropDown?:int<0,1>}> 	$url        	Url for link or array of subbutton description
  *                                                                                                                                                      Example when an array is used:
  *                                                                                                                                                      $arrayforbutaction = array(
@@ -14188,8 +14188,9 @@ function dolGetButtonAction($label, $text = '', $actionType = 'default', $url = 
 		$class = 'butAction';
 		if ($actionType == 'email') {
 			$class = 'butAction butActionEmail';
-		}
-		if ($actionType == 'danger' || $actionType == 'delete') {
+		} elseif ($actionType == 'clone') {
+			$class = 'butAction butActionClone';
+		} elseif ($actionType == 'danger' || $actionType == 'delete') {
 			$class = 'butActionDelete';
 			if (!empty($url) && strpos($url, 'token=') === false) {
 				$url .= '&token=' . newToken();
