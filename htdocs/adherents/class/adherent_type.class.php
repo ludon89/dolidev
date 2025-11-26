@@ -674,7 +674,7 @@ class AdherentType extends CommonObject
 	 *  Return the array of all amounts per membership type id
 	 *
 	 *  @param	int		$status			Filter on status of type
-	 *  @return array<int,string>		Array of membership type
+	 *  @return array<int,float>		Array of membership type
 	 */
 	public function amountByType($status = null)
 	{
