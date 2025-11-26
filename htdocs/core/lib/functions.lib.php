@@ -14182,11 +14182,13 @@ function dolGetButtonAction($label, $text = '', $actionType = 'default', $url = 
 	}
 
 	// Here, $url is a simple link
-
 	if (!empty($params['isDropdown']) || !empty($params['isDropDown'])) {	// Use the dropdown-item style (not for action button)
 		$class = "dropdown-item";
 	} else {
 		$class = 'butAction';
+		if ($actionType == 'email') {
+			$class = 'butAction butActionEmail';
+		}
 		if ($actionType == 'danger' || $actionType == 'delete') {
 			$class = 'butActionDelete';
 			if (!empty($url) && strpos($url, 'token=') === false) {
@@ -14322,7 +14324,7 @@ function dolGetButtonAction($label, $text = '', $actionType = 'default', $url = 
  * using `dolPrintHTMLForAttributeUrl()`. All other attributes are escaped using
  * `dolPrintHTMLForAttribute()`.
  *
- * ⚠️ Note: Disabling escaping (via `$unescapedAttr`) is **not recommended** unless you
+ * Note: Disabling escaping (via `$unescapedAttr`) is **not recommended** unless you
  * fully trust the input data, as it may lead to XSS vulnerabilities.
  *
  * Example:

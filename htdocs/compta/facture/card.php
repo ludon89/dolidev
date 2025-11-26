@@ -6604,14 +6604,14 @@ if ($action == 'create') {
 				if (($object->status == Facture::STATUS_VALIDATED || $object->status == Facture::STATUS_CLOSED) || getDolGlobalString('FACTURE_SENDBYEMAIL_FOR_ALL_STATUS')) {
 					if ($objectidnext) {
 						$params['attr']['title'] = $langs->trans("DisabledBecauseReplacedInvoice");
-						print dolGetButtonAction('', $langs->trans('SendMail'), 'default', '#', '', false, $params);
+						print dolGetButtonAction('', $langs->trans('SendMail'), 'email', '#', '', false, $params);
 					} else {
 						if ($usercansend) {
 							unset($params['attr']['title']);
-							print dolGetButtonAction('', $langs->trans('SendMail'), 'default', $_SERVER['PHP_SELF'].'?facid='.$object->id.'&action=presend&mode=init#formmailbeforetitle', '', true, $params);
+							print dolGetButtonAction('', $langs->trans('SendMail'), 'email', $_SERVER['PHP_SELF'].'?facid='.$object->id.'&action=presend&mode=init#formmailbeforetitle', '', true, $params);
 						} else {
 							unset($params['attr']['title']);
-							print dolGetButtonAction('', $langs->trans('SendMail'), 'default', '#', '', false, $params);
+							print dolGetButtonAction('', $langs->trans('SendMail'), 'email', '#', '', false, $params);
 						}
 					}
 				}
