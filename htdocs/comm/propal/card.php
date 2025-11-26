@@ -2206,7 +2206,7 @@ $now = dol_now();
 
 // Add new proposal
 if ($action == 'create') {
-	$currency_code = $conf->currency;
+	$currency_code = getDolCurrency();
 
 	print load_fiche_titre($langs->trans("NewProp"), '', 'propal');
 
@@ -2214,8 +2214,6 @@ if ($action == 'create') {
 	if ($socid > 0) {
 		$res = $soc->fetch($socid);
 	}
-
-	$currency_code = $conf->currency;
 
 	$cond_reglement_id = GETPOSTINT('cond_reglement_id');
 	$deposit_percent = GETPOSTFLOAT('cond_reglement_id_deposit_percent');
@@ -3580,7 +3578,7 @@ if ($action == 'create') {
 				// Send
 				if (empty($user->socid)) {
 					if ($object->status == Propal::STATUS_VALIDATED || $object->status == Propal::STATUS_SIGNED || getDolGlobalString('PROPOSAL_SENDBYEMAIL_FOR_ALL_STATUS')) {
-						print dolGetButtonAction('', $langs->trans('SendMail'), 'default', $_SERVER["PHP_SELF"] . '?action=presend&token=' . newToken() . '&id=' . $object->id . '&mode=init#formmailbeforetitle', '', $usercansend);
+						print dolGetButtonAction('', $langs->trans('SendMail'), 'email', $_SERVER["PHP_SELF"] . '?action=presend&token=' . newToken() . '&id=' . $object->id . '&mode=init#formmailbeforetitle', '', $usercansend);
 					}
 				}
 
