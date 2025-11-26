@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   checkmajorversion:
-    name: Check lock of major version with generate_filelist_xml.php
+    name: Check lock on fileset unalterable_files with generate_filelist_xml.php
     runs-on: ubuntu-latest
     # Do not run schedule on forks
     if: |
