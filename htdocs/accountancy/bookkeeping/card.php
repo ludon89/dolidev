@@ -967,7 +967,7 @@ if ($action == 'create') {
 			print load_fiche_titre($langs->trans("ListeMvts"), '', '');
 
 			if (empty($object->date_validation)) {
-				print '<form action="' . $_SERVER["PHP_SELF"] . '?piece_num=' . ((int)$object->piece_num) . '" method="POST">';
+				print '<form action="' . $_SERVER["PHP_SELF"] . '?piece_num=' . ((int) $object->piece_num) . '" method="POST">';
 				if ($optioncss != '') {
 					print '<input type="hidden" name="optioncss" value="' . $optioncss . '">';
 				}
