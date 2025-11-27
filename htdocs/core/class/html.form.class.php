@@ -6854,10 +6854,10 @@ class Form
 	 *    Show form with transport mode
 	 *
 	 * @param string $page Page
-	 * @param string $selected Id mode pre-select
+	 * @param int|'' $selected Id mode pre-select
 	 * @param string $htmlname Name of select html field
-	 * @param int $active Active or not, -1 = all
-	 * @param int $addempty 1=Add empty entry
+	 * @param int<-1,1> $active Active or not, -1 = all
+	 * @param int<0,1> $addempty 1=Add empty entry
 	 * @return    void
 	 */
 	public function formSelectTransportMode($page, $selected = '', $htmlname = 'transport_mode_id', $active = 1, $addempty = 0)

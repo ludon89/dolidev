@@ -1347,17 +1347,17 @@ class Categorie extends CommonObject
 						'rowid' => (int) $obj->rowid,
 						'id' => (int) $obj->rowid,
 						'fk_parent' => (int) $obj->fk_parent,
-						'label' => !empty($obj->label_trans) ? $obj->label_trans : $obj->label,
-						'description' => !empty($obj->description_trans) ? $obj->description_trans : $obj->description,
-						'color' => $obj->color,
-						'position' => $obj->position,
+						'label' => !empty($obj->label_trans) ? (string) $obj->label_trans : (string) $obj->label,
+						'description' => !empty($obj->description_trans) ? (string) $obj->description_trans : (string) $obj->description,
+						'color' => (string) $obj->color,
+						'position' => (string) $obj->position,
 						'visible' => (int) $obj->visible,
-						'ref_ext' => $obj->ref_ext,
+						'ref_ext' => (string) $obj->ref_ext,
 						'picto' => 'category',
 						// fields are filled with buildPathFromId later
 						'fullpath' => '',
 						'fulllabel' => '',
-						// 'level' => null,
+						'level' => null,
 					);
 				$i++;
 			}
