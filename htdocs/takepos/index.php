@@ -94,7 +94,7 @@ $MAXCATEG = (empty($conf->global->TAKEPOS_NB_MAXCATEG) ? $maxcategbydefaultforth
 $MAXPRODUCT = (empty($conf->global->TAKEPOS_NB_MAXPRODUCT) ? $maxproductbydefaultforthisdevice : $conf->global->TAKEPOS_NB_MAXPRODUCT);
 
 $term = empty($_SESSION['takeposterminal']) ? 1 : $_SESSION['takeposterminal'];
-$socid = getDolGlobalString('CASHDESK_ID_THIRDPARTY' . $term);
+$socid = getDolGlobalInt('CASHDESK_ID_THIRDPARTY' . $term);
 /*
  $constforcompanyid = 'CASHDESK_ID_THIRDPARTY'.$_SESSION["takeposterminal"];
  $soc = new Societe($db);
