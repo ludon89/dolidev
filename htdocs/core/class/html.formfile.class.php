@@ -508,7 +508,7 @@ class FormFile
 
 		$printer = 0;
 		// The direct print feature is implemented only for such elements
-		if (in_array($modulepart, array('contract', 'facture', 'supplier_proposal', 'propal', 'proposal', 'order', 'commande', 'expedition', 'commande_fournisseur', 'expensereport', 'delivery', 'ticket'))) {
+		if (in_array($modulepart, array('contract', 'facture', 'supplier_proposal', 'propal', 'proposal', 'order', 'commande', 'expedition', 'commande_fournisseur', 'expensereport', 'delivery', 'ticket', 'bom', 'mrp:mo'))) {
 			$printer = ($user->hasRight('printing', 'read') && isModEnabled('printing'));
 		}
 
