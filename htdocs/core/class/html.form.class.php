@@ -4759,7 +4759,7 @@ class Form
 				$obj = $this->db->fetch_object($resql);
 
 				// Si traduction existe, on l'utilise, sinon on prend le libelle par default
-				$label = ($obj->label != '-' ? $obj->label : '');
+				$label = ($obj->label != '-' ? (string) $obj->label : '');
 				if ($langs->trans("DemandReasonType" . $obj->code) != "DemandReasonType" . $obj->code) {
 					$label = $langs->trans("DemandReasonType" . $obj->code); // So translation key DemandReasonTypeSRC_XXX will work
 				}
