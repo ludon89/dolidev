@@ -1110,7 +1110,7 @@ class Thirdparties extends DolibarrApi
 	 * @throws RestException 404
 	 * @throws RestException 503
 	 */
-	public function getFixedAmountDiscounts($id,  $mode = 'customer', $filter = "none", $sortfield = "f.type", $sortorder = 'ASC')
+	public function getFixedAmountDiscounts($id, $mode = 'customer', $filter = "none", $sortfield = "f.type", $sortorder = 'ASC')
 	{
 		$obj_ret = array();
 
