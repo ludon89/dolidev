@@ -78,7 +78,7 @@ class Tasks extends DolibarrApi
 			throw new RestException(404, 'Task not found');
 		}
 
-		if (!DolibarrApi::_checkAccessToResource('task', $this->task->id)) {
+		if (!DolibarrApi::_checkAccessToResource('task', $this->task->id, 'projet_task')) {
 			throw new RestException(403, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
 		}
 
