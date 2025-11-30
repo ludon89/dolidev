@@ -550,19 +550,19 @@ class Tasks extends DolibarrApi
 		}
 
 		$taskresult = $this->task->fetch($id);
-		if( ! $taskresult ) {
+		if(!$taskresult ) {
 			throw new RestException(404, 'Task with id='.$id.' not found');
 		}
-		if( ! DolibarrApi::_checkAccessToResource('task',$this->task->id)) {
+		if(!DolibarrApi::_checkAccessToResource('task',$this->task->id)) {
 			throw new RestException(403, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
 		}
 
 		$timespent = new TimeSpent($this->db);
 		$timeresult = $timespent->fetch($timespent_id);
-		if( ! $timeresult ) {
+		if(!$timeresult ) {
 			throw new RestException(404, 'Timespent with id='.$timespent_id.' not found');
 		}
-		if( ! DolibarrApi::_checkAccessToResource('time',$timespent->id)) {
+		if(!DolibarrApi::_checkAccessToResource('time',$timespent->id)) {
 			throw new RestException(403, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
 		}
 
