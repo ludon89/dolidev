@@ -315,12 +315,6 @@ class SecurityGETPOSTTest extends CommonClassTest
 		$conf->global->MAIN_RESTRICTHTML_ONLY_VALID_HTML = 1;
 		$conf->global->MAIN_RESTRICTHTML_ONLY_VALID_HTML_TIDY = 0;
 
-		$_POST["pagecontentwithaconstantvarinurl"] = '<a href="https://[__aaa__]/aaa.html">https://[__aaa__]/aaa.html</a>';
-		$result = GETPOST("pagecontentwithaconstantvarinurl", 'restricthtml');
-		print __METHOD__." result=".$result."\n";
-		$this->assertEquals('<a href="https://[__aaa__]/aaa.html">https://[__aaa__]/aaa.html</a>', $result, 'Test on HTML content with url with constant');
-
-
 
 		//$_POST["param0"] = 'A real string with <a href="rrr" title="aabb">aaa</a> and " inside content';
 		$result = GETPOST("param0", 'restricthtml');
@@ -342,6 +336,11 @@ class SecurityGETPOSTTest extends CommonClassTest
 		print __METHOD__." result param7 = ".$result."\n";
 		//$this->assertEquals('InvalidHTMLStringCantBeCleaned', $result, 'Test 15b');   // With some PHP and libxml version, we got this result when parsing invalid HTML, but ...
 		//$this->assertEquals('"c:\this is a path~1\aaan 110;" abcdef', $result);		// ... on other PHP and libxml versions, we got a HTML that has been cleaned
+
+		$_POST["pagecontentwithaconstantvarinurl"] = '<a href="https://[__aaa__]/aaa.html">https://[__aaa__]/aaa.html</a>';
+		$result = GETPOST("pagecontentwithaconstantvarinurl", 'restricthtml');
+		print __METHOD__." result=".$result."\n";
+		$this->assertEquals('<a href="https://[__aaa__]/aaa.html">https://[__aaa__]/aaa.html</a>', $result, 'Test on HTML content with url with constant');
 
 
 		// Test with restricthtml + MAIN_RESTRICTHTML_ONLY_VALID_HTML_TIDY only to test disabling of bad attributes
