@@ -4514,8 +4514,8 @@ function dol_print_socialnetworks($value, $contactid, $socid, $type, $dictsocial
 				$link = str_replace('{socialid}', $value, getDolGlobalString($networkconstname));
 				$valuetoshow = $value;
 				if (preg_match('/^https?:\/\//i', $link)) {
-					$valuetoshow = preg_replace('/https:\/\/www\.linkedin\./', 'linkedin.', $valuetoshow);
-					//$valuetoshow = preg_replace('/www\.twitter\./', 'twitter.', $valuetoshow);
+					$valuetoshow = preg_replace('/https:\/\/www\.linkedin\.com\/?/', '', $valuetoshow);
+					//$valuetoshow = preg_replace('/www\.twitter\.com\/?/', '', $valuetoshow);
 					$htmllink .= '<a href="' . dol_sanitizeUrl($link, 0) . '" target="_blank" rel="noopener noreferrer">' . dol_escape_htmltag($valuetoshow) . '</a>';
 				} elseif ($link) {
 					$htmllink .= '<a href="' . dol_sanitizeUrl($link, 1) . '" target="_blank" rel="noopener noreferrer">' . dol_escape_htmltag($valuetoshow) . '</a>';
