@@ -1010,6 +1010,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($canvasdisplayactio
 		if (empty($private)) {
 			$private = 0;
 		}
+
 		// Load object modCodeClient
 		$module = getDolGlobalString('SOCIETE_CODECLIENT_ADDON', 'mod_codeclient_leopard');
 		if (substr($module, 0, 15) == 'mod_codeclient_' && substr($module, -3) == 'php') {
