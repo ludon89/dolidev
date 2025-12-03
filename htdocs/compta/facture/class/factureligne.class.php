@@ -985,7 +985,7 @@ class FactureLigne extends CommonInvoiceLine
 	 * New mode = the values on the line already represent the delta between the previous
 	 * state and the current state, so we don't need a conversion (we return 1).
 	 *
-	 * @return int
+	 * @return float
 	 */
 	public function getSituationRatio()
 	{
