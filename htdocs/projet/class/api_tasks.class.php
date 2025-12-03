@@ -654,6 +654,7 @@ class Tasks extends DolibarrApi
 		$this->task->timespent_note     = $note;
 		if (!empty($progress) && $progress >= 0 && $progress <= 100) {
 			$this->task->progress  		= $progress;
+		}
 
 		$result = $this->task->addTimeSpent(DolibarrApiAccess::$user, 0);
 		if ($result == 0) {
