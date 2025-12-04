@@ -334,8 +334,8 @@ function LoadProducts(position, issubcat) {
 
 	// Get socid
 	let socid = jQuery('#thirdpartyid').val();
-	if ((socid === undefined || socid === "") && parseInt("<?php echo $socid ?>") > 0) {
-		socid = parseInt("<?= $socid ?>");
+	if ((socid === undefined || socid === "") && parseInt("<?php echo dol_escape_js($socid) ?>") > 0) {
+		socid = parseInt("<?php echo dol_escape_js($socid); ?>");
 	}
 
 	// Only show products for sale (tosell=1)
@@ -449,8 +449,8 @@ function MoreProducts(moreorless) {
 
 	// Get socid
 	let socid = jQuery('#thirdpartyid').val();
-	if ((socid === undefined || socid === "") && parseInt("<?php echo $socid ?>") > 0) {
-		socid = parseInt("<?= $socid ?>");
+	if ((socid === undefined || socid === "") && parseInt("<?php echo dol_escape_js($socid) ?>") > 0) {
+		socid = parseInt("<?php echo dol_escape_js($socid); ?>");
 	}
 
 	// Only show products for sale (tosell=1)
@@ -681,8 +681,8 @@ function Search2(keyCodeForEnter, moreorless) {
 
 			// Only show products for sale (tosell=1)
 			let socid = jQuery('#thirdpartyid').val();
-			if ((socid === undefined || socid === "") && parseInt("<?php echo $socid ?>") > 0) {
-				socid = parseInt("<?= $socid ?>");
+			if ((socid === undefined || socid === "") && parseInt("<?php echo dol_escape_js($socid) ?>") > 0) {
+				socid = parseInt("<?php echo dol_escape_js($socid); ?>");
 			}
 
 			$.getJSON('<?php echo DOL_URL_ROOT ?>/takepos/ajax/ajax.php?action=search&token=<?php echo newToken();?>&term=' + search_term + '&thirdpartyid=' + socid + '&search_start=' + search_start + '&search_limit=' + search_limit, function (data) {
