@@ -630,6 +630,7 @@ if (empty($reshook)) {
 					}
 				}
 			}
+
 			if ($currentIndex <= getDolGlobalInt("MAXREFONDOC", 10)) {
 				$objecttmp->note_public = dol_concatdesc($objecttmp->note_public, $langs->transnoentities($cmd->ref).(empty($cmd->ref_client) ? '' : ' ('.$cmd->ref_client.')'));
 				$objecttmp->update($user);
