@@ -4514,8 +4514,8 @@ function dol_print_socialnetworks($value, $contactid, $socid, $type, $dictsocial
 				$link = str_replace('{socialid}', $value, getDolGlobalString($networkconstname));
 				$valuetoshow = $value;
 				if (preg_match('/^https?:\/\//i', $link)) {
-					$valuetoshow = preg_replace('/https:\/\/www\.linkedin\./', 'linkedin.', $valuetoshow);
-					//$valuetoshow = preg_replace('/www\.twitter\./', 'twitter.', $valuetoshow);
+					$valuetoshow = preg_replace('/https:\/\/www\.linkedin\.com\/?/', '', $valuetoshow);
+					//$valuetoshow = preg_replace('/www\.twitter\.com\/?/', '', $valuetoshow);
 					$htmllink .= '<a href="' . dol_sanitizeUrl($link, 0) . '" target="_blank" rel="noopener noreferrer">' . dol_escape_htmltag($valuetoshow) . '</a>';
 				} elseif ($link) {
 					$htmllink .= '<a href="' . dol_sanitizeUrl($link, 1) . '" target="_blank" rel="noopener noreferrer">' . dol_escape_htmltag($valuetoshow) . '</a>';
@@ -5691,7 +5691,7 @@ function img_picto($titlealt, $picto, $moreatt = '', $pictoisfullpath = 0, $srco
 				'accounting_account' => 'infobox-bank_account',
 				'accountline' => 'infobox-bank_account',
 				'accountancy' => 'infobox-bank_account',
-				'admin'=> 'opacitymedium',
+				'admin' => 'opacitymedium',
 				'asset' => 'infobox-bank_account',
 				'bank_account' => 'infobox-bank_account',
 				'bill' => 'infobox-commande',
@@ -7124,14 +7124,14 @@ function print_fiche_titre($title, $mesg = '', $picto = 'generic', $pictoisfullp
 /**
  *	Load a title with picto
  *
- *	@param	string	$title				Title to show (HTML sanitized content). Can be a string with a <br> as a substring.
- *	@param	string	$morehtmlright		Added message to show on right
- *	@param	string	$picto				Icon to use before title (should be a 32x32 transparent png file)
+ *	@param	string		$title				Title to show (HTML sanitized content). Can be a string with a <br> as a second string shown under the fmain title.
+ *	@param	string		$morehtmlright		Added message to show on right
+ *	@param	string		$picto				Icon to use before title (should be a 32x32 transparent png file)
  *	@param	int<0,1>	$pictoisfullpath	1=Icon name is a full absolute url of image
- * 	@param	string	$id					To force an id on html objects
- *  @param  string  $morecssontable     More css on table
- *	@param	string	$morehtmlcenter		Added message to show on center
- *  @param	string	$morecssonpicto		More css on picto
+ * 	@param	string		$id					To force an id on html objects
+ *  @param  string  	$morecssontable     More css on table
+ *	@param	string		$morehtmlcenter		Added message to show on center
+ *  @param	string		$morecssonpicto		More css on picto
  * 	@return	string
  *  @see print_barre_liste()
  */
@@ -7579,7 +7579,7 @@ function price($amount, $form = 0, $outlangs = '', $trunc = 1, $rounding = -1, $
 	//print $amount."-";
 	$data = explode('.', $amount);
 	$decpart = isset($data[1]) ? $data[1] : '';
-	$decpart = preg_replace('/0+$/i', '', $decpart); // Supprime les 0 de fin de partie decimale
+	$decpart = preg_replace('/0+$/i', '', $decpart); // Remove 0 at end of decimal part
 	//print "decpart=".$decpart."<br>";
 	$end = '';
 
@@ -7662,7 +7662,7 @@ function price($amount, $form = 0, $outlangs = '', $trunc = 1, $rounding = -1, $
  */
 function price2num($amount, $rounding = '', $option = 0)
 {
-	global $langs, $conf;
+	global $langs;
 
 	// Clean parameters
 	if (is_null($amount)) {
@@ -8445,7 +8445,8 @@ function get_default_tva(Societe $thirdparty_seller, Societe $thirdparty_buyer, 
 	}
 
 	// If the (seller country = buyer country) then the default VAT = VAT of the product sold. End of rule.
-	if (empty($vatrule) && (($seller_country_code == $buyer_country_code)
+	if (empty($vatrule) && (
+		($seller_country_code == $buyer_country_code)
 		|| (in_array($seller_country_code, array('FR', 'MC')) && in_array($buyer_country_code, array('FR', 'MC')))
 		|| (in_array($seller_country_code, array('MQ', 'GP')) && in_array($buyer_country_code, array('MQ', 'GP')))	// We should be able to manage the case of MQ, GP, ... with a deicated vat rate at previous step.
 	)) { // Warning ->country_code not always defined
@@ -8517,7 +8518,8 @@ function get_default_tva(Societe $thirdparty_seller, Societe $thirdparty_buyer, 
 
 	// Allow an external module to bypass the calculation of prices
 	$parameters = array('vatvalue' => $vatvalue, 'vatrule' => $vatrule);
-	$tmpobject = null; $tmpaction = '';
+	$tmpobject = null;
+	$tmpaction = '';
 	// @phan-suppress-next-line PhanPluginConstantVariableNull
 	$reshook = $hookmanager->executeHooks('get_default_tva', $parameters, $tmpobject, $tmpaction);	// @phan-suppress-current-line PhanPluginConstantVariableNull
 	if ($reshook > 0 && !empty($hookmanager->resArray['vatvalue'])) {
@@ -9390,19 +9392,41 @@ function dol_htmlwithnojs($stringtoencode, $nouseofiframesandbox = 0, $check = '
 						//$out = '<html><head><meta charset="utf-8"></head><body><div class="tricktoremove">'.dol_nl2br($out).'</div></body></html>';
 					}
 
+					// Note: <a href="https://[__aaa__]/aaa.html"> is transformed into <a href="https://[__aaa__]/aaa.html">
+					// We don't want that, so we protect [__xxx__] by replacing [ and ] before loadHTML and restore them after saveHTML
+					$out = preg_replace_callback(
+						'/\[__([0-9a-zA-Z_]+)__\]/',
+						/**
+						 * @param 	array<int,string> $m	Array of matches
+						 * @return 	string 					Translated string for the key
+						 */
+						function ($m) {
+							return 'BRACKETSTART__' . $m[1] . '__BRACKETEND'; },
+						$out);
+
 					$dom->loadHTML($out, LIBXML_HTML_NODEFDTD | LIBXML_ERR_NONE | LIBXML_HTML_NOIMPLIED | LIBXML_NONET | LIBXML_NOWARNING | LIBXML_NOERROR | LIBXML_NOXMLDECL);
 
 					$dom->encoding = 'UTF-8';
 
 					$out = trim($dom->saveHTML());
 
+					// Restore [ and ] that were protected before loadHTML
+					$out = preg_replace_callback(
+						'/BRACKETSTART__([0-9a-zA-Z_]+)__BRACKETEND/',
+						/**
+						 * @param 	array<int,string> $m	Array of matches
+						 * @return 	string 					Translated string for the key
+						 */
+						function ($m) {
+							return '[__' . $m[1] . '__]'; },
+						$out);
+
 					// Remove the trick added to solve pb with text in utf8 and text without parent tag
 					//$out = preg_replace('/^'.preg_quote('<?xml encoding="UTF-8">', '/').'/', '', $out);
 					$out = preg_replace('/^' . preg_quote('<html><head><', '/') . '[^<>]+' . preg_quote('></head><body><div class="tricktoremove">', '/') . '/', '', $out);
 					$out = preg_replace('/' . preg_quote('</div></body></html>', '/') . '$/', '', trim($out));
-					//                  $out = preg_replace('/^<\?xml encoding="UTF-8"><div class="tricktoremove">/', '', $out);
-					//                  $out = preg_replace('/<\/div>$/', '', $out);
-					//                  var_dump('rrrrrrrrrrrrrrrrrrrrrrrrrrrrr'.$out);
+					//$out = preg_replace('/^<\?xml encoding="UTF-8"><div class="tricktoremove">/', '', $out);
+					//$out = preg_replace('/<\/div>$/', '', $out);
 
 					if (!$outishtml) {		// If $out was not HTML content we made before a dol_nl2br so we must do the opposite operation now
 						$out = str_replace('<br>', '', $out);
@@ -9540,22 +9564,54 @@ function dol_htmlwithnojs($stringtoencode, $nouseofiframesandbox = 0, $check = '
 				$out = 'ErrorHTMLLinksNotAllowed';
 			}
 		} elseif (getDolGlobalInt('MAIN_DISALLOW_URL_INTO_DESCRIPTIONS') == 1) {
+			// Refuse any links except it they are to the wrapper document.php or viewimage.php
 			$nblinks = 0;
+
 			// Loop on each url in src= and url(
 			$pattern = '/src=["\']?(http[^"\']+)|url\(["\']?(http[^\)]+)/';
 
+			global $dolibarr_main_url_root;
+
 			$matches = array();
 			if (preg_match_all($pattern, $out, $matches)) {
-				// URLs are into $matches[1]
-				$urls = $matches[1];
+				// URLs are into $matches[1] or $matches[2]
+				$urls = array();
+				foreach ($matches[1] as $tmpval) {
+					if (!empty($tmpval)) {
+						$urls[] = $tmpval;
+					}
+				}
+				foreach ($matches[2] as $tmpval) {
+					if (!empty($tmpval)) {
+						$urls[] = $tmpval;
+					}
+				}
 
-				// Affiche les URLs
+				// Show URLs
+				$firstexturl = '';
+				$secondexturl = '';
 				foreach ($urls as $url) {
-					$nblinks++;
-					echo "Found url = " . $url . "\n";
+					$urlok = 0;
+					$parsedurl = parse_url($url);
+					if (!empty($parsedurl)) {
+						if (preg_match('/'.preg_quote($dolibarr_main_url_root, '/').'/', $url)
+							//&& preg_match('/(document|viewimage)\.php$/', $parsedurl['path']) && preg_match('/modulepart=(media|mycompany)/', $parsedurl['query'])
+						) {
+							$urlok = 1;
+						}
+					}
+					if (!$urlok) {
+						$nblinks++;
+						if (empty($firstexturl)) {
+							$firstexturl = $url;
+						} elseif (empty($secondexturl)) {
+							$secondexturl = $url;
+						}
+						//echo "Found url = ".$url . "\n";
+					}
 				}
 				if ($nblinks > 0) {
-					$out = 'ErrorHTMLExternalLinksNotAllowed';
+					$out = 'ErrorHTMLExternalLinksNotAllowed (Example: '.$firstexturl.($secondexturl ? ' '.$secondexturl : '').')';
 				}
 			}
 		}
@@ -11938,7 +11994,7 @@ function dol_eval_standard($s, $hideerrors = 1, $onlysimplestring = '1')
 
 		// Set $dolibarr_main_restrict_eval_methods_array
 		if (!isset($dolibarr_main_restrict_eval_methods)) {
-			$dolibarr_main_restrict_eval_methods = 'getDolGlobalString, getDolGlobalInt, getDolCurrency, fetchNoCompute, hasRight, isModEnabled, isStringVarMatching, abs, min, max, round, dol_now, preg_match';
+			$dolibarr_main_restrict_eval_methods = 'getDolGlobalString, getDolGlobalInt, getDolCurrency, fetchNoCompute, hasRight, isAdmin, isModEnabled, isStringVarMatching, abs, min, max, round, dol_now, preg_match';
 		}
 		//print '$dolibarr_main_restrict_eval_methods = '.$dolibarr_main_restrict_eval_methods."\n";
 		$dolibarr_main_restrict_eval_methods_array = explode(',', str_replace(" ", "", $dolibarr_main_restrict_eval_methods));
@@ -12031,13 +12087,14 @@ function dol_eval_standard($s, $hideerrors = 1, $onlysimplestring = '1')
 			$savescheck = $scheck;
 			$scheck = preg_replace('/\$conf->[a-z\_]+->enabled/', '__VARCONFENABLED__', $scheck);		// Remove this once $user->module->enabled has been replaced everywhere with isModEnabled.
 			$scheck = preg_replace('/\$user->hasRight/', '__VARUSERHASRIGHT__', $scheck);
-			$scheck = preg_replace('/\$user->rights/', '__VARUSERHASRIGHT__', $scheck);		// Remove this once $user->rights->xxx is removed everywhere.
+			$scheck = preg_replace('/\$user->rights/', '__VARUSERHASRIGHT__', $scheck);		// Remove this once $user->rights->xxx is replaced everywhere with $user->hasRight()
+			$scheck = preg_replace('/\$user->admin/', '__VARUSERISADMIN__', $scheck);		// Remove this once $user->admin is replaced everywhere with $user->isAdmin()
 			$scheck = preg_replace('/\(\$db\)/', '__VARDB__', $scheck);
 			$scheck = preg_replace('/\$langs/', '__VARLANGSTRANS__', $scheck);
 			$scheck = preg_replace('/\$mysoc/', '__VARMYSOC__', $scheck);
 			$scheck = preg_replace('/\$action/', '__VARACTION__', $scheck);
-			$scheck = preg_replace('/\$mainmenu/', '__VARMAINMENU__', $scheck);
-			$scheck = preg_replace('/\$leftmenu/', '__VARLEFTMENU__', $scheck);
+			$scheck = preg_replace('/\$mainmenu/', '__VARMAINMENU__', $scheck);				// Remove this once all tests on $mainmenu has been replaced with isStringVarMatching
+			$scheck = preg_replace('/\$leftmenu/', '__VARLEFTMENU__', $scheck);				// Remove this once all tests on $mainmenu has been replaced with isStringVarMatching
 			$scheck = preg_replace('/\$websitepage/', '__VARWEBSITEPAGE__', $scheck);
 			$scheck = preg_replace('/\$website/', '__VARWEBSITE__', $scheck);
 			$scheck = preg_replace('/\$objectoffield/', '__VAROBJECTOFFIELD__', $scheck);
@@ -12641,7 +12698,6 @@ function complete_head_from_modules($conf, $langs, $object, &$head, &$h, $type, 
 function printCommonFooter($zone = 'private')
 {
 	global $conf, $hookmanager, $user, $langs;
-	global $debugbar;
 	global $action;
 	global $micro_start_time;
 
@@ -12655,8 +12711,9 @@ function printCommonFooter($zone = 'private')
 	print "\n<!-- A div to store page_y POST parameter -->\n";
 	print '<div id="page_y" style="display: none;">' . (GETPOST('page_y') ? GETPOST('page_y') : '') . '</div>' . "\n";
 
-	$parameters = array();
-	$reshook = $hookmanager->executeHooks('printCommonFooter', $parameters); // Note that $action and $object may have been modified by some hooks
+	$parameters = array('zone' => $zone);
+	$tmpobject = null;
+	$reshook = $hookmanager->executeHooks('printCommonFooter', $parameters, $tmpobject, $action); // Note that $action and $object may have been modified by some hooks
 	if (empty($reshook)) {
 		if (getDolGlobalString('MAIN_HTML_FOOTER')) {
 			print getDolGlobalString('MAIN_HTML_FOOTER') . "\n";
@@ -12850,7 +12907,7 @@ function printCommonFooter($zone = 'private')
 			print "\n" . '</script>' . "\n";
 
 			// Google Analytics
-			// TODO Add a hook here
+			// TODO Remove this, can be replaced with the hook printCommonFooter
 			if (isModEnabled('google') && getDolGlobalString('MAIN_GOOGLE_AN_ID')) {
 				$tmptagarray = explode(',', getDolGlobalString('MAIN_GOOGLE_AN_ID'));
 				foreach ($tmptagarray as $tmptag) {
@@ -12876,15 +12933,23 @@ function printCommonFooter($zone = 'private')
 			print_r(xdebug_get_code_coverage());
 		}
 
+		// Output string from hooks
+		if (!empty($hookmanager->resPrint)) {
+			print $hookmanager->resPrint;
+		}
+
 		// Add DebugBar data
-		if ($user->hasRight('debugbar', 'read') && $debugbar instanceof DebugBar\DebugBar) {
-			if (isset($debugbar['time'])) {
-				// @phan-suppress-next-line PhanPluginUnknownObjectMethodCall
-				$debugbar['time']->stopMeasure('pageaftermaster');
+		if ($user->hasRight('debugbar', 'read')) {
+			global $debugbar;
+			if ($debugbar instanceof DebugBar\DebugBar) {
+				if (isset($debugbar['time'])) {
+					// @phan-suppress-next-line PhanPluginUnknownObjectMethodCall
+					$debugbar['time']->stopMeasure('pageaftermaster');
+				}
+				print '<!-- Output debugbar data -->' . "\n";
+				$renderer = $debugbar->getJavascriptRenderer();
+				print $renderer->render();
 			}
-			print '<!-- Output debugbar data -->' . "\n";
-			$renderer = $debugbar->getJavascriptRenderer();
-			print $renderer->render();
 		} elseif (count($conf->logbuffer)) {    // If there is some logs in buffer to show
 			print "\n";
 			print "<!-- Start of log output\n";
@@ -14072,7 +14137,7 @@ function dolGetStatus($statusLabel = '', $statusLabelShort = '', $html = '', $st
  *
  * @param string    	$label      	Label or tooltip of button if $text is provided. Also used as tooltip in title attribute. Can be escaped HTML content or full simple text.
  * @param string    	$text       	Optional : short label on button. Can be escaped HTML content or full simple text.
- * @param string 		$actionType 	'default', 'danger', 'email', 'clone', 'cancel', 'delete', ...
+ * @param string 		$actionType 	'default', 'edit', 'danger', 'email', 'clone', 'cancel', 'delete', ...
  * @param string|array<int,array{lang:string,enabled:bool,perm:bool|int,label:string,url:string,urlroot?:string,isDropDown?:int<0,1>}> 	$url        	Url for link or array of subbutton description
  *                                                                                                                                                      Example when an array is used:
  *                                                                                                                                                      $arrayforbutaction = array(
@@ -14182,13 +14247,18 @@ function dolGetButtonAction($label, $text = '', $actionType = 'default', $url = 
 	}
 
 	// Here, $url is a simple link
-
 	if (!empty($params['isDropdown']) || !empty($params['isDropDown'])) {	// Use the dropdown-item style (not for action button)
 		$class = "dropdown-item";
 	} else {
 		$class = 'butAction';
-		if ($actionType == 'danger' || $actionType == 'delete') {
-			$class = 'butActionDelete';
+		if ($actionType == 'edit') {
+			$class = 'butAction butActionEdit';
+		} elseif ($actionType == 'email') {
+			$class = 'butAction butActionEmail';
+		} elseif ($actionType == 'clone') {
+			$class = 'butAction butActionClone';
+		} elseif ($actionType == 'danger' || $actionType == 'delete') {
+			$class = 'butAction butActionDelete';
 			if (!empty($url) && strpos($url, 'token=') === false) {
 				$url .= '&token=' . newToken();
 			}
@@ -14322,7 +14392,7 @@ function dolGetButtonAction($label, $text = '', $actionType = 'default', $url = 
  * using `dolPrintHTMLForAttributeUrl()`. All other attributes are escaped using
  * `dolPrintHTMLForAttribute()`.
  *
- * ⚠️ Note: Disabling escaping (via `$unescapedAttr`) is **not recommended** unless you
+ * Note: Disabling escaping (via `$unescapedAttr`) is **not recommended** unless you
  * fully trust the input data, as it may lead to XSS vulnerabilities.
  *
  * Example:

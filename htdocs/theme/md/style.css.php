@@ -1352,6 +1352,12 @@ td.wordbreak img, td.wordbreakimp img {
 .nopaddingbottomimp {
 	padding-bottom: 0 !important;
 }
+.padding2 {
+	padding: 2px;
+}
+.padding3 {
+	padding: 3px;
+}
 .paddingleft {
 	padding-<?php print $left; ?>: 4px;
 }
@@ -1396,6 +1402,9 @@ td.wordbreak img, td.wordbreakimp img {
 }
 .marginleftlarge {
 	margin-<?php print $left; ?>: 20px !important;
+}
+.marginleftlargeondesktop {
+	margin-<?php print $left; ?>: 20px;
 }
 .paddinglarge {
 	padding: 6px !important;
@@ -1587,8 +1596,12 @@ span.fa.fa-plus-circle.paddingleft {
 	margin-left: 1px;
 }
 .listofinvoicetype {
-	height: 28px;
+	min-height: 1.8em;
 	vertical-align: middle;
+	padding-top: 7px;
+	padding-bottom: 1px;
+	display: flex;
+	align-items: center;
 }
 .divsocialnetwork:not(:last-child) {
 	padding-<?php print $right; ?>: 20px;
@@ -1980,6 +1993,7 @@ select.flat.selectlimit {
 .amountpaymentcomplete {
 	color: var(--amountpaymentcomplete);
 	font-weight: bold;
+	font-size: 1.7em;
 	white-space: nowrap;
 }
 .amountpaymentcompletenoresize {
@@ -1989,6 +2003,7 @@ select.flat.selectlimit {
 .amountremaintopay {
 	color: var(--amountremaintopaycolor);
 	font-weight: bold;
+	font-size: 1.7em;
 	white-space: nowrap;
 }
 .amountremaintopaynoresize {
@@ -1997,6 +2012,7 @@ select.flat.selectlimit {
 }
 .amountremaintopayback {
 	font-weight: bold;
+	font-size: 1.7em;
 	white-space: nowrap;
 }
 .amountremaintopaybacknoresize {
@@ -2005,7 +2021,7 @@ select.flat.selectlimit {
 .amountpaymentneutral {
 	color: var(--amountremaintopaybackcolor);
 	font-weight: bold;
-	font-size: 1.4em;
+	font-size: 1.7em;
 	white-space: nowrap;
 }
 .amountpaymentneutralnoresize {
@@ -2233,7 +2249,7 @@ tr.nobottom td {
 .maxwidth40  { max-width: 40px; }
 .maxwidth50  { max-width: 50px; }
 .maxwidth75  { max-width: 75px; }
-.maxwidthdate  { max-width: 105px; }
+.maxwidthdate  { max-width: 90px; }
 .maxwidth100 { max-width: 100px; }
 .maxwidth125 { max-width: 125px; }
 .maxwidth150 { max-width: 150px; }
@@ -2392,6 +2408,10 @@ select.widthcentpercentminusxx, span.widthcentpercentminusxx:not(.select2-select
 		font-size: <?php print is_numeric($fontsize) ? ($fontsize).'px' : $fontsize; ?> !important;
 	}
 
+	.marginleftlargeondesktop {
+		margin-<?php print $left; ?>: 0;
+	}
+
 	.login_vertical_align {
 		padding-left: 0;
 	}
@@ -2433,7 +2453,7 @@ select.widthcentpercentminusxx, span.widthcentpercentminusxx:not(.select2-select
 		height: 40px !important;
 	}
 	div.tabBar .listofinvoicetype table tr, div.tabBar .listofinvoicetype table tr td {
-		height: 28px !important;
+		height: 2.2em !important;
 	}
 
 	div.tabs div.tab a.tab  {
@@ -4246,7 +4266,7 @@ div.divButAction {
 	margin-bottom: 1.4em;
 }
 div.tabsAction {
-	margin: 20px 0em 20px 0em;
+	margin: 30px 0em 30px 0em;
 	padding: 0em 0em;
 	text-align: right;
 }
@@ -4475,7 +4495,7 @@ td.border, div.tagtable div div.border {
 .nobordertop, .nobordertop tr:first-of-type td {
 	border-top: none !important;
 }
-.noborderbottom, .noborderbottom tr:last-of-type td {
+.noborderbottom, tr.noborderbottom td, .noborderbottom tr:last-of-type td {
 	border-bottom: none !important;
 }
 .bordertop {
@@ -4557,7 +4577,7 @@ table.nointerlines tr:not(:last-child) td {
 
 /* Management of border radius */
 <?php $borderradius = getDolGlobalString('THEME_ELDY_USEBORDERONTABLE') ? getDolGlobalInt('THEME_ELDY_BORDER_RADIUS', 6) : 0; ?>
-table.noborder:not(.cal_month, .paymenttable) {
+table.noborder:not(.cal_month, .paymenttable, .margintable) {
 	border-radius: <?php echo $borderradius; ?>px;
 }
 table.noborder.cal_month {

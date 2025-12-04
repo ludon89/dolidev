@@ -1190,6 +1190,12 @@ td.wordbreak img, td.wordbreakimp img {
 .nopaddingbottomimp {
 	padding-bottom: 0 !important;
 }
+.padding2 {
+	padding: 2px;
+}
+.padding3 {
+	padding: 3px;
+}
 .paddingleft {
 	padding-<?php print $left; ?>: 4px;
 }
@@ -1241,6 +1247,9 @@ td.wordbreak img, td.wordbreakimp img {
 .marginleftlarge {
 	margin-<?php print $left; ?>: 20px !important;
 }
+.marginleftlargeondesktop {
+	margin-<?php print $left; ?>: 20px;
+}
 .paddinglarge {
 	padding: 6px !important;
 }
@@ -1275,7 +1284,7 @@ td.wordbreak img, td.wordbreakimp img {
 .borderimp {
 	border: 1px solid #888 !important;
 }
-.text-warning{
+.text-warning {
 	color : <?php print $textWarning; ?>
 }
 /* CSS used for long description and extrafield text */
@@ -2278,6 +2287,10 @@ datalist {
 {
 	div.refidno {
 		font-size: <?php print is_numeric($fontsize) ? ((int) $fontsize + 3).'px' : $fontsize; ?> !important;
+	}
+
+	.marginleftlargeondesktop {
+		margin-<?php print $left; ?>: 0;
 	}
 
 	div#login_left, div#login_right {
@@ -4434,7 +4447,7 @@ td.border, div.tagtable div div.border {
 .nobordertop, .nobordertop tr:first-of-type td {
 	border-top: none !important;
 }
-.noborderbottom, .noborderbottom tr:last-of-type td {
+.noborderbottom, tr.noborderbottom td, .noborderbottom tr:last-of-type td {
 	border-bottom: none !important;
 }
 .bordertop {
@@ -7960,8 +7973,8 @@ div.kanban.column div.ui-sortable-helper {
 /* ============================================================================== */
 
 .searchpage .tagtr .tagtd {
-	padding-top: 2px;
-	padding-bottom: 2px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 .searchpage .tagtr .tagtd .button {
 	background: unset;
