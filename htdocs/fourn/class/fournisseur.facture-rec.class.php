@@ -1186,7 +1186,7 @@ class FactureFournisseurRec extends CommonInvoice
 			return -1;
 		}
 
-		if ($this->status == self::STATUS_SUSPENDED) {
+		if ($this->suspended == self::STATUS_SUSPENDED) {
 			// Clean parameters
 			$fk_product = empty($fk_product) ? 0 : $fk_product;
 			$label = empty($label) ? '' : $label;
