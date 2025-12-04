@@ -1204,7 +1204,7 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 		print '<table class="border centpercent tableforfield">';
 
 		// Task parent
-		print '<tr><td>' . $langs->trans("ChildOfTask") . '</td><td>';
+		print '<tr><td>' . $langs->trans("ParentTask") . '</td><td>';
 		if ($object->fk_task_parent > 0) {
 			$tasktmp = new Task($db);
 			$tasktmp->fetch($object->fk_task_parent);
