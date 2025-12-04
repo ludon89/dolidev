@@ -99,6 +99,7 @@ if (empty($dolibarr_nocache)) {
 @import "badges.css";
 @import "title-buttons.css";
 @import "nav.css";
+@import "card.css";
 /**
 This file can overwrite default pico css
  */
