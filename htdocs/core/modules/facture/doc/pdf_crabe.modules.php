@@ -32,11 +32,11 @@
  *	\brief      File of class to generate customers invoices from crabe model
  */
 
-require_once DOL_DOCUMENT_ROOT.'/core/modules/facture/modules_facture.php';
-require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/pdf.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/core/modules/facture/modules_facture.php';
+require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/pdf.lib.php';
 
 
 /**
@@ -44,9 +44,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/pdf.lib.php';
  */
 class pdf_crabe extends ModelePDFFactures
 {
-	 /**
-	  * @var DoliDb Database handler
-	  */
+	/**
+	 * @var DoliDb Database handler
+	 */
 	public $db;
 
 	/**
@@ -236,7 +236,7 @@ class pdf_crabe extends ModelePDFFactures
 		// phpcs:enable
 		global $user, $langs, $conf, $mysoc, $hookmanager, $nblines;
 
-		dol_syslog("write_file outputlangs->defaultlang=".(is_object($outputlangs) ? $outputlangs->defaultlang : 'null'));
+		dol_syslog("write_file outputlangs->defaultlang=" . (is_object($outputlangs) ? $outputlangs->defaultlang : 'null'));
 
 		if (!is_object($outputlangs)) {
 			$outputlangs = $langs;
@@ -275,14 +275,14 @@ class pdf_crabe extends ModelePDFFactures
 				$objphoto = new Product($this->db);
 				$objphoto->fetch($object->lines[$i]->fk_product);
 
-				$pdir = get_exdir($object->lines[$i]->fk_product, 2, 0, 0, $objphoto, 'product').$object->lines[$i]->fk_product."/photos/";
-				$dir = $conf->product->dir_output.'/'.$pdir;
+				$pdir = get_exdir($object->lines[$i]->fk_product, 2, 0, 0, $objphoto, 'product') . $object->lines[$i]->fk_product . "/photos/";
+				$dir = $conf->product->dir_output . '/' . $pdir;
 
 				$realpath = '';
 				foreach ($objphoto->liste_photos($dir, 1) as $key => $obj) {
 					$filename = $obj['photo'];
 					//if ($obj['photo_vignette']) $filename='thumbs/'.$obj['photo_vignette'];
-					$realpath = $dir.$filename;
+					$realpath = $dir . $filename;
 					break;
 				}
 
@@ -305,11 +305,11 @@ class pdf_crabe extends ModelePDFFactures
 			// Definition of $dir and $file
 			if ($object->specimen) {
 				$dir = empty($conf->facture->multidir_output[$object->entity]) ? $conf->facture->dir_output : $conf->facture->multidir_output[$object->entity];
-				$file = $dir."/SPECIMEN.pdf";
+				$file = $dir . "/SPECIMEN.pdf";
 			} else {
 				$objectref = dol_sanitizeFileName($object->ref);
-				$dir = (empty($conf->facture->multidir_output[$object->entity]) ? $conf->facture->dir_output : $conf->facture->multidir_output[$object->entity])."/".$objectref;
-				$file = $dir."/".$objectref.".pdf";
+				$dir = (empty($conf->facture->multidir_output[$object->entity]) ? $conf->facture->dir_output : $conf->facture->multidir_output[$object->entity]) . "/" . $objectref;
+				$file = $dir . "/" . $objectref . ".pdf";
 			}
 			if (!file_exists($dir)) {
 				if (dol_mkdir($dir) < 0) {
@@ -321,11 +321,11 @@ class pdf_crabe extends ModelePDFFactures
 			if (file_exists($dir)) {
 				// Add pdfgeneration hook
 				if (!is_object($hookmanager)) {
-					include_once DOL_DOCUMENT_ROOT.'/core/class/hookmanager.class.php';
+					include_once DOL_DOCUMENT_ROOT . '/core/class/hookmanager.class.php';
 					$hookmanager = new HookManager($this->db);
 				}
 				$hookmanager->initHooks(array('pdfgeneration'));
-				$parameters = array('file'=>$file, 'object'=>$object, 'outputlangs'=>$outputlangs);
+				$parameters = array('file' => $file, 'object' => $object, 'outputlangs' => $outputlangs);
 				global $action;
 				$reshook = $hookmanager->executeHooks('beforePDFCreation', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 
@@ -369,7 +369,7 @@ class pdf_crabe extends ModelePDFFactures
 					if (!empty($conf->mycompany->multidir_output[$object->entity])) {
 						$logodir = $conf->mycompany->multidir_output[$object->entity];
 					}
-					$pagecount = $pdf->setSourceFile($logodir.'/'.$conf->global->MAIN_ADD_PDF_BACKGROUND);
+					$pagecount = $pdf->setSourceFile($logodir . '/' . $conf->global->MAIN_ADD_PDF_BACKGROUND);
 					$tplidx = $pdf->importPage(1);
 				}
 
@@ -379,9 +379,9 @@ class pdf_crabe extends ModelePDFFactures
 
 				$pdf->SetTitle($outputlangs->convToOutputCharset($object->ref));
 				$pdf->SetSubject($outputlangs->transnoentities("PdfInvoiceTitle"));
-				$pdf->SetCreator("Dolibarr ".DOL_VERSION);
-				$pdf->SetAuthor($mysoc->name.($user->id > 0 ? ' - '.$outputlangs->convToOutputCharset($user->getFullName($outputlangs)) : ''));
-				$pdf->SetKeyWords($outputlangs->convToOutputCharset($object->ref)." ".$outputlangs->transnoentities("PdfInvoiceTitle")." ".$outputlangs->convToOutputCharset($object->thirdparty->name));
+				$pdf->SetCreator("Dolibarr " . DOL_VERSION);
+				$pdf->SetAuthor($mysoc->name . ($user->id > 0 ? ' - ' . $outputlangs->convToOutputCharset($user->getFullName($outputlangs)) : ''));
+				$pdf->SetKeyWords($outputlangs->convToOutputCharset($object->ref) . " " . $outputlangs->transnoentities("PdfInvoiceTitle") . " " . $outputlangs->convToOutputCharset($object->thirdparty->name));
 				if (getDolGlobalString('MAIN_DISABLE_PDF_COMPRESSION')) {
 					$pdf->SetCompression(false);
 				}
@@ -418,6 +418,19 @@ class pdf_crabe extends ModelePDFFactures
 					if ($object->lines[$i]->remise_percent) {
 						$this->atleastonediscount++;
 					}
+
+					// Do not take into account lines of the type “deposit.”
+					$is_deposit = false;
+					if (preg_match('/^\((.*)\)$/', $object->lines[$i]->desc, $reg)) {
+						if ($reg[1] == 'DEPOSIT') {
+							$is_deposit = true;
+						}
+					}
+					// If DEPOSIT, this line is completely ignored for calculations.
+					if ($is_deposit) {
+						continue;
+					}
+
 
 					// determine category of operation
 					if ($categoryOfOperation < 2) {
@@ -513,7 +526,7 @@ class pdf_crabe extends ModelePDFFactures
 				$parameters = array(
 					'object' => $object,
 					'i' => $i,
-					'pdf' =>& $pdf,
+					'pdf' => &$pdf,
 					'outputlangs' => $outputlangs,
 					'hidedetails' => $hidedetails
 				);
@@ -781,7 +794,8 @@ class pdf_crabe extends ModelePDFFactures
 
 					// Retrieve type from database for backward compatibility with old records
 					if ((!isset($localtax1_type) || $localtax1_type == '' || !isset($localtax2_type) || $localtax2_type == '') // if tax type not defined
-					&& (!empty($localtax1_rate) || !empty($localtax2_rate))) { // and there is local tax
+						&& (!empty($localtax1_rate) || !empty($localtax2_rate))
+					) { // and there is local tax
 						$localtaxtmp_array = getLocalTaxesFromRate($vatrate, 0, $object->thirdparty, $mysoc);
 						$localtax1_type = isset($localtaxtmp_array[0]) ? $localtaxtmp_array[0] : '';
 						$localtax2_type = isset($localtaxtmp_array[2]) ? $localtaxtmp_array[2] : '';
@@ -813,10 +827,10 @@ class pdf_crabe extends ModelePDFFactures
 					}
 					$this->tva[$vatrate] += $tvaligne;	// ->tva is abandonned, we use now ->tva_array that is more complete
 					$vatcode = $object->lines[$i]->vat_src_code;
-					if (empty($this->tva_array[$vatrate.($vatcode ? ' ('.$vatcode.')' : '')]['amount'])) {
-						$this->tva_array[$vatrate.($vatcode ? ' ('.$vatcode.')' : '')]['amount'] = 0;
+					if (empty($this->tva_array[$vatrate . ($vatcode ? ' (' . $vatcode . ')' : '')]['amount'])) {
+						$this->tva_array[$vatrate . ($vatcode ? ' (' . $vatcode . ')' : '')]['amount'] = 0;
 					}
-					$this->tva_array[$vatrate.($vatcode ? ' ('.$vatcode.')' : '')] = array('vatrate'=>$vatrate, 'vatcode'=>$vatcode, 'amount'=> $this->tva_array[$vatrate.($vatcode ? ' ('.$vatcode.')' : '')]['amount'] + $tvaligne);
+					$this->tva_array[$vatrate . ($vatcode ? ' (' . $vatcode . ')' : '')] = array('vatrate' => $vatrate, 'vatcode' => $vatcode, 'amount' => $this->tva_array[$vatrate . ($vatcode ? ' (' . $vatcode . ')' : '')]['amount'] + $tvaligne);
 
 					if ($posYAfterImage > $posYAfterDescription) {
 						$nexY = $posYAfterImage;
@@ -825,10 +839,10 @@ class pdf_crabe extends ModelePDFFactures
 					// Add line
 					if (!empty($conf->global->MAIN_PDF_DASH_BETWEEN_LINES) && $i < ($nblines - 1)) {
 						$pdf->setPage($pageposafter);
-						$pdf->SetLineStyle(array('dash'=>'1,1', 'color'=>array(80, 80, 80)));
+						$pdf->SetLineStyle(array('dash' => '1,1', 'color' => array(80, 80, 80)));
 						//$pdf->SetDrawColor(190,190,200);
 						$pdf->line($this->marge_gauche, $nexY + 1, $this->page_largeur - $this->marge_droite, $nexY + 1);
-						$pdf->SetLineStyle(array('dash'=>0));
+						$pdf->SetLineStyle(array('dash' => 0));
 					}
 
 					$nexY += 2; // Add space between lines
@@ -881,7 +895,7 @@ class pdf_crabe extends ModelePDFFactures
 					$this->_tableau($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 1, 0, $object->multicurrency_code);
 					$bottomlasttab = $this->page_hauteur - $heightforinfotot - $heightforfreetext - $heightforfooter + 1;
 				}
-				dol_syslog("bottomlasttab=".$bottomlasttab." this->page_hauteur=".$this->page_hauteur." heightforinfotot=".$heightforinfotot." heightforfreetext=".$heightforfreetext." heightforfooter=".$heightforfooter);
+				dol_syslog("bottomlasttab=" . $bottomlasttab . " this->page_hauteur=" . $this->page_hauteur . " heightforinfotot=" . $heightforinfotot . " heightforfreetext=" . $heightforfreetext . " heightforfooter=" . $heightforfooter);
 
 				// Display info area
 				$posy = $this->_tableau_info($pdf, $object, $bottomlasttab, $outputlangs, $outputlangsbis);
@@ -913,7 +927,7 @@ class pdf_crabe extends ModelePDFFactures
 
 				// Add pdfgeneration hook
 				$hookmanager->initHooks(array('pdfgeneration'));
-				$parameters = array('file'=>$file, 'object'=>$object, 'outputlangs'=>$outputlangs);
+				$parameters = array('file' => $file, 'object' => $object, 'outputlangs' => $outputlangs);
 				global $action;
 				$reshook = $hookmanager->executeHooks('afterPDFCreation', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
 				if ($reshook < 0) {
@@ -923,7 +937,7 @@ class pdf_crabe extends ModelePDFFactures
 
 				dolChmod($file);
 
-				$this->result = array('fullpath'=>$file);
+				$this->result = array('fullpath' => $file);
 
 				return 1; // No error
 			} else {
@@ -981,8 +995,8 @@ class pdf_crabe extends ModelePDFFactures
 		$sql = "SELECT re.rowid, re.amount_ht, re.multicurrency_amount_ht, re.amount_tva, re.multicurrency_amount_tva,  re.amount_ttc, re.multicurrency_amount_ttc,";
 		$sql .= " re.description, re.fk_facture_source,";
 		$sql .= " f.type, f.datef";
-		$sql .= " FROM ".MAIN_DB_PREFIX."societe_remise_except as re, ".MAIN_DB_PREFIX."facture as f";
-		$sql .= " WHERE re.fk_facture_source = f.rowid AND re.fk_facture = ".((int) $object->id);
+		$sql .= " FROM " . MAIN_DB_PREFIX . "societe_remise_except as re, " . MAIN_DB_PREFIX . "facture as f";
+		$sql .= " WHERE re.fk_facture_source = f.rowid AND re.fk_facture = " . ((int) $object->id);
 		$resql = $this->db->query($sql);
 		if ($resql) {
 			$num = $this->db->num_rows($resql);
@@ -1041,9 +1055,9 @@ class pdf_crabe extends ModelePDFFactures
 		// TODO Call getListOfPaymentsgetListOfPayments instead of hard coded sql
 		$sql = "SELECT p.datep as date, p.fk_paiement, p.num_paiement as num, pf.amount as amount, pf.multicurrency_amount,";
 		$sql .= " cp.code";
-		$sql .= " FROM ".MAIN_DB_PREFIX."paiement_facture as pf, ".MAIN_DB_PREFIX."paiement as p";
-		$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_paiement as cp ON p.fk_paiement = cp.id";
-		$sql .= " WHERE pf.fk_paiement = p.rowid AND pf.fk_facture = ".((int) $object->id);
+		$sql .= " FROM " . MAIN_DB_PREFIX . "paiement_facture as pf, " . MAIN_DB_PREFIX . "paiement as p";
+		$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "c_paiement as cp ON p.fk_paiement = cp.id";
+		$sql .= " WHERE pf.fk_paiement = p.rowid AND pf.fk_facture = " . ((int) $object->id);
 		//$sql.= " WHERE pf.fk_paiement = p.rowid AND pf.fk_facture = 1";
 		$sql .= " ORDER BY p.datep";
 
@@ -1075,7 +1089,7 @@ class pdf_crabe extends ModelePDFFactures
 				$pdf->SetXY($tab3_posx + 21, $tab3_top + $y);
 				$pdf->MultiCell(20, 3, price($sign * ((isModEnabled("multicurrency") && $object->multicurrency_tx != 1) ? $row->multicurrency_amount : $row->amount), 0, $outputlangs), 0, 'L', 0);
 				$pdf->SetXY($tab3_posx + 40, $tab3_top + $y);
-				$oper = $outputlangs->transnoentitiesnoconv("PaymentTypeShort".$row->code);
+				$oper = $outputlangs->transnoentitiesnoconv("PaymentTypeShort" . $row->code);
 
 				$pdf->MultiCell(20, 3, $oper, 0, 'L', 0);
 				$pdf->SetXY($tab3_posx + 58, $tab3_top + $y);
@@ -1179,12 +1193,12 @@ class pdf_crabe extends ModelePDFFactures
 		if ($object->type != 2 && ($object->cond_reglement_code || $object->cond_reglement)) {
 			$pdf->SetFont('', 'B', $default_font_size - 2);
 			$pdf->SetXY($this->marge_gauche, $posy);
-			$titre = $outputlangs->transnoentities("PaymentConditions").':';
+			$titre = $outputlangs->transnoentities("PaymentConditions") . ':';
 			$pdf->MultiCell(43, 4, $titre, 0, 'L');
 
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posxval, $posy);
-			$lib_condition_paiement = $outputlangs->transnoentities("PaymentCondition".$object->cond_reglement_code) != ('PaymentCondition'.$object->cond_reglement_code) ? $outputlangs->transnoentities("PaymentCondition".$object->cond_reglement_code) : $outputlangs->convToOutputCharset($object->cond_reglement_doc ? $object->cond_reglement_doc : $object->cond_reglement_label);
+			$lib_condition_paiement = $outputlangs->transnoentities("PaymentCondition" . $object->cond_reglement_code) != ('PaymentCondition' . $object->cond_reglement_code) ? $outputlangs->transnoentities("PaymentCondition" . $object->cond_reglement_code) : $outputlangs->convToOutputCharset($object->cond_reglement_doc ? $object->cond_reglement_doc : $object->cond_reglement_label);
 			$lib_condition_paiement = str_replace('\n', "\n", $lib_condition_paiement);
 			$pdf->MultiCell(67, 4, $lib_condition_paiement, 0, 'L');
 
@@ -1195,7 +1209,7 @@ class pdf_crabe extends ModelePDFFactures
 		if (getDolGlobalInt('INVOICE_CATEGORY_OF_OPERATION') == 2 && $this->categoryOfOperation >= 0) {
 			$pdf->SetFont('', 'B', $default_font_size - 2);
 			$pdf->SetXY($this->marge_gauche, $posy);
-			$categoryOfOperationTitle = $outputlangs->transnoentities("MentionCategoryOfOperations").' : ';
+			$categoryOfOperationTitle = $outputlangs->transnoentities("MentionCategoryOfOperations") . ' : ';
 			$pdf->MultiCell($posxval - $this->marge_gauche, 4, $categoryOfOperationTitle, 0, 'L');
 
 			$pdf->SetFont('', '', $default_font_size - 2);
@@ -1208,12 +1222,15 @@ class pdf_crabe extends ModelePDFFactures
 
 		if ($object->type != 2) {
 			// Check a payment mode is defined
-			if (empty($object->mode_reglement_code)
-			&& !getDolGlobalInt('FACTURE_CHQ_NUMBER')
-			&& !getDolGlobalInt('FACTURE_RIB_NUMBER')) {
+			if (
+				empty($object->mode_reglement_code)
+				&& !getDolGlobalInt('FACTURE_CHQ_NUMBER')
+				&& !getDolGlobalInt('FACTURE_RIB_NUMBER')
+			) {
 				$this->error = $outputlangs->transnoentities("ErrorNoPaiementModeConfigured");
 			} elseif (($object->mode_reglement_code == 'CHQ' && !getDolGlobalInt('FACTURE_CHQ_NUMBER') && empty($object->fk_account) && empty($object->fk_bank))
-				|| ($object->mode_reglement_code == 'VIR' && !getDolGlobalInt('FACTURE_RIB_NUMBER') && empty($object->fk_account) && empty($object->fk_bank))) {
+				|| ($object->mode_reglement_code == 'VIR' && !getDolGlobalInt('FACTURE_RIB_NUMBER') && empty($object->fk_account) && empty($object->fk_bank))
+			) {
 				// Avoid having any valid PDF with setup that is not complete
 				$outputlangs->load("errors");
 
@@ -1228,24 +1245,26 @@ class pdf_crabe extends ModelePDFFactures
 			}
 
 			// Show payment mode
-			if (!empty($object->mode_reglement_code)
-			&& $object->mode_reglement_code != 'CHQ'
-			&& $object->mode_reglement_code != 'VIR') {
+			if (
+				!empty($object->mode_reglement_code)
+				&& $object->mode_reglement_code != 'CHQ'
+				&& $object->mode_reglement_code != 'VIR'
+			) {
 				$pdf->SetFont('', 'B', $default_font_size - 2);
 				$pdf->SetXY($this->marge_gauche, $posy);
-				$titre = $outputlangs->transnoentities("PaymentMode").':';
+				$titre = $outputlangs->transnoentities("PaymentMode") . ':';
 				$pdf->MultiCell(80, 5, $titre, 0, 'L');
 
 				$pdf->SetFont('', '', $default_font_size - 2);
 				$pdf->SetXY($posxval, $posy);
-				$lib_mode_reg = $outputlangs->transnoentities("PaymentType".$object->mode_reglement_code) != ('PaymentType'.$object->mode_reglement_code) ? $outputlangs->transnoentities("PaymentType".$object->mode_reglement_code) : $outputlangs->convToOutputCharset($object->mode_reglement);
+				$lib_mode_reg = $outputlangs->transnoentities("PaymentType" . $object->mode_reglement_code) != ('PaymentType' . $object->mode_reglement_code) ? $outputlangs->transnoentities("PaymentType" . $object->mode_reglement_code) : $outputlangs->convToOutputCharset($object->mode_reglement);
 				//#21654: add account number used for the debit
 				if ($object->mode_reglement_code == "PRE") {
-					require_once DOL_DOCUMENT_ROOT.'/societe/class/companybankaccount.class.php';
+					require_once DOL_DOCUMENT_ROOT . '/societe/class/companybankaccount.class.php';
 					$bac = new CompanyBankAccount($this->db);
 					$bac->fetch(0, $object->thirdparty->id);
-					$iban= $bac->iban.(($bac->iban && $bac->bic) ? ' / ' : '').$bac->bic;
-					$lib_mode_reg .= ' '.$outputlangs->trans("PaymentTypePREdetails", dol_trunc($iban, 6, 'right', 'UTF-8', 1));
+					$iban = $bac->iban . (($bac->iban && $bac->bic) ? ' / ' : '') . $bac->bic;
+					$lib_mode_reg .= ' ' . $outputlangs->trans("PaymentTypePREdetails", dol_trunc($iban, 6, 'right', 'UTF-8', 1));
 				}
 				$pdf->MultiCell(80, 5, $lib_mode_reg, 0, 'L');
 
@@ -1280,13 +1299,13 @@ class pdf_crabe extends ModelePDFFactures
 				}
 
 				if ($object->statut != Facture::STATUS_DRAFT && $useonlinepayment) {
-					require_once DOL_DOCUMENT_ROOT.'/core/lib/payments.lib.php';
+					require_once DOL_DOCUMENT_ROOT . '/core/lib/payments.lib.php';
 					global $langs;
 
 					$langs->loadLangs(array('payment', 'paybox', 'stripe'));
 					$servicename = $langs->transnoentities('Online');
 					$paiement_url = getOnlinePaymentUrl('', 'invoice', $object->ref, '', '', '');
-					$linktopay = $langs->trans("ToOfferALinkForOnlinePayment", $servicename).' <a href="'.$paiement_url.'">'.$outputlangs->transnoentities("ClickHere").'</a>';
+					$linktopay = $langs->trans("ToOfferALinkForOnlinePayment", $servicename) . ' <a href="' . $paiement_url . '">' . $outputlangs->transnoentities("ClickHere") . '</a>';
 
 					$pdf->SetXY($this->marge_gauche, $posy);
 					$pdf->writeHTMLCell(80, 5, '', '', dol_htmlentitiesbr($linktopay), 0, 1);
@@ -1409,7 +1428,7 @@ class pdf_crabe extends ModelePDFFactures
 		// Total HT
 		$pdf->SetFillColor(255, 255, 255);
 		$pdf->SetXY($col1x, $tab2_top);
-		$pdf->MultiCell($col2x - $col1x, $tab2_hl, $outputlangs->transnoentities(empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT) ? "TotalHT" : "Total").(is_object($outputlangsbis) ? ' / '.$outputlangsbis->transnoentities(empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT) ? "TotalHT" : "Total") : ''), 0, 'L', 1);
+		$pdf->MultiCell($col2x - $col1x, $tab2_hl, $outputlangs->transnoentities(empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT) ? "TotalHT" : "Total") . (is_object($outputlangsbis) ? ' / ' . $outputlangsbis->transnoentities(empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT) ? "TotalHT" : "Total") : ''), 0, 'L', 1);
 
 		$total_ht = ((isModEnabled("multicurrency") && isset($object->multicurrency_tx) && $object->multicurrency_tx != 1) ? $object->multicurrency_total_ht : $object->total_ht);
 		$pdf->SetXY($col2x, $tab2_top);
@@ -1444,12 +1463,12 @@ class pdf_crabe extends ModelePDFFactures
 							$tvacompl = '';
 							if (preg_match('/\*/', $tvakey)) {
 								$tvakey = str_replace('*', '', $tvakey);
-								$tvacompl = " (".$outputlangs->transnoentities("NonPercuRecuperable").")";
+								$tvacompl = " (" . $outputlangs->transnoentities("NonPercuRecuperable") . ")";
 							}
 
-							$totalvat = $outputlangs->transcountrynoentities("TotalLT1", $mysoc->country_code).(is_object($outputlangsbis) ? ' / '.$outputlangsbis->transcountrynoentities("TotalLT1", $mysoc->country_code) : '');
+							$totalvat = $outputlangs->transcountrynoentities("TotalLT1", $mysoc->country_code) . (is_object($outputlangsbis) ? ' / ' . $outputlangsbis->transcountrynoentities("TotalLT1", $mysoc->country_code) : '');
 							$totalvat .= ' ';
-							$totalvat .= vatrate(abs($tvakey), 1).$tvacompl;
+							$totalvat .= vatrate(abs($tvakey), 1) . $tvacompl;
 							$pdf->MultiCell($col2x - $col1x, $tab2_hl, $totalvat, 0, 'L', 1);
 
 							$total_localtax = ((isModEnabled("multicurrency") && isset($object->multicurrency_tx) && $object->multicurrency_tx != 1) ? price2num($tvaval * $object->multicurrency_tx, 'MT') : $tvaval);
@@ -1478,11 +1497,11 @@ class pdf_crabe extends ModelePDFFactures
 							$tvacompl = '';
 							if (preg_match('/\*/', $tvakey)) {
 								$tvakey = str_replace('*', '', $tvakey);
-								$tvacompl = " (".$outputlangs->transnoentities("NonPercuRecuperable").")";
+								$tvacompl = " (" . $outputlangs->transnoentities("NonPercuRecuperable") . ")";
 							}
-							$totalvat = $outputlangs->transcountrynoentities("TotalLT2", $mysoc->country_code).(is_object($outputlangsbis) ? ' / '.$outputlangsbis->transcountrynoentities("TotalLT2", $mysoc->country_code) : '');
+							$totalvat = $outputlangs->transcountrynoentities("TotalLT2", $mysoc->country_code) . (is_object($outputlangsbis) ? ' / ' . $outputlangsbis->transcountrynoentities("TotalLT2", $mysoc->country_code) : '');
 							$totalvat .= ' ';
-							$totalvat .= vatrate(abs($tvakey), 1).$tvacompl;
+							$totalvat .= vatrate(abs($tvakey), 1) . $tvacompl;
 							$pdf->MultiCell($col2x - $col1x, $tab2_hl, $totalvat, 0, 'L', 1);
 
 							$total_localtax = ((isModEnabled("multicurrency") && isset($object->multicurrency_tx) && $object->multicurrency_tx != 1) ? price2num($tvaval * $object->multicurrency_tx, 'MT') : $tvaval);
@@ -1506,16 +1525,16 @@ class pdf_crabe extends ModelePDFFactures
 						$tvacompl = '';
 						if (preg_match('/\*/', $tvakey)) {
 							$tvakey = str_replace('*', '', $tvakey);
-							$tvacompl = " (".$outputlangs->transnoentities("NonPercuRecuperable").")";
+							$tvacompl = " (" . $outputlangs->transnoentities("NonPercuRecuperable") . ")";
 						}
-						$totalvat = $outputlangs->transcountrynoentities("TotalVAT", $mysoc->country_code).(is_object($outputlangsbis) ? ' / '.$outputlangsbis->transcountrynoentities("TotalVAT", $mysoc->country_code) : '');
+						$totalvat = $outputlangs->transcountrynoentities("TotalVAT", $mysoc->country_code) . (is_object($outputlangsbis) ? ' / ' . $outputlangsbis->transcountrynoentities("TotalVAT", $mysoc->country_code) : '');
 						$totalvat .= ' ';
 						if (getDolGlobalString('PDF_VAT_LABEL_IS_CODE_OR_RATE') == 'rateonly') {
-							$totalvat .= vatrate($tvaval['vatrate'], 1).$tvacompl;
+							$totalvat .= vatrate($tvaval['vatrate'], 1) . $tvacompl;
 						} elseif (getDolGlobalString('PDF_VAT_LABEL_IS_CODE_OR_RATE') == 'codeonly') {
-							$totalvat .= $tvaval['vatcode'].$tvacompl;
+							$totalvat .= $tvaval['vatcode'] . $tvacompl;
 						} else {
-							$totalvat .= vatrate($tvaval['vatrate'], 1).($tvaval['vatcode'] ? ' ('.$tvaval['vatcode'].')' : '').$tvacompl;
+							$totalvat .= vatrate($tvaval['vatrate'], 1) . ($tvaval['vatcode'] ? ' (' . $tvaval['vatcode'] . ')' : '') . $tvacompl;
 						}
 						$pdf->MultiCell($col2x - $col1x, $tab2_hl, $totalvat, 0, 'L', 1);
 
@@ -1542,10 +1561,10 @@ class pdf_crabe extends ModelePDFFactures
 							$tvacompl = '';
 							if (preg_match('/\*/', $tvakey)) {
 								$tvakey = str_replace('*', '', $tvakey);
-								$tvacompl = " (".$outputlangs->transnoentities("NonPercuRecuperable").")";
+								$tvacompl = " (" . $outputlangs->transnoentities("NonPercuRecuperable") . ")";
 							}
-							$totalvat = $outputlangs->transcountrynoentities("TotalLT1", $mysoc->country_code).' ';
-							$totalvat .= vatrate(abs($tvakey), 1).$tvacompl;
+							$totalvat = $outputlangs->transcountrynoentities("TotalLT1", $mysoc->country_code) . ' ';
+							$totalvat .= vatrate(abs($tvakey), 1) . $tvacompl;
 
 							$pdf->MultiCell($col2x - $col1x, $tab2_hl, $totalvat, 0, 'L', 1);
 
@@ -1574,11 +1593,11 @@ class pdf_crabe extends ModelePDFFactures
 						$tvacompl = '';
 						if (preg_match('/\*/', $tvakey)) {
 							$tvakey = str_replace('*', '', $tvakey);
-							$tvacompl = " (".$outputlangs->transnoentities("NonPercuRecuperable").")";
+							$tvacompl = " (" . $outputlangs->transnoentities("NonPercuRecuperable") . ")";
 						}
-						$totalvat = $outputlangs->transcountrynoentities("TotalLT2", $mysoc->country_code).' ';
+						$totalvat = $outputlangs->transcountrynoentities("TotalLT2", $mysoc->country_code) . ' ';
 
-						$totalvat .= vatrate(abs($tvakey), 1).$tvacompl;
+						$totalvat .= vatrate(abs($tvakey), 1) . $tvacompl;
 						$pdf->MultiCell($col2x - $col1x, $tab2_hl, $totalvat, 0, 'L', 1);
 
 						$total_localtax = ((isModEnabled("multicurrency") && isset($object->multicurrency_tx) && $object->multicurrency_tx != 1) ? price2num($tvaval * $object->multicurrency_tx, 'MT') : $tvaval);
@@ -1629,8 +1648,8 @@ class pdf_crabe extends ModelePDFFactures
 					$index++;
 					$pdf->SetXY($col1x, $tab2_top + $tab2_hl * $index);
 
-					$retainedWarrantyToPayOn = $outputlangs->transnoentities("RetainedWarranty").' ('.$object->retained_warranty.'%)';
-					$retainedWarrantyToPayOn .= !empty($object->retained_warranty_date_limit) ? ' '.$outputlangs->transnoentities("toPayOn", dol_print_date($object->retained_warranty_date_limit, 'day')) : '';
+					$retainedWarrantyToPayOn = $outputlangs->transnoentities("RetainedWarranty") . ' (' . $object->retained_warranty . '%)';
+					$retainedWarrantyToPayOn .= !empty($object->retained_warranty_date_limit) ? ' ' . $outputlangs->transnoentities("toPayOn", dol_print_date($object->retained_warranty_date_limit, 'day')) : '';
 
 					$pdf->MultiCell($col2x - $col1x, $tab2_hl, $retainedWarrantyToPayOn, $useborder, 'L', 1);
 					$pdf->SetXY($col2x, $tab2_top + $tab2_hl * $index);
@@ -1734,7 +1753,7 @@ class pdf_crabe extends ModelePDFFactures
 				$pdf->MultiCell(($pdf->GetStringWidth($categoryOfOperations)) + 4, 2, $categoryOfOperations);
 			}
 
-			$titre = $outputlangs->transnoentities("AmountInCurrency", $outputlangs->transnoentitiesnoconv("Currency".$currency));
+			$titre = $outputlangs->transnoentities("AmountInCurrency", $outputlangs->transnoentitiesnoconv("Currency" . $currency));
 			$pdf->SetXY($this->page_largeur - $this->marge_droite - ($pdf->GetStringWidth($titre) + 3), $tab_top - 4);
 			$pdf->MultiCell(($pdf->GetStringWidth($titre) + 3), 2, $titre);
 
@@ -1859,9 +1878,9 @@ class pdf_crabe extends ModelePDFFactures
 					$logodir = $conf->mycompany->multidir_output[$object->entity];
 				}
 				if (!getDolGlobalInt('MAIN_PDF_USE_LARGE_LOGO')) {
-					$logo = $logodir.'/logos/thumbs/'.$this->emetteur->logo_small;
+					$logo = $logodir . '/logos/thumbs/' . $this->emetteur->logo_small;
 				} else {
-					$logo = $logodir.'/logos/'.$this->emetteur->logo;
+					$logo = $logodir . '/logos/' . $this->emetteur->logo;
 				}
 				if (is_readable($logo)) {
 					$height = pdf_getHeightForLogo($logo);
@@ -1915,10 +1934,10 @@ class pdf_crabe extends ModelePDFFactures
 				$title .= $outputlangsbis->transnoentities("InvoiceProForma");
 			}
 		}
-		$title .= ' '.$outputlangs->convToOutputCharset($object->ref);
+		$title .= ' ' . $outputlangs->convToOutputCharset($object->ref);
 		if ($object->statut == $object::STATUS_DRAFT) {
 			$pdf->SetTextColor(128, 0, 0);
-			$title .= ' - '.$outputlangs->transnoentities("NotValidated");
+			$title .= ' - ' . $outputlangs->transnoentities("NotValidated");
 		}
 
 		$pdf->MultiCell($w, 3, $title, '', 'R');
@@ -1943,7 +1962,7 @@ class pdf_crabe extends ModelePDFFactures
 			$posy += 4;
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetTextColor(0, 0, 60);
-			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("RefCustomer")." : ".$outputlangs->convToOutputCharset($object->ref_customer), '', 'R');
+			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("RefCustomer") . " : " . $outputlangs->convToOutputCharset($object->ref_customer), '', 'R');
 		}
 
 		if (!empty($conf->global->PDF_SHOW_PROJECT_TITLE)) {
@@ -1952,7 +1971,7 @@ class pdf_crabe extends ModelePDFFactures
 				$posy += 3;
 				$pdf->SetXY($posx, $posy);
 				$pdf->SetTextColor(0, 0, 60);
-				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("Project")." : ".(empty($object->project->title) ? '' : $object->project->title), '', 'R');
+				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("Project") . " : " . (empty($object->project->title) ? '' : $object->project->title), '', 'R');
 			}
 		}
 
@@ -1963,7 +1982,7 @@ class pdf_crabe extends ModelePDFFactures
 				$posy += 3;
 				$pdf->SetXY($posx, $posy);
 				$pdf->SetTextColor(0, 0, 60);
-				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("RefProject")." : ".(empty($object->project->ref) ? '' : $object->project->ref), '', 'R');
+				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("RefProject") . " : " . (empty($object->project->ref) ? '' : $object->project->ref), '', 'R');
 			}
 		}
 
@@ -1975,7 +1994,7 @@ class pdf_crabe extends ModelePDFFactures
 			$posy += 3;
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetTextColor(0, 0, 60);
-			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("ReplacementByInvoice").' : '.$outputlangs->convToOutputCharset($objectreplacing->ref), '', 'R');
+			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("ReplacementByInvoice") . ' : ' . $outputlangs->convToOutputCharset($objectreplacing->ref), '', 'R');
 		}
 		if ($object->type == 1) {
 			$objectreplaced = new Facture($this->db);
@@ -1984,7 +2003,7 @@ class pdf_crabe extends ModelePDFFactures
 			$posy += 4;
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetTextColor(0, 0, 60);
-			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("ReplacementInvoice").' : '.$outputlangs->convToOutputCharset($objectreplaced->ref), '', 'R');
+			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("ReplacementInvoice") . ' : ' . $outputlangs->convToOutputCharset($objectreplaced->ref), '', 'R');
 		}
 		if ($object->type == 2 && !empty($object->fk_facture_source)) {
 			$objectreplaced = new Facture($this->db);
@@ -1993,7 +2012,7 @@ class pdf_crabe extends ModelePDFFactures
 			$posy += 3;
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetTextColor(0, 0, 60);
-			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("CorrectionInvoice").' : '.$outputlangs->convToOutputCharset($objectreplaced->ref), '', 'R');
+			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("CorrectionInvoice") . ' : ' . $outputlangs->convToOutputCharset($objectreplaced->ref), '', 'R');
 		}
 
 		$posy += 4;
@@ -2001,15 +2020,15 @@ class pdf_crabe extends ModelePDFFactures
 		$pdf->SetTextColor(0, 0, 60);
 		$title = $outputlangs->transnoentities("DateInvoice");
 		if (!empty($conf->global->PDF_USE_ALSO_LANGUAGE_CODE) && is_object($outputlangsbis)) {
-			$title .= ' - '.$outputlangsbis->transnoentities("DateInvoice");
+			$title .= ' - ' . $outputlangsbis->transnoentities("DateInvoice");
 		}
-		$pdf->MultiCell($w, 3, $title." : ".dol_print_date($object->date, "day", false, $outputlangs, true), '', 'R');
+		$pdf->MultiCell($w, 3, $title . " : " . dol_print_date($object->date, "day", false, $outputlangs, true), '', 'R');
 
 		if (!empty($conf->global->INVOICE_POINTOFTAX_DATE)) {
 			$posy += 4;
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetTextColor(0, 0, 60);
-			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("DatePointOfTax")." : ".dol_print_date($object->date_pointoftax, "day", false, $outputlangs), '', 'R');
+			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("DatePointOfTax") . " : " . dol_print_date($object->date_pointoftax, "day", false, $outputlangs), '', 'R');
 		}
 
 		if ($object->type != 2) {
@@ -2018,16 +2037,16 @@ class pdf_crabe extends ModelePDFFactures
 			$pdf->SetTextColor(0, 0, 60);
 			$title = $outputlangs->transnoentities("DateDue");
 			if (!empty($conf->global->PDF_USE_ALSO_LANGUAGE_CODE) && is_object($outputlangsbis)) {
-				$title .= ' - '.$outputlangsbis->transnoentities("DateDue");
+				$title .= ' - ' . $outputlangsbis->transnoentities("DateDue");
 			}
-			$pdf->MultiCell($w, 3, $title." : ".dol_print_date($object->date_lim_reglement, "day", false, $outputlangs, true), '', 'R');
+			$pdf->MultiCell($w, 3, $title . " : " . dol_print_date($object->date_lim_reglement, "day", false, $outputlangs, true), '', 'R');
 		}
 
 		if (empty($conf->global->MAIN_PDF_HIDE_CUSTOMER_CODE) && $object->thirdparty->code_client) {
 			$posy += 3;
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetTextColor(0, 0, 60);
-			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("CustomerCode")." : ".$outputlangs->transnoentities($object->thirdparty->code_client), '', 'R');
+			$pdf->MultiCell($w, 3, $outputlangs->transnoentities("CustomerCode") . " : " . $outputlangs->transnoentities($object->thirdparty->code_client), '', 'R');
 		}
 
 		// Get contact
@@ -2039,7 +2058,7 @@ class pdf_crabe extends ModelePDFFactures
 				$posy += 4;
 				$pdf->SetXY($posx, $posy);
 				$pdf->SetTextColor(0, 0, 60);
-				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("SalesRepresentative")." : ".$usertmp->getFullName($langs), '', 'R');
+				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("SalesRepresentative") . " : " . $usertmp->getFullName($langs), '', 'R');
 			}
 		}
 
@@ -2061,7 +2080,7 @@ class pdf_crabe extends ModelePDFFactures
 			if (count($arrayidcontact) > 0) {
 				$object->fetch_user($arrayidcontact[0]);
 				$labelbeforecontactname = ($outputlangs->transnoentities("FromContactName") != 'FromContactName' ? $outputlangs->transnoentities("FromContactName") : $outputlangs->transnoentities("Name"));
-				$carac_emetteur .= ($carac_emetteur ? "\n" : '').$labelbeforecontactname." ".$outputlangs->convToOutputCharset($object->user->getFullName($outputlangs));
+				$carac_emetteur .= ($carac_emetteur ? "\n" : '') . $labelbeforecontactname . " " . $outputlangs->convToOutputCharset($object->user->getFullName($outputlangs));
 				$carac_emetteur .= "\n";
 			}
 
@@ -2166,11 +2185,11 @@ class pdf_crabe extends ModelePDFFactures
 					$contactshipping = $object->fetch_Contact($idaddressshipping[0]);
 					$companystatic = new Societe($this->db);
 					$companystatic->fetch($object->contact->fk_soc);
-					$carac_client_name_shipping=pdfBuildThirdpartyName($object->contact, $outputlangs);
+					$carac_client_name_shipping = pdfBuildThirdpartyName($object->contact, $outputlangs);
 					$carac_client_shipping = pdf_build_address($outputlangs, $this->emetteur, $companystatic, $object->contact, $usecontact, 'target', $object);
 				} else {
-					$carac_client_name_shipping=pdfBuildThirdpartyName($object->thirdparty, $outputlangs);
-					$carac_client_shipping=pdf_build_address($outputlangs, $this->emetteur, $object->thirdparty, '', 0, 'target', $object);
+					$carac_client_name_shipping = pdfBuildThirdpartyName($object->thirdparty, $outputlangs);
+					$carac_client_shipping = pdf_build_address($outputlangs, $this->emetteur, $object->thirdparty, '', 0, 'target', $object);
 				}
 				if (!empty($carac_client_shipping)) {
 					$posy += $hautcadre;
@@ -2189,7 +2208,7 @@ class pdf_crabe extends ModelePDFFactures
 					$posy = $pdf->getY();
 
 					// Show shipping information
-					$pdf->SetXY($posx+2, $posy);
+					$pdf->SetXY($posx + 2, $posy);
 					$pdf->SetFont('', '', $default_font_size - 1);
 					$pdf->MultiCell($widthrecbox - 2, 2, $carac_client_shipping, '', 'L');
 					$top_shift += $hautcadre;
