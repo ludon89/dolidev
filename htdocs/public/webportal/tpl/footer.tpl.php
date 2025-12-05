@@ -146,7 +146,7 @@ if (empty($conf->browser->layout) || $conf->browser->layout != 'phone') { ?>
 						<h2 class="dialog-header-title">${title}</h2>
 					</div>
 					<div class="dialog-header-action-container" >
-						<button class="dialog-header-btn dialog-close-btn btn-low-emphasis">&times;</button>
+						<button class="dialog-header-btn dialog-close-btn btn-low-emphasis close"></button>
 					</div>
 				</div>
 				<div class="dialog-body">
@@ -231,6 +231,7 @@ if (empty($conf->browser->layout) || $conf->browser->layout != 'phone') { ?>
 			}
 
 			function show_preview(mode) {
+				// TODO : rebuild dialog tpl show modal_card
 				let newElem = '<a href="#close" aria-label="Close" class="close" data-target="modalforpopup" onClick="toggleModal(event)"></a><object name="objectpreview" data="' +
 					file + '" type="' + type + '" width="' + object_width + '" height="' + object_height + '" param="noparam"></object>';
 				if (mode == 'image' && showOriginalSizeButton) {

@@ -85,6 +85,7 @@
 }
 
 /* Close button */
-.dialog-header-btn.dialog-close-btn {
-	font-size: 1.2em;
+dialog article .dialog-header-btn.close {
+	margin-top: 0;
+	margin-bottom: 0;
 }
