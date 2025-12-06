@@ -11608,7 +11608,7 @@ function dol_getIdFromCode($db, $key, $tablename, $fieldkey = 'code', $fieldid =
  *	Check if a variable with name $var start with $regextext.
  *  Can be used to forge dol_eval() conditions.
  *
- *  @param	string			$var		Variable
+ *  @param	string			$var		Variable name ('mainmenu' or 'leftmenu', ...)
  *  @param	string			$regextext	Text that must be a valid regex string
  *  @param	int<0,1>		$matchrule	1=Test if start with, 0=Test if equal
  *  @return	boolean|string				True or False, text if bad usage.
