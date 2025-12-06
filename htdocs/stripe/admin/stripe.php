@@ -602,8 +602,7 @@ print "</tr>\n";
 // https://docs.stripe.com/api/events/types#event_types-payout.created
 // https://docs.stripe.com/api/events/types#event_types-payout.paid
 print '<tr class="oddeven"><td>';
-print $langs->trans("StripeAutoRecordPayout");
-print $form->textwithpicto('', '<span class="opacitymedium">'.$langs->trans("StripeAutoRecordPayout2", "payout.created | payout.failed | payout.paid").'</span>');
+print $form->textwithpicto($langs->trans("StripeAutoRecordPayout"), '<span class="opacitymedium">'.$langs->trans("StripeAutoRecordPayout2", "payout.created | payout.failed | payout.paid").'</span>');
 print '</td>';
 print '<td>';
 if ($conf->use_javascript_ajax) {
