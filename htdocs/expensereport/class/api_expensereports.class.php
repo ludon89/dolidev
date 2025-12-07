@@ -417,6 +417,8 @@ class ExpenseReports extends DolibarrApi
 	/**
 	 * Delete a line from an expense report
 	 *
+	 * @since	23.0.0	Initial implementation
+	 *
 	 * @param	int		$id				ID of the expense report to update
 	 * @param	int		$lineid			ID of line to delete
 	 *
