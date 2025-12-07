@@ -247,6 +247,8 @@ class ExpenseReports extends DolibarrApi
 	/**
 	 * Get lines of an expense report
 	 *
+	 * @since	23.0.0	Initial implementation
+	 *
 	 * @param	int		$id		ID of the expense report
 	 *
 	 * @url	GET {id}/lines
@@ -258,16 +260,16 @@ class ExpenseReports extends DolibarrApi
 	 */
 	public function getLines($id)
 	{
-		if(!DolibarrApiAccess::$user->hasRight('expensereport', 'lire')) {
+		if (!DolibarrApiAccess::$user->hasRight('expensereport', 'lire')) {
 			throw new RestException(403);
 		}
 
 		$result = $this->expensereport->fetch($id);
-		if(!$result) {
+		if (!$result) {
 			throw new RestException(404, 'expensereport not found');
 		}
 
-		if(!DolibarrApi::_checkAccessToResource('expensereport',$this->expensereport->id)) {
+		if (!DolibarrApi::_checkAccessToResource('expensereport', $this->expensereport->id)) {
 			throw new RestException(403, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
 		}
 		$this->expensereport->fetch_lines();
