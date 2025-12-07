@@ -254,6 +254,8 @@ class ExpenseReports extends DolibarrApi
 	 * @url	GET {id}/lines
 	 *
 	 * @return array
+	 * @phan-return ExpenseReportLine[]
+	 * @phpstan-return ExpenseReportLine[]
 	 *
 	 * @throws RestException 403
 	 * @throws RestException 404
