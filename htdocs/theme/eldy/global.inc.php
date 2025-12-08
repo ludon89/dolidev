@@ -5847,10 +5847,11 @@ div.backgreypublicpayment {
 }	/* Width must have min to make stripe input area visible. Lower than 320 makes input area crazy for credit card that need zip code */
 
 #tablepublicpayment {
-	border: 1px solid #CCCCCC !important;
+	border: 2px solid #CCCCCC !important;
 	width: 100%;
 	padding: 20px;
 	margin-bottom: 25px;
+	border-radius: 4px;
 }
 #tablepublicpayment .CTableRow1  { background-color: #F0F0F0 !important; }
 #tablepublicpayment tr.liste_total { border-bottom: 1px solid #CCCCCC !important; }
@@ -9231,7 +9232,7 @@ table.jPicker {
 	}
 	#tablepublicpayment {
 		width:	auto !important;
-		border: none !important;
+		/* border: none !important; */
 	}
 	.poweredbypublicpayment {
 		float: unset !important;
@@ -9266,7 +9267,7 @@ table.jPicker {
 	}
 
 	#dolpublictable {
-		padding: 10px;
+		padding: 14px;
 	}
 
 	input[type=checkbox], input[type=radio] {
