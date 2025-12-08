@@ -1120,6 +1120,12 @@ textarea.centpercent {
 .liste_titre .nowrap {
 	white-space: nowrap;
 }
+.liste_titre.sticky {
+	position: sticky;
+	top:0;
+	z-index: 2;
+}
+
 .nowraponall {	/* no wrap on all devices */
 	white-space: nowrap;
 }
