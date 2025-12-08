@@ -133,7 +133,7 @@ if ($action == 'send' && !$cancel) {
 			}
 		}
 
-		if ($result) {
+		if (!$error) {
 			setEventMessages($langs->trans("SmsSuccessfulySent", $smsfrom, $sendto), null, 'mesgs');
 		} else {
 			setEventMessages($langs->trans("ResultKo"), null, 'errors');
