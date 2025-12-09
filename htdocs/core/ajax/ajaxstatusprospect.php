@@ -87,14 +87,12 @@ if ($action === "updatestatusprospect" && $permisstiontoupdate) {
 
 
 	// Load thirdparty
-	$prospect = new Client($db);
+	$prospect = new Societe($db);
 	$result = $prospect->fetch($idprospect);
 
 	if ($result >= 0) {
-		$oldStatus = $prospect->fk_stcomm;
-
 		// Apply new status
-		$prospect->fk_stcomm = $idstatus;
+		$prospect->stcomm_id = $idstatus;
 
 		// Update using business logic (fires COMPANY_MODIFY)
 		$updateResult = $prospect->update($prospect->id, $user);
