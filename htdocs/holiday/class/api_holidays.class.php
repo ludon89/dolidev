@@ -365,7 +365,8 @@ class Holidays extends DolibarrApi
 		if (!DolibarrApi::_checkAccessToResource('holiday', $this->holiday->id)) {
 			throw new RestException(403, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
 		}
-
+		
+		$this->holiday->status = Holiday::STATUS_VALIDATED;
 		$result = $this->holiday->validate(DolibarrApiAccess::$user, $notrigger);
 		if ($result == 0) {
 			throw new RestException(304, 'Error nothing done. May be object is already validated');
@@ -557,7 +558,7 @@ class Holidays extends DolibarrApi
 		if ($this->holiday->statut != Holiday::STATUS_CANCELED) {
 			throw new RestException(400, 'Holiday is not canceled. Only canceled holidays can be reopened.');
 		}
-
+		$this->holiday->status = Holiday::STATUS_VALIDATED;
 		$result = $this->holiday->validate(DolibarrApiAccess::$user, $notrigger);
 		if ($result < 0) {
 			throw new RestException(500, 'Error when canceling holiday: '.$this->holiday->error);
