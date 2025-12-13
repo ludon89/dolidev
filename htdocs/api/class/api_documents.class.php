@@ -300,6 +300,22 @@ class Documents extends DolibarrApi
 			if ($result <= 0) {
 				throw new RestException(500, 'Error generating document missing doctemplate parameter');
 			}
+		} elseif ($modulepart == 'expensereport') {
+			require_once DOL_DOCUMENT_ROOT.'/expensereport/class/expensereport.class.php';
+
+			$tmpobject = new ExpenseReport($this->db);
+			$result = $tmpobject->fetch(0, preg_replace('/\.[^\.]+$/', '', basename($original_file)));
+
+			if (!$result) {
+				throw new RestException(404, 'Exepnse report not found');
+			}
+
+			$templateused = $doctemplate ? $doctemplate : $tmpobject->model_pdf;
+			$result = $tmpobject->generateDocument($templateused, $outputlangs, $hidedetails, $hidedesc, $hideref);
+
+			if ($result <= 0) {
+				throw new RestException(500, 'Error generating document missing doctemplate parameter');
+			}
 		} else {
 			throw new RestException(403, 'Generation not available for this modulepart');
 		}
