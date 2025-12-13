@@ -588,11 +588,11 @@ function confirmDolibarr(msg, id, popupWidth = 400, disableCancelButton = 0) {
 
 	let buttons = {};
 	if (disableCancelButton === 0) {
-		buttons.Cancel = function () {
+		buttons['<?php echo dol_escape_js($langs->trans("Cancel")); ?>'] = function () {
 		   $(this).dialog("close");
 		};
 	}
-	buttons.OK = function () {
+	buttons['<?php echo dol_escape_js($langs->trans("OK")); ?>'] = function () {
 		console.log("We click OK"); $(this).dialog("close"); alink.setAttribute("data-alreadyclicked", "1"); alink.click(); return false;
 	};
 
