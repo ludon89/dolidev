@@ -892,7 +892,7 @@ class Documents extends DolibarrApi
 				require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 				$object = new Contact($this->db);
 				$fetchbyid = true;
-			} elseif ($modulepart == 'societe' || $modulepart == 'company' || $modulepart == 'thirdparty') {
+			} elseif ($modulepart == 'societe' || $modulepart == 'company') {
 				$modulepart = 'societe';
 				require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 				$object = new Societe($this->db);
@@ -948,7 +948,7 @@ class Documents extends DolibarrApi
 
 			// Test on permissions
 			//if ($modulepart != 'ecm') {	// Here $modulepart is always != 'ecm'
-			if ($modulepart == 'societe' || $modulepart == 'company' || $modulepart == 'thirdparty') {
+			if ($modulepart == 'societe' || $modulepart == 'company') {
 				$relativefile = $tmpreldir.dol_sanitizeFileName((string) $object->id);
 			} else {
 				$relativefile = $tmpreldir.dol_sanitizeFileName($object->ref);
