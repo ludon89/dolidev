@@ -949,7 +949,7 @@ class Documents extends DolibarrApi
 			// Test on permissions
 			//if ($modulepart != 'ecm') {	// Here $modulepart is always != 'ecm'
 			if ($modulepart == 'societe' || $modulepart == 'company' || $modulepart == 'thirdparty') {
-				$relativefile = $tmpreldir.dol_sanitizeFileName($object->id);
+				$relativefile = $tmpreldir.dol_sanitizeFileName((string) $object->id);
 			} else {
 				$relativefile = $tmpreldir.dol_sanitizeFileName($object->ref);
 			}
