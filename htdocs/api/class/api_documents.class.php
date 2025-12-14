@@ -135,6 +135,7 @@ class Documents extends DolibarrApi
 	 * @since	18.0.0	Added support for contract and suppliers invoice documents
 	 * @since	19.0.0	Added support for shipment documents
 	 * @since	20.0.0	Added support for mrp documents
+	 * @since	23.0.0	Added support for expense report documents
 	 *
 	 * @param   string  $modulepart		Name of module or area concerned by file download ('thirdparty', 'member', 'proposal', 'supplier_proposal', 'order', 'supplier_order', 'invoice', 'supplier_invoice', 'shipment', 'project',  ...)
 	 * @param   string  $original_file  Relative path with filename, relative to modulepart (for example: IN201701-999/IN201701-999.pdf).
