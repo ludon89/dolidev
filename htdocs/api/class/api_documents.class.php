@@ -135,6 +135,7 @@ class Documents extends DolibarrApi
 	 * @since	18.0.0	Added support for contract and suppliers invoice documents
 	 * @since	19.0.0	Added support for shipment documents
 	 * @since	20.0.0	Added support for mrp documents
+	 * @since	23.0.0	Added support for expense report documents
 	 * @since	23.0.0	Added support for product documents
 	 *
 	 * @param   string  $modulepart		Name of module or area concerned by file download ('thirdparty', 'member', 'proposal', 'supplier_proposal', 'order', 'supplier_order', 'invoice', 'supplier_invoice', 'shipment', 'project',  ...)
@@ -300,6 +301,15 @@ class Documents extends DolibarrApi
 
 			if ($result <= 0) {
 				throw new RestException(500, 'Error generating document missing doctemplate parameter');
+			}
+		} elseif ($modulepart == 'expensereport') {
+			require_once DOL_DOCUMENT_ROOT.'/expensereport/class/expensereport.class.php';
+
+			$tmpobject = new ExpenseReport($this->db);
+			$result = $tmpobject->fetch(0, preg_replace('/\.[^\.]+$/', '', basename($original_file)));
+
+			if (!$result) {
+				throw new RestException(404, 'Exepnse report not found');
 			}
 		} elseif ($modulepart == 'product') {
 			require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
