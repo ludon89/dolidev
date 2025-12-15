@@ -956,13 +956,12 @@ class FormMail extends Form
 				// Add lines substitution key from each line
 				$lines = '';
 				$defaultlines = $arraydefaultmessage->content_lines;
-				$linesisstructuredhtml = false;
 				if (!empty($defaultlines) && dol_textishtml($defaultlines) && preg_match('/<\\s*(tr|td|th|table|tbody|thead|tfoot|ul|ol|li)\\b/i', $defaultlines)) {
 					$linesisstructuredhtml = true;
 					}
 				if (isset($defaultlines)) {
 					foreach ($this->substit_lines as $substit_line) {
-					$lines .= make_substitutions($defaultlines, $substit_line)."\n";
+						$lines .= make_substitutions($defaultlines, $substit_line)."\n";
 					}
 				}
 				$this->substit['__LINES__'] = $lines;
