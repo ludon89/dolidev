@@ -114,3 +114,8 @@ Scope is the web application (backoffice) and the APIs.
 * Invalid or missing SPF (Sender Policy Framework) records (Incomplete or missing SPF/DKIM/DMARC)
 * Physical or social engineering attempts or issues that require physical access to a victim’s computer/device
 * Vulnerabilities of type XSS exploited by using javascript into a website page of the website module or by using php code into a website page (being able to set javascript or php code is the expected behaviour in the website module), except if the user does not have the permission to edit page or php code.
+
+
+## Be informed of a new vulnerability
+
+You can get more information on how to be informed on a new vulnerability on the page [https://wiki.dolibarr.org/index.php/Informations_s%C3%A9curit%C3%A9](https://wiki.dolibarr.org/index.php/Security_information)
