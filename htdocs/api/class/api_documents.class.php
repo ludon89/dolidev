@@ -343,6 +343,22 @@ class Documents extends DolibarrApi
 			if ($result <= 0) {
 				throw new RestException(500, 'Error generating document missing doctemplate parameter');
 			}
+		} elseif ($modulepart == 'fichinter' || $modulepart == 'intervention') {
+			require_once DOL_DOCUMENT_ROOT . '/fichinter/class/fichinter.class.php';
+
+			$tmpobject = new Fichinter($this->db);
+			$result = $tmpobject->fetch(0, preg_replace('/\.[^\.]+$/', '', basename($original_file)));
+
+			if (!$result) {
+				throw new RestException(404, 'Intervention not found');
+			}
+
+			$templateused = $doctemplate ? $doctemplate : $tmpobject->model_pdf;
+			$result = $tmpobject->generateDocument($templateused, $outputlangs, $hidedetails, $hidedesc, $hideref);
+
+			if ($result <= 0) {
+				throw new RestException(500, 'Error generating document');
+			}
 		} else {
 			throw new RestException(403, 'Generation not available for this modulepart');
 		}
