@@ -709,6 +709,19 @@ class Documents extends DolibarrApi
 				throw new RestException(404, 'Contact not found');
 			}
 			$upload_dir = $conf->societe->multidir_output[$object->entity ?? $conf->entity] . "/contact/" . get_exdir(0, 0, 0, 1, $object, 'contact');
+		} elseif ($modulepart == 'stock') {
+			require_once DOL_DOCUMENT_ROOT.'/product/stock/class/entrepot.class.php';
+
+			if (!DolibarrApiAccess::$user->hasRight('stock', 'lire')) {
+				throw new RestException(403);
+			}
+
+			$object = new Entrepot($this->db);
+			$result = $object->fetch($id, $ref);
+			if (!$result) {
+				throw new RestException(404, 'Warehouse not found');
+			}
+			$upload_dir = $conf->stock->multidir_output[$object->entity ?? $conf->entity].'/'.get_exdir(0, 0, 0, 1, $object, 'stock');
 		} else {
 			throw new RestException(500, 'Modulepart '.$modulepart.' not implemented yet.');
 		}
