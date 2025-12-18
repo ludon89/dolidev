@@ -1648,28 +1648,12 @@ class Project extends CommonObject
 	 * @param 	int		$list			0=Return array, 1=Return string list
 	 * @param	int		$socid			0=No filter on third party, id of third party
 	 * @param	string	$filter			Additional filter on project (statut, ref, ...). TODO Use USF syntax here.
-	 * @return 	int[]|string			Array of projects id, or string with projects id separated with "," if list is 1
+	 * @return 	int[]|string			Array of projects id, or string with projects id separated with "," if param list is 1
 	 */
 	public function getProjectsAuthorizedForUser($user, $mode = 0, $list = 0, $socid = 0, $filter = '')
 	{
 		$projects = array();
 		$temp = array();
-
-		$sql = "SELECT ".(($mode == 0 || $mode == 1) ? "DISTINCT " : "")."p.rowid, p.ref";
-		$sql .= " FROM ".MAIN_DB_PREFIX."projet as p";
-		if ($mode == 0) {
-			$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."element_contact as ec ON ec.element_id = p.rowid";
-		} elseif ($mode == 1) {
-			$sql .= ", ".MAIN_DB_PREFIX."element_contact as ec";
-		} // elseif ($mode == 2) {
-		// No filter. Use this if user has permission to see all project
-		// }
-		$sql .= " WHERE p.entity IN (".getEntity('project').")";
-		// Internal users must see project he is contact to even if project linked to a third party he can't see.
-		//if ($socid || ! $user->rights->societe->client->voir)	$sql.= " AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".((int) $socid).")";
-		if ($socid > 0) {
-			$sql .= " AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".((int) $socid).")";
-		}
 
 		// Get id of types of contacts for projects (This list never contains a lot of elements)
 		$listofprojectcontacttype = array();
@@ -1688,17 +1672,26 @@ class Project extends CommonObject
 			$listofprojectcontacttype[0] = '0'; // To avoid syntax error if not found
 		}
 
+
+		$sql = "SELECT p.rowid, p.ref";
+		$sql .= " FROM ".MAIN_DB_PREFIX."projet as p";
+		$sql .= " WHERE p.entity IN (".getEntity('project').")";
+		// Internal users must see project he is contact to even if project is linked to a third party he can't see.
+		//if ($socid || ! $user->rights->societe->client->voir)	$sql.= " AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".((int) $socid).")";
+		if ($socid > 0) {
+			$sql .= " AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".((int) $socid).")";
+		}
+
 		if ($mode == 0) {
-			$sql .= " AND ( p.public = 1";
-			$sql .= " OR ( ec.fk_c_type_contact IN (".$this->db->sanitize(implode(',', array_keys($listofprojectcontacttype))).")";
+			$sql .= " AND (p.public = 1";
+			$sql .= " OR EXISTS (SELECT ec.rowid FROM ".MAIN_DB_PREFIX."element_contact as ec";
+			$sql .= " WHERE ec.element_id = p.rowid AND ec.fk_c_type_contact IN (".$this->db->sanitize(implode(',', array_keys($listofprojectcontacttype))).")";
 			$sql .= " AND ec.fk_socpeople = ".((int) $user->id).")";
-			$sql .= " )";
+			$sql .= ")";
 		} elseif ($mode == 1) {
-			$sql .= " AND ec.element_id = p.rowid";
-			$sql .= " AND (";
-			$sql .= "  ( ec.fk_c_type_contact IN (".$this->db->sanitize(implode(',', array_keys($listofprojectcontacttype))).")";
+			$sql .= " AND EXISTS (SELECT ec.rowid FROM ".MAIN_DB_PREFIX."element_contact as ec";
+			$sql .= " WHERE ec.element_id = p.rowid AND ec.fk_c_type_contact IN (".$this->db->sanitize(implode(',', array_keys($listofprojectcontacttype))).")";
 			$sql .= " AND ec.fk_socpeople = ".((int) $user->id).")";
-			$sql .= " )";
 		} // elseif ($mode == 2) {
 		// No filter. Use this if user has permission to see all project
 		//}
@@ -1712,7 +1705,7 @@ class Project extends CommonObject
 			$sql .= $filter;
 		}
 
-		//print $sql;
+		print $sql;
 
 		$resql = $this->db->query($sql);
 		if ($resql) {
