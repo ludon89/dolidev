@@ -68,7 +68,7 @@
  * DATE
  */
 
-[class*="fieldname_options_"] > input {
+[class*="fieldname_options_"] > input:not([type="radio"]) {
 	width: auto;
 	max-width: none;
 	box-sizing: border-box; /* pour que padding/border ne débordent pas */
