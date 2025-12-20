@@ -4518,7 +4518,7 @@ if ($action == 'create') {
 		if (!getDolGlobalInt('INVOICE_DISABLE_SOURCE')) {
 			print '<tr><td>'.$langs->trans('Source').'</td><td>';
 			print img_picto('', 'question', 'class="pictofixedwidth"');
-			$form->selectInputReason((string) $inputReasonId, 'input_reason_id', '', 1, 'maxwidth200 widthcentpercentminusx');
+			$form->selectInputReason((string) $inputReasonId, 'input_reason_id', '', 1, 'maxwidth250 widthcentpercentminusx');
 			print '</td></tr>';
 		} else {
 			print '<input type="hidden" name="input_reason_id" value="'.((string) $inputReasonId).'">';
@@ -5431,7 +5431,7 @@ if ($action == 'create') {
 			print $form->editfieldkey('Source', 'input_reason', '', $object, (int) $usercancreate);
 			print '</td><td class="valuefield">';
 			if ($action == 'editinput_reason') {
-				$form->formInputReason($_SERVER['PHP_SELF'].'?id='.$object->id, (string) $object->demand_reason_id, 'input_reason_id', 1);
+				$form->formInputReason($_SERVER['PHP_SELF'].'?id='.$object->id, (string) $object->demand_reason_id, 'input_reason_id', 1, 'maxwidth250 widthcentpercentminusx');
 			} else {
 				$form->formInputReason($_SERVER['PHP_SELF'].'?id='.$object->id, (string) $object->demand_reason_id, 'none');
 			}
