@@ -2767,7 +2767,7 @@ if ($num > 0) {
 
 			// Author
 			if (!empty($arrayfields['u.login']['checked'])) {
-				print '<td class="tdoverflowmax125">';
+				print '<td class="tdoverflowmax100">';
 				if ($userstatic->id) {
 					print $userstatic->getNomUrl(-1);
 				} else {
