@@ -198,6 +198,11 @@ if (empty($page) || $page < 0 || GETPOST('button_search', 'alpha') || GETPOST('b
 	// If $page is not defined, or '' or -1 or if we click on clear filters
 	$page = 0;
 }
+
+if ($contextpage == 'poslist' && !GETPOSTISSET('limit')) {
+	$limit = 5;
+}
+
 $offset = $limit * $page;
 if (!$sortorder && getDolGlobalString('INVOICE_DEFAULT_UNPAYED_SORT_ORDER') && $search_status == '1') {
 	$sortorder = getDolGlobalString('INVOICE_DEFAULT_UNPAYED_SORT_ORDER');
