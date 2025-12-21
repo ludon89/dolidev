@@ -11289,10 +11289,10 @@ function dol_htmloutput_mesg($mesgstring = '', $mesgarray = array(), $style = 'o
 	} elseif ($mesgstring && preg_match('/class="warning"/i', $mesgstring)) {
 		$iswarning++;
 	}
-	if ($style == 'error') {
+	if ($style == 'error' || $style == 'errors') {
 		$iserror++;
 	}
-	if ($style == 'warning') {
+	if ($style == 'warning' || $style == 'warnings') {
 		$iswarning++;
 	}
 

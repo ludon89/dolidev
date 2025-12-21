@@ -148,10 +148,10 @@ if ($pay == 'cheque') {
 	$paycode = 'CHQ'; // For backward compatibility
 }
 
-// Retrieve paiementid
+// Retrieve paiementid and paiementcode
 $paiementid = 0;
 if ($paycode) {
-	$sql = "SELECT id FROM ".MAIN_DB_PREFIX."c_paiement";
+	$sql = "SELECT id, code FROM ".MAIN_DB_PREFIX."c_paiement";
 	$sql .= " WHERE entity IN (".getEntity('c_paiement').")";
 	$sql .= " AND code = '".$db->escape($paycode)."'";
 	$resql = $db->query($sql);
@@ -340,18 +340,25 @@ if (empty($reshook)) {
 				// We do not set $payments->multicurrency_amounts because we want payment to be in main currency.
 
 				$payment->paiementid = $paiementid;
+				$payment->paiementcode = $paycode;
 				$payment->num_payment = $invoice->ref;
 
 				if ($pay != "delayed") {
-					$res = $payment->create($user);
+					$res = $payment->create($user);		// This record payment and regenerate the PDF
 					if ($res < 0) {
 						$error++;
-						dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
+						//setEventMessages($payment->error, $payment->errors, 'error');
+						dol_htmloutput_mesg($payment->error, $payment->errors, 'error', 1);
 					} else {
+						//setEventMessages(null, $payment->warnings, 'warnings');
+						if (!empty($payment->warnings)) {
+							dol_htmloutput_mesg(null, $payment->warnings, 'warning', 1);
+						}
+
 						$res = $payment->addPaymentToBank($user, 'payment', '(CustomerInvoicePayment)', $bankaccount, '', '');
 						if ($res < 0) {
 							$error++;
-							dol_htmloutput_errors($langs->trans('ErrorNoPaymentDefined').' '.$payment->error, $payment->errors, 1);
+							dol_htmloutput_mesg($langs->trans('ErrorNoPaymentDefined').' '.$payment->error, $payment->errors, 'error', 1);
 						}
 					}
 					$remaintopay = $invoice->getRemainToPay(); // Recalculate remain to pay after the payment is recorded
