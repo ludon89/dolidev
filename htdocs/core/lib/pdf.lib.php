@@ -2639,10 +2639,14 @@ function pdf_getLinkedObjects(&$object, $outputlangs)
 				$linkedobjects[$objecttype]['date_value'] = dol_print_date($elementobject->date, 'day', '', $outputlangs);
 			}
 		} elseif ($objecttype == 'commande' || $objecttype == 'supplier_order' || $objecttype == 'order_supplier') {
+			$optiontohidelinkedorders = "PDF_HIDE_LINKED_ORDERS_ON_SAME_THIRDPARTY";
+			if ($objecttype == 'supplier_order' || $objecttype == 'order_supplier') {
+				$optiontohidelinkedorders = "PDF_HIDE_LINKED_PURCHASE_ORDERS_ON_SAME_THIRDPARTY";
+			}
 			'@phan-var-force array<Commande|CommandeFournisseur> $objects';
 			$outputlangs->load('orders');
 
-			if (count($objects) > 1 && count($objects) <= getDolGlobalInt("MAXREFONDOC", 10) && !getDolGlobalString("PDF_HIDE_LINKED_OBJECT_IN_PUBLIC_NOTE")) {
+			if (count($objects) > 1 && count($objects) <= getDolGlobalInt("MAXREFONDOC", 10) && !getDolGlobalString($optiontohidelinkedorders)) {
 				if (empty($object->context['DolPublicNoteAppendedGetLinkedObjects'])) { // Check if already appended before add to avoid repeat data
 					$outputList = '';
 					foreach ($objects as $elementobject) {
@@ -2657,7 +2661,7 @@ function pdf_getLinkedObjects(&$object, $outputlangs)
 						$object->note_public = dol_concatdesc($object->note_public, $outputList);
 					}
 				}
-			} elseif (count($objects) == 1) {
+			} elseif (count($objects) == 1 && !getDolGlobalString($optiontohidelinkedorders)) {
 				$elementobject = array_shift($objects);
 				if (canDisplayLinkedObjectInPDF($object, $elementobject)) {
 					$linkedobjects[$objecttype]['ref_title'] = $outputlangs->transnoentities("RefOrder");
