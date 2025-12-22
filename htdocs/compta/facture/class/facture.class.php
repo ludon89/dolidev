@@ -2448,9 +2448,8 @@ class Facture extends CommonInvoice
 	/**
 	 *	Load all detailed lines into this->lines
 	 *
-	 *	@param		int		$only_type_product	Return only for type products
-	 *	@param		int		$loadalsotranslation	Return translation for products
-	 *
+	 *	@param		int|string	$only_type_product		Return only for type products
+	 *	@param		int			$loadalsotranslation	Return translation for products
 	 *	@return     int         1 if OK, < 0 if KO
 	 */
 	public function fetch_lines($only_type_product = '', $loadalsotranslation = 0)
@@ -2519,7 +2518,7 @@ class Facture extends CommonInvoice
 		$sql .= ' LEFT JOIN '.$this->db->prefix().'product as p ON l.fk_product = p.rowid';
 		$sql .= ' WHERE l.fk_facture = '.((int) $this->id);
 		if (is_int($only_type_product)) {
-			$sql .= ' AND p.fk_product_type='.$only_type_product;
+			$sql .= " AND p.fk_product_type = ".((int) $only_type_product);
 		}
 		$sql .= ' ORDER BY l.rang, l.rowid';
 
