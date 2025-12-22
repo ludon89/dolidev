@@ -146,21 +146,39 @@ function getMultidirOutput($object, $module = '', $forobject = 0, $mode = 'outpu
 	}
 
 	// Special case for backward compatibility
-	if ($module == 'fichinter') {
-		$module = 'ficheinter';
-	} elseif ($module == 'invoice_supplier') {
-		$module = 'supplier_invoice';
-	} elseif ($module == 'order_supplier') {
-		$module = 'supplier_order';
-	} elseif ($module == 'recruitmentjobposition') {
-		$module = 'recruitment';
-		$subdirectory = '/recruitmentjobposition';
-	} elseif ($module == 'recruitmentcandidature') {
-		$module = 'recruitment';
-		$subdirectory = '/recruitmentcandidature';
-	} elseif ($module == 'knowledgerecord') {
-		$module = 'knowledgemanagement';
-		$subdirectory = '/knowledgerecord';
+	switch ($module) {
+		case 'fichinter':
+			$module = 'ficheinter';
+			break;
+		case 'invoice_supplier':
+			$module = 'supplier_invoice';
+			break;
+		case 'order_supplier':
+			$module = 'supplier_order';
+			break;
+		case 'recruitmentjobposition':
+			$module = 'recruitment';
+			$subdirectory = '/recruitmentjobposition';
+			break;
+		case 'recruitmentcandidature':
+			$module = 'recruitment';
+			$subdirectory = '/recruitmentcandidature';
+			break;
+		case 'knowledgerecord':
+			$module = 'knowledgemanagement';
+			$subdirectory = '/knowledgerecord';
+			break;
+		case 'service':
+		case 'produit':
+			$module = 'product';
+			break;
+		case 'action':
+		case 'actioncomm':
+		case 'event':
+			$module = 'agenda';
+			break;
+		default:
+			break;
 	}
 
 	// Get the relative path of directory
