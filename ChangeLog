@@ -220,7 +220,6 @@ The following changes may create regressions for some external modules, but were
 FIX: $param is the 5th parameter of print_liste_field_titre ($moreparam) (#36250)
 FIX: 17.0: perweek.php resets task progress to 0% when: (#36401)
 FIX: 18.0: GETPOSTDATE and buildParamDate assumed HTTP param names 'minute' and 'second' instead of 'min' and 'sec'
-FIX: 18.0: `GETPOSTDATE()` and `buildParamDate()` assumed wrong HTTP param names
 FIX: 19.0 - attachments upload dir for invoices not always determined correctly (doesn't always take multi-entity into account) (#36302)
 FIX: #33148 - partial payments are taken into account in EPC QR codes (#36338)
 FIX: #33899 API Timespent Service Field
