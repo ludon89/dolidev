@@ -7401,7 +7401,10 @@ input.select2-input {
 	<?php } ?>
 }
 
-.blockvmenusearch .select2-container--default .select2-selection--single,
+.blockvmenusearch .select2-container--default .select2-selection--single
+{
+	/* background-color: var(--colorbackvmenu1); */
+}
 .blockvmenubookmarks .select2-container--default .select2-selection--single
 {
 	background-color: var(--colorbackvmenu1);
