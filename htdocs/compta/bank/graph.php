@@ -123,7 +123,7 @@ if ($result < 0) {
 	if ($resql) {
 		$num = $db->num_rows($resql);
 		$obj = $db->fetch_object($resql);
-		$min = $db->jdate($obj->min);
+		$min = dol_get_first_hour($db->jdate($obj->min));
 		$max = dol_get_last_hour($db->jdate($obj->max));
 	} else {
 		dol_print_error($db);
