@@ -862,13 +862,9 @@ if ($num > 0) {
 			}
 			// Ref
 			if (!empty($arrayfields['d.ref']['checked'])) {
-				print '<td>';
-				print '<table class="nobordernopadding"><tr class="nocellnopadd">';
-				print '<td class="nobordernopadding nowrap">';
+				print '<td class="tdoverflowmax150">';
 				print $expensereportstatic->getNomUrl(1);
-				print '</td>';
 				// Warning late icon and note
-				print '<td class="nobordernopadding nowrap">';
 				if ($expensereportstatic->status == 2 && $expensereportstatic->hasDelay('toapprove')) {
 					print img_warning($langs->trans("Late"));
 				}
@@ -880,14 +876,10 @@ if ($num > 0) {
 					print '<a href="'.DOL_URL_ROOT.'/expensereport/note.php?id='.$obj->rowid.'">'.img_picto($langs->trans("ViewPrivateNote"), 'object_generic').'</a>';
 					print '</span>';
 				}
-				print '</td>';
-				print '<td width="16" class="nobordernopadding hideonsmartphone right">';
 				$filename = dol_sanitizeFileName($obj->ref);
 				$filedir = $conf->expensereport->dir_output.'/'.dol_sanitizeFileName($obj->ref);
 				$urlsource = $_SERVER['PHP_SELF'].'?id='.$obj->rowid;
 				print $formfile->getDocumentsLink($expensereportstatic->element, $filename, $filedir);
-				print '</td>';
-				print '</tr></table>';
 				print '</td>';
 				if (!$i) {
 					$totalarray['nbfield']++;
