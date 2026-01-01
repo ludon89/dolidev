@@ -230,7 +230,7 @@ class modBlockedLog extends DolibarrModules
 
 		// Add first entry in unalterable Log to track that module was activated
 		$action = 'MODULE_SET';
-		$result = $b->setObjectData($object, $action, 0);
+		$result = $b->setObjectData($object, $action, 0, $user, null);
 
 		if ($result < 0) {
 			$this->error = $b->error;
@@ -274,7 +274,7 @@ class modBlockedLog extends DolibarrModules
 		$object->label = 'Module disabled';
 
 		$b = new BlockedLog($this->db);
-		$result = $b->setObjectData($object, 'MODULE_RESET', 0);
+		$result = $b->setObjectData($object, 'MODULE_RESET', 0, $user, null);
 		if ($result < 0) {
 			$this->error = $b->error;
 			$this->errors = $b->errors;

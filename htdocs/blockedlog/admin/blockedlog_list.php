@@ -163,10 +163,20 @@ if (GETPOST('downloadcsv', 'alpha')) {
 		setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Year")), null, "errors");
 		$error++;
 	} else {
+		$dates = dol_get_first_day(GETPOSTINT('yeartoexport'), GETPOSTINT('monthtoexport') > 0 ? GETPOSTINT('monthtoexport') : 1);
+		$datee = dol_get_last_day(GETPOSTINT('yeartoexport'), GETPOSTINT('monthtoexport') > 0 ? GETPOSTINT('monthtoexport') : 12);
+
+		if ($datee >= dol_now()) {
+			setEventMessages($langs->trans("ErrorPeriodMustBePastToAllowExport"), null, "errors");
+			$error++;
+		}
+
 		// Get the ID of the first line qualified
-		$sql = "SELECT rowid,date_creation,tms,user_fullname,action,amounts,element,fk_object,date_object,ref_object,signature,fk_user,object_data";
+		$sql = "SELECT rowid, date_creation, tms, user_fullname, action, amounts, amounts_taxexcl, element, fk_object, date_object, ref_object, signature, fk_user, object_data";
 		$sql .= " FROM ".MAIN_DB_PREFIX."blockedlog";
 		$sql .= " WHERE entity = ".((int) $conf->entity);
+		// For unalterable log, we are using the date of creation of the log. Note that a bookkeeper may decide to dispatch an invoice
+		// on different periods for example to manage depreciation.
 		if (GETPOSTINT('monthtoexport') > 0 || GETPOSTINT('yeartoexport') > 0) {
 			$dates = dol_get_first_day(GETPOSTINT('yeartoexport'), GETPOSTINT('monthtoexport') ? GETPOSTINT('monthtoexport') : 1);
 			$datee = dol_get_last_day(GETPOSTINT('yeartoexport'), GETPOSTINT('monthtoexport') ? GETPOSTINT('monthtoexport') : 12);
@@ -207,7 +217,7 @@ if (GETPOST('downloadcsv', 'alpha')) {
 		$object->label = 'Export unalterable logs - Period: year='.GETPOSTINT('yeartoexport').(GETPOSTINT('monthtoexport') ? ' month='.GETPOSTINT('monthtoexport') : '');
 
 		$action = 'BLOCKEDLOG_EXPORT';
-		$result = $b->setObjectData($object, $action, 0, $user);
+		$result = $b->setObjectData($object, $action, 0, $user, null);
 		//var_dump($b); exit;
 
 		if ($result < 0) {
@@ -225,7 +235,7 @@ if (GETPOST('downloadcsv', 'alpha')) {
 
 	if (!$error) {
 		// Now restart request with all data, si without the limit(1) in sql request
-		$sql = "SELECT rowid, date_creation, tms, user_fullname, action, amounts, element, fk_object, date_object, ref_object,";
+		$sql = "SELECT rowid, date_creation, tms, user_fullname, action, amounts, amounts_taxexcl, element, fk_object, date_object, ref_object,";
 		$sql .= " signature, fk_user, object_data, object_version, object_format, debuginfo";
 		$sql .= " FROM ".MAIN_DB_PREFIX."blockedlog";
 		$sql .= " WHERE entity = ".((int) $conf->entity);
@@ -274,8 +284,8 @@ if (GETPOST('downloadcsv', 'alpha')) {
 
 				$block_static->date_creation = $db->jdate($obj->date_creation);		// TODO Use gmt
 
-				$block_static->amounts = (float) $obj->amounts;						// Database store value with 8 digits, we cut ending 0 them with (flow)
-				$block_static->vat = $obj->vat;
+				$block_static->amounts_taxexcl = (float) $obj->amounts_taxexcl;		// Database store value with 8 digits, we cut ending 0 them with (float)
+				$block_static->amounts = (float) $obj->amounts;						// Database store value with 8 digits, we cut ending 0 them with (float)
 
 				$block_static->action = $obj->action;
 				$block_static->date_object = $db->jdate($obj->date_object);			// TODO Use gmt ?
