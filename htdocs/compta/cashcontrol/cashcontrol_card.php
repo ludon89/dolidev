@@ -119,6 +119,7 @@ $permissiontodelete = ($user->hasRight("cashdesk", "run") || $user->hasRight("ta
 /*
  * Actions
  */
+
 $error = 0;
 
 if (empty($backtopage)) {
