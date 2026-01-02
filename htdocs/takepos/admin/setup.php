@@ -147,7 +147,8 @@ print load_fiche_titre($langs->trans("CashDeskSetup").' (TakePOS)', $linkback, '
 
 
 if (in_array($mysoc->country_code, array('FR'))) {
-	$htmltext = $langs->trans("CashRegisterAlertFR", $langs->transnoentitiesnoconv("Bank"), $langs->transnoentitiesnoconv("CashControl")).'<br>';
+	$htmltext = $langs->trans("CashRegisterAlertFR", $langs->transnoentitiesnoconv("Bank"), $langs->transnoentitiesnoconv("CashControl")).' ';
+	$htmltext .= $langs->trans("CashRegisterAlertFR2").'<br>';
 	print info_admin($htmltext, 0, 0, 'warning');
 }
 
