@@ -77,15 +77,16 @@ class BlockedLog
 	public $amounts_taxexcl = null;
 
 	/**
-	 * @var float|string|null
-	 */
-	public $vat = null;
-
-	/**
 	 * trigger action
 	 * @var string
 	 */
 	public $action = '';
+
+	/**
+	 * Module source
+	 * @var string
+	 */
+	public $module_source = '';
 
 	/**
 	 * @var string $linktype. Example 'paymentofinvoice'
@@ -532,8 +533,10 @@ class BlockedLog
 			'@phan-var-force Subscription $object';
 			$this->date_object = $object->dateh;
 		} elseif ($object->element == 'cashcontrol') {
+			/** var CashControl $object */
 			'@phan-var-force CashControl $object';
 			$this->date_object = $object->date_creation;
+			$this->module_source = $object->posmodule;
 		} elseif (property_exists($object, 'date')) {
 			// Generic case
 			$this->date_object = $object->date; // @phan-suppress-current-line PhanUndeclaredProperty
@@ -552,6 +555,7 @@ class BlockedLog
 					$this->linktype = 'credit_note_of';
 					$this->linktoref = $invoice->ref;
 				}
+				//$this->module_source = $invoice->module_source;
 			}
 		}
 		if ($object->element == 'facture') {
@@ -563,6 +567,7 @@ class BlockedLog
 					$this->linktype = 'credit_note_of';
 					$this->linktoref = $invoice->ref;
 				}
+				$this->module_source = $invoice->module_source;
 			}
 		}
 
@@ -1033,7 +1038,7 @@ class BlockedLog
 			return -1;
 		}
 
-		$sql = "SELECT b.rowid, b.date_creation, b.signature, b.amounts_taxexcl, b.amounts, b.action, b.element, b.fk_object, b.entity,";
+		$sql = "SELECT b.rowid, b.date_creation, b.signature, b.amounts_taxexcl, b.amounts, b.action, b.module_source, b.element, b.fk_object, b.entity,";
 		$sql .= " b.certified, b.tms, b.fk_user, b.user_fullname, b.date_object, b.ref_object, b.object_data, b.object_version, b.object_format";
 		$sql .= " FROM ".MAIN_DB_PREFIX."blockedlog as b";
 		if ($id) {
@@ -1050,10 +1055,11 @@ class BlockedLog
 				$this->date_creation 	= $this->db->jdate($obj->date_creation);	// jdate(date_creation)is UTC
 				$this->date_modification = $this->db->jdate($obj->tms);				// jdate(tms) is UTC
 
+				$this->action 			= $obj->action;
+				$this->module_source	= $obj->module_source;
+
 				$this->amounts_taxecl	= (is_null($obj->amounts_taxexcl) ? null : (float) $obj->amounts);
 				$this->amounts			= (float) $obj->amounts;
-				$this->action 			= $obj->action;
-				$this->element			= $obj->element;
 
 				$this->fk_object = $obj->fk_object;
 				$this->date_object = $this->db->jdate($obj->date_object);			// jdate(date_object) is UTC
@@ -1065,6 +1071,8 @@ class BlockedLog
 				$this->object_data = $this->dolDecodeBlockedData($obj->object_data);
 				$this->object_version = $obj->object_version;
 				$this->object_format = $obj->object_format;
+
+				$this->element			= $obj->element;
 
 				$this->signature		= $obj->signature;
 				$this->certified		= ($obj->certified == 1);
@@ -1225,6 +1233,7 @@ class BlockedLog
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."blockedlog (";
 		$sql .= " date_creation,";
 		$sql .= " action,";
+		$sql .= " module_source,";
 		$sql .= " amounts_taxexcl,";
 		$sql .= " amounts,";
 		$sql .= " signature,";
@@ -1243,6 +1252,7 @@ class BlockedLog
 		$sql .= ") VALUES (";
 		$sql .= "'".$this->db->idate($this->date_creation)."',";
 		$sql .= "'".$this->db->escape($this->action)."',";
+		$sql .= "'".$this->db->escape((string) $this->module_source)."',";
 		$sql .= (is_null($this->amounts_taxexcl) ? "null" : (float) $this->amounts_taxexcl).",";
 		$sql .= (float) $this->amounts.",";
 		$sql .= "'".$this->db->escape($this->signature)."',";
@@ -1361,7 +1371,7 @@ class BlockedLog
 			return $this->date_creation.'|'.$this->action.'|'.$this->amounts.'|'.$this->ref_object.'|'.$this->date_object.'|'.$this->user_fullname;
 		} elseif ($this->object_format == 'V2') {
 			$s = $this->entity;
-			$s .= '|'.$this->date_creation.'|'.$this->action.'|'.$this->amounts_taxexcl.'|'.$this->amounts.'|'.$this->ref_object.'|'.$this->date_object.'|'.$this->user_fullname;
+			$s .= '|'.$this->date_creation.'|'.$this->action.'|'.$this->module_source.'|'.$this->amounts_taxexcl.'|'.$this->amounts.'|'.$this->ref_object.'|'.$this->date_object.'|'.$this->user_fullname;
 			$s .= '|'.(string) $this->linktoref;
 			$s .= '|'.(string) $this->linktype;
 			return $s;
