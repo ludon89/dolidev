@@ -629,6 +629,7 @@ if (getDolGlobalString('BLOCKEDLOG_SCAN_ALL_FOR_LOWERIDINERROR')) {
 	}
 }
 
+$refinvoicefound = array();
 $totalhtamount = array();
 $totalvatamount = array();
 $totalamount = array();
@@ -696,9 +697,9 @@ if (is_array($blocks)) {
 
 			//$tmpobj = json_decode($block->object_data);
 
-			// Define $totalhtamount, $totalvatamount, $totalamount for $block->action event code
+			// Define $totalhtamount, $totalvatamount, $totalamount for $block action code and module
 			$total_ht = $total_vat = $total_ttc = 0;
-			sumAmountsForUnalterableEvent($block, $totalhtamount, $totalvatamount, $totalamount, $total_ht, $total_vat, $total_ttc);
+			sumAmountsForUnalterableEvent($block, $refinvoicefound, $totalhtamount, $totalvatamount, $totalamount, $total_ht, $total_vat, $total_ttc);
 
 			// Amount
 			print '<td class="right nowraponall">';
@@ -773,6 +774,7 @@ if (is_array($blocks)) {
 		}
 	}
 
+	// Show total line
 	if ($nbshown == 0) {
 		$colspan = 11;
 		if (getDolGlobalString('MAIN_FEATURES_LEVEL') > 0) {	// If in experimental or develop mode, we add some debug information. It may help developers to find origin of bugs.
@@ -811,7 +813,7 @@ if (is_array($blocks)) {
 				// Amount (HT)
 				print '<td class="right nowraponall">';
 				$totalhttoshow = 0;
-				foreach ($totalhtamount[$key] as $value) {
+				foreach ($totalhtamount[$key] as $value) {	// Loop on each module
 					$totalhttoshow += $value;
 				}
 				print $langs->trans("HT").': ';
