@@ -196,7 +196,7 @@ if (GETPOST('action') == 'export' && $user->hasRight('blockedlog', 'read')) {		/
 		$periodnotcomplete = 1;
 	}
 
-	$suffixperiod = ($periodnotcomplete ? 'NOTCOMPLETE' : 'DONOTMODIFY');
+	$suffixperiod = ($periodnotcomplete ? 'INCOMPLETE' : 'DONOTMODIFY');
 
 	if (!$error) {
 		// Get the ID of the first line qualified
