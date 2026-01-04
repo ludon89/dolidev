@@ -234,7 +234,7 @@ if ($action == "valid" && $permissiontoadd) {	// validate = close
 	$object->card = (float) price2num(GETPOST('card_amount', 'alpha'));
 	$object->cheque = (float) price2num(GETPOST('cheque_amount', 'alpha'));
 
-	// TODO Add pepetual amount
+	// TODO Add perpetual amount
 
 
 	$result = $object->update($user);
@@ -777,10 +777,16 @@ if (empty($action) || $action == "view" || $action == "close") {
 		print '<tr><td valign="middle">'.$langs->trans("InitialBankBalance").' - '.$langs->trans("Cash").'</td><td>';
 		print '<span class="amount">'.price($object->opening, 0, $langs, 1, -1, -1, $conf->currency).'</span>';
 		print "</td></tr>";
-		foreach ($arrayofpaymentmode as $key => $val) {
-			print '<tr><td valign="middle">'.$langs->trans($val).'</td><td>';
-			print '<span class="amount">'.price($object->$key, 0, $langs, 1, -1, -1, $conf->currency).'</span>';
-			print "</td></tr>";
+
+		if ($object->status == $object::STATUS_CLOSED) {
+			foreach ($arrayofpaymentmode as $key => $val) {
+				$realamountforpaymentmode = $object->$key;
+				print '<tr><td valign="middle">'.$langs->trans($val).'</td><td>';
+				if ($realamountforpaymentmode) {
+					print '<span class="amount">'.price($realamountforpaymentmode, 0, $langs, 1, -1, -1, $conf->currency).'</span>';
+				}
+				print "</td></tr>";
+			}
 		}
 
 		print "</table>\n";
