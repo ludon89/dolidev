@@ -396,7 +396,7 @@ if ($action == "valid" && $permissiontoadd) {	// validate = close
 	if ($resql) {
 		$obj = $db->fetch_object($resql);
 		if ($obj) {
-			$firstrecorddate = $obj->date_creation;
+			$firstrecorddate = $db->jdate($obj->date_creation);
 		}
 	}
 	if ($firstrecorddate) {
