@@ -295,8 +295,10 @@ class BlockedLog
 				$sep++;
 				$this->trackedevents['separator_'.$sep] = array('id' => 'separator_'.$sep, 'label' => '----------', 'labelhtml' => '<span class="opacitymedium">-----   '.$langs->trans("CashControl").'</span>', 'disabled' => 1);
 			}
-
-			$this->trackedevents['CASHCONTROL_VALIDATE'] = array('id' => 'CASHCONTROL_VALIDATE', 'label' => 'logCASHCONTROL_VALIDATE', 'labelhtml' => img_picto('', 'pos', 'class="pictofixedwidth").').$langs->trans('logCASHCONTROL_VALIDATE'));
+			if (getDolGlobalString('BLOCKEDLOG_ADD_OLD_CASHCONTROL_VALIDATE')) {
+				$this->trackedevents['CASHCONTROL_VALIDATE'] = array('id' => 'CASHCONTROL_VALIDATE', 'label' => 'logCASHCONTROL_VALIDATE', 'labelhtml' => img_picto('', 'pos', 'class="pictofixedwidth").').$langs->trans('logCASHCONTROL_VALIDATE'));
+			}
+			$this->trackedevents['CASHCONTROL_CLOSE'] = array('id' => 'CASHCONTROL_CLOSE', 'label' => 'logCASHCONTROL_CLOSE', 'labelhtml' => img_picto('', 'pos', 'class="pictofixedwidth").').$langs->trans('logCASHCONTROL_CLOSE'));
 		}
 
 		// Add more action to track from a conf variable. For the case we want to track other actions into the unalterable log.

@@ -180,3 +180,5 @@ CashControlEndDateMustBeBeforeNow=It is not possible to make a monthly or yearly
 CashControlEndDayMustNotBeInPast=It is not possible to make a daily cash control on a day in the future.
 TheoricalView=Theorical view
 SentOrderToKitchen=Send order to kitchen
+LifetimeAmount=Lifetime amount
+AllTerminals=All terminals
