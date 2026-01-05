@@ -865,10 +865,10 @@ class BlockedLog
 					if (property_exists($tmpobject, 'module_source')) {
 						if (is_null($originofpayment)) {
 							$originofpayment = $tmpobject->module_source;
-						} elseif ($originofpayment != $invoice->module_source) {
+						} elseif ($originofpayment != $tmpobject->module_source) {
 							$originofpayment = 'mix';	// the payment is on several invoices with different origins
 						} else {
-							$originofpayment = (string) $invoice->module_source;
+							$originofpayment = (string) $tmpobject->module_source;
 						}
 					}
 
