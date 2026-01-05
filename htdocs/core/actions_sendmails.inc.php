@@ -446,6 +446,14 @@ if (($action == 'send' || $action == 'relance') && !GETPOST('addfile') && !GETPO
 							$object->sendtouserid = $sendtouserid;
 						}
 
+						// TODO Fix this: Such properties does not exists on all objects
+						$object->context['email_msgid'] = $mailfile->msgid;
+						$object->context['email_from'] = $from;
+						$object->context['email_subject'] = $subject;
+						$object->context['email_to'] = $sendto;
+						$object->context['email_tocc'] = $sendtocc;
+						$object->context['email_tobcc'] = $sendtobcc;
+
 						$object->email_msgid = $mailfile->msgid; // @todo Set msgid into $mailfile after sending
 						$object->email_from = $from;
 						$object->email_subject = $subject;

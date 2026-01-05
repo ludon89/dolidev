@@ -762,6 +762,13 @@ class BlockedLog
 			if (!empty($object->newref)) {
 				$this->object_data->ref = $object->newref;
 			}
+
+			// Information on email
+			$this->object_data->action_email_sent = array(
+				"email_from" => $object->context['email_from'],
+				"email_to" => $object->context['email_to'],
+				"email_msgid" => $object->context['email_msgid']
+			);
 		} elseif ($this->element == 'invoice_supplier') {
 			'@phan-var-force FactureFournisseur $object';
 			foreach ($object as $key => $value) {
