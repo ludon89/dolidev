@@ -682,7 +682,7 @@ class BlockedLog
 		// Field specific to object
 		if ($this->element == 'facture') {
 			'@phan-var-force Facture $object';
-			$this->module_source = $object->module_source;
+			$this->module_source = (string) $object->module_source;
 
 			foreach ($object as $key => $value) {
 				if (in_array($key, $arrayoffieldstoexclude)) {

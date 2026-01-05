@@ -421,6 +421,8 @@ if (($action == 'send' || $action == 'relance') && !GETPOST('addfile') && !GETPO
 				if ($result) {
 					// Initialisation of datas of object to call trigger
 					if (is_object($object)) {
+						$db->begin();	// Transaction for post action must start after sending email to avoid lock when sending email that may be long
+
 						if (empty($actiontypecode)) {
 							$actiontypecode = 'AC_OTH_AUTO'; // Event inserted into agenda automatically
 						}
@@ -454,10 +456,15 @@ if (($action == 'send' || $action == 'relance') && !GETPOST('addfile') && !GETPO
 						// Call of triggers (you should have set $triggersendname to execute trigger.
 						if (!empty($triggersendname)) {
 							if ($triggersendname == 'BILL_SENTBYMAIL' && $object instanceof Facture) {
+								/* @var Facture $object */
+
 								// If sending email for invoice, we increase the counter of invoices sent by email
 								$sql = "UPDATE ".MAIN_DB_PREFIX."facture SET email_sent_counter = email_sent_counter + 1";
 								$sql .= " WHERE rowid = ".((int) $object->id);
+
 								$db->query($sql);
+
+								$object->email_sent_counter = $object->email_sent_counter + 1;
 							}
 
 							$result = $object->call_trigger($triggersendname, $user);  // @phan-suppress-current-line PhanPossiblyUndeclaredGlobalVariable
@@ -469,6 +476,12 @@ if (($action == 'send' || $action == 'relance') && !GETPOST('addfile') && !GETPO
 							}
 						}
 						// End call of triggers
+
+						if (!$error) {
+							$db->commit();
+						} else {
+							$db->rollback();
+						}
 					}
 
 					// Redirect here
