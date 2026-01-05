@@ -206,7 +206,7 @@ class BlockedLog
 
 		$sep = 0;
 
-		$this->trackedmodules['0'] = 'None';
+		$this->trackedmodules['0'] = 'None';	// @phan-suppress-current-line PhanTypeMismatchProperty Phan don't want you assign a key '0'.
 		if (isModEnabled('takepos')) {
 			$this->trackedmodules['takepos'] = 'TakePOS';
 		}
