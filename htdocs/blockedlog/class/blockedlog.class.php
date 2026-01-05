@@ -596,7 +596,10 @@ class BlockedLog
 				'name', 'lastname', 'firstname', 'region', 'region_id', 'region_code', 'state', 'state_id', 'state_code', 'country', 'country_id', 'country_code',
 				'total_ht', 'total_tva', 'total_ttc', 'total_localtax1', 'total_localtax2',
 				'barcode_type', 'barcode_type_code', 'barcode_type_label', 'barcode_type_coder', 'mode_reglement_id', 'cond_reglement_id', 'mode_reglement', 'cond_reglement', 'shipping_method_id',
-				'extraparams', 'fk_incoterms', 'fk_user_creat', 'fk_user_valid', 'label_incoterms', 'location_incoterms', 'lines', 'nb', 'tms', 'comments', 'array_options', 'warnings'));
+				'extraparams', 'fk_incoterms', 'fk_user_creat', 'fk_user_valid', 'label_incoterms', 'location_incoterms', 'lines', 'nb', 'tms', 'comments', 'array_options', 'warnings',
+				'opening', 'status', 'date_valid'
+				)
+			);
 		}
 
 		if (!empty($object->thirdparty)) {
