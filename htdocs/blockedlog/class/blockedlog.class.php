@@ -206,7 +206,7 @@ class BlockedLog
 
 		$sep = 0;
 
-		$this->trackedmodules['0'] = 'None';
+		$this->trackedmodules['0'] = 'None';	// @phan-suppress-current-line PhanTypeMismatchProperty Phan don't want you assign a key '0'.
 		if (isModEnabled('takepos')) {
 			$this->trackedmodules['takepos'] = 'TakePOS';
 		}
@@ -774,29 +774,11 @@ class BlockedLog
 
 			// Add data for action emails
 			if ($action == 'BILL_SENTBYMAIL') {
-				$emailobj = new stdClass();
-				$emailobj->email_from = $object->context['email_from'];
-				// $emailobj->email_to = $object->context['email_to'];
-				$emailobj->email_msgid = $object->context['email_msgid'];
-				// $emailobj->email_subject = $object->context['email_subject'];
-
-				$this->object_data->action_email_sent = $emailobj;
-			}
-
-			// Add data for action doc_preview
-			if ($action == 'DOC_PREVIEW') {
-				$docpreviewobj = new stdClass();
-				$docpreviewobj->pos_print_counter = $object->pos_print_counter;
-
-				//$this->object_data->action_doc_preview = $docpreviewobj;
-			}
-
-			// Add data for action doc_download
-			if ($action == 'DOC_DOWNLOAD') {
-				$docdownloadobj = new stdClass();
-				$docdownloadobj->pos_print_counter = $object->pos_print_counter;
-
-				//$this->object_data->action_doc_download = $docdownloadobj;
+				$this->object_data->action_email_sent = array(
+					"email_from" => $object->context['email_from'],
+					"email_to" => $object->context['email_to'],
+					"email_msgid" => $object->context['email_msgid']
+				);
 			}
 		} elseif ($this->element == 'invoice_supplier') {
 			'@phan-var-force FactureFournisseur $object';
