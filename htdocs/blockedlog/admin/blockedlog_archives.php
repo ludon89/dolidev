@@ -141,6 +141,8 @@ $upload_dir = getMultidirOutput($block_static, 'blockedlog').'/archives';
 
 dol_mkdir($upload_dir);
 
+$fh = null;
+
 
 /*
  * Actions
@@ -306,7 +308,7 @@ if (GETPOST('action') == 'export' && $user->hasRight('blockedlog', 'read')) {		/
 
 				$block_static->module_source = $obj->module_source;
 
-				$block_static->amounts_excl = (float) $obj->amounts_excl;			// Database store value with 8 digits, we cut ending 0 them with (flow)
+				$block_static->amounts_taxexcl = (float) $obj->amounts_taxexcl;		// Database store value with 8 digits, we cut ending 0 them with (flow)
 				$block_static->amounts = (float) $obj->amounts;						// Database store value with 8 digits, we cut ending 0 them with (flow)
 
 				$block_static->action = $obj->action;
