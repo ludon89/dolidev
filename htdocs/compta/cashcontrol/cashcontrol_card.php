@@ -159,6 +159,7 @@ $sqlfilteronopdate .= " AND dateo < '".$db->idate((int) $datestart)."'";
 
 
 // Define dates and terminal
+$posmodule = '';
 $terminalid = '';
 $terminaltouse = '';
 if ($action == "create" || $action == "start" || $action == 'valid' || $action == 'close') {
@@ -175,7 +176,7 @@ if ($action == "create" || $action == "start" || $action == 'valid' || $action =
 		$terminalid = GETPOST('posnumber', 'alpha');
 		$terminaltouse = $terminalid;
 
-		if ($terminaltouse == '1' && $posmodule == 'cashdesk') {
+		if ($terminaltouse == '1' && $posmodule == 'cashdesk') {	// for compatibility with an old module
 			$terminaltouse = '';
 		}
 	}
