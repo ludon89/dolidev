@@ -414,4 +414,9 @@ ALTER TABLE llx_pos_cash_fence ADD COLUMN cheque_lifetime double(24,8) DEFAULT n
 
 ALTER TABLE llx_pos_cash_fence ADD COLUMN lifetime_start datetime DEFAULT NULL;
 
+UPDATE llx_cronjob set test = 'getDolDBType() == \'mysqli\'' WHERE label = 'MakeLocalDatabaseDumpShort';
+UPDATE llx_cronjob set test = 'getDolGlobalString(\'MAIN_ALLOW_BACKUP_BY_EMAIL\') && getDolDBType() == \'mysqli\'' WHERE label = 'MakeSendLocalDatabaseDumpShort';
+
+
+
 -- end of migration

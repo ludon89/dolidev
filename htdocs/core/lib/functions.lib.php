@@ -327,6 +327,17 @@ function getDolEntity()
 }
 
 /**
+ * Return the current entity
+ *
+ * @return 	int							Value returned
+ */
+function getDolDBType()
+{
+	global $conf;
+	return $conf->db->type;
+}
+
+/**
  * Return the default context page string
  *
  * @param	string		$s					Page path
@@ -12011,7 +12022,7 @@ function dol_eval_standard($s, $hideerrors = 1, $onlysimplestring = '1')
 
 		// Set $dolibarr_main_restrict_eval_methods_array
 		if (!isset($dolibarr_main_restrict_eval_methods)) {
-			$dolibarr_main_restrict_eval_methods = 'getDolGlobalString, getDolGlobalInt, getDolCurrency, fetchNoCompute, hasRight, isAdmin, isModEnabled, isStringVarMatching, abs, min, max, round, dol_now, preg_match';
+			$dolibarr_main_restrict_eval_methods = 'getDolGlobalString, getDolGlobalInt, getDolCurrency, getDolEntity, getDolDBType, fetchNoCompute, hasRight, isAdmin, isModEnabled, isStringVarMatching, abs, min, max, round, dol_now, preg_match';
 		}
 		//print '$dolibarr_main_restrict_eval_methods = '.$dolibarr_main_restrict_eval_methods."\n";
 		$dolibarr_main_restrict_eval_methods_array = explode(',', str_replace(" ", "", $dolibarr_main_restrict_eval_methods));
