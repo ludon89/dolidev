@@ -1600,7 +1600,7 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 		}
 
 		$sql = "SELECT t.rowid, t.fk_element, t.element_date, t.element_datehour, t.element_date_withhour, t.element_duration, t.fk_user, t.note, t.thm,";
-		$sql .= " t.fk_product,";
+		$sql .= " t.fk_product, t.import_key, t.datec, t.tms";
 		$sql .= " pt.rowid as taskid, pt.ref, pt.label, pt.fk_projet,";
 		$sql .= " u.lastname, u.firstname, u.login, u.photo, u.gender, u.statut as user_status,";
 		$sql .= " il.fk_facture as invoice_id, inv.fk_statut,";
@@ -1771,9 +1771,9 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 
 			$i = 0;
 			while ($i < $num) {
-				$row = $db->fetch_object($resql);
+				$obj = $db->fetch_object($resql);
 
-				$tasks[$i] = $row;
+				$tasks[$i] = $obj;
 
 				$i++;
 			}
@@ -1883,7 +1883,7 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 			print $formother->select_percent(GETPOST('progress') ? GETPOST('progress') : $object->progress, 'progress', 0, 5, 0, 100, 1);
 			print '</td>';
 
-			// Invoiced
+			// Billed
 			if (!getDolGlobalString('PROJECT_HIDE_TASKS') && getDolGlobalString('PROJECT_BILL_TIME_SPENT')) {
 				print '<td>';
 				print '</td>';
@@ -2025,6 +2025,10 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 		if (!empty($arrayfields['t.fk_product']['checked'])) {
 			print '<td class="liste_titre right"></td>';
 		}
+		// Last modification
+		if (!empty($arrayfields['t.tms']['checked'])) {
+			print '<td class="liste_titre right"></td>';
+		}
 		// Value in main currency
 		if (!empty($arrayfields['value']['checked'])) {
 			print '<td class="liste_titre"></td>';
@@ -2109,6 +2113,10 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 		}
 		if (!empty($arrayfields['t.fk_product']['checked'])) {
 			print_liste_field_titre($arrayfields['t.fk_product']['label'], $_SERVER['PHP_SELF'], 't.fk_product', '', $param, '', $sortfield, $sortorder);
+			$totalarray['nbfield']++;
+		}
+		if (!empty($arrayfields['t.tms']['checked'])) {
+			print_liste_field_titre($arrayfields['t.tms']['label'], $_SERVER['PHP_SELF'], 't.tms', '', $param, '', $sortfield, $sortorder);
 			$totalarray['nbfield']++;
 		}
 
@@ -2458,6 +2466,13 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 				}
 			}
 
+			// Last modification
+			if (!empty($arrayfields['t.tms']['checked'])) {
+				print '<td class="nowraponall">';
+				print dol_print_date($task_time->tms, 'dayhour');
+				print '</td>';
+			}
+
 			// Value spent
 			if (!empty($arrayfields['value']['checked'])) {
 				$langs->load("salaries");
@@ -2489,7 +2504,7 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 				}
 			}
 
-			// Invoiced
+			// Billed
 			if (!empty($arrayfields['valuebilled']['checked'])) {
 				print '<td class="center">'; // invoice_id and invoice_line_id
 				if (!getDolGlobalString('PROJECT_HIDE_TASKS') && getDolGlobalString('PROJECT_BILL_TIME_SPENT')) {
@@ -2883,6 +2898,13 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 				// Product
 				if (!empty($arrayfields['t.fk_product']['checked'])) {
 					print '<td class="nowraponall tdoverflowmax125">';
+					print '</td>';
+				}
+
+				// Last modification
+				if (!empty($arrayfields['t.tms']['checked'])) {
+					print '<td class="nowraponall">';
+					print dol_print_date($task_time->tms, 'dayhour');
 					print '</td>';
 				}
 
