@@ -1925,15 +1925,18 @@ function dol_sanitizeFileName($str, $newstr = '_', $unaccent = 1, $includequotes
  *
  *	@param	string	$str            String to clean
  * 	@param	string	$newstr			String to replace bad chars with
- *  @param	int	    $unaccent		1=Remove also accent (default), 0 do not remove them
+ *  @param	int	    $unaccent		1=Remove also accent, 0 do not remove them
  *	@return string          		String cleaned
  *
  * 	@see        	dol_string_nospecial(), dol_string_unaccent(), dol_sanitizeFileName()
  */
-function dol_sanitizePathName($str, $newstr = '_', $unaccent = 1)
+function dol_sanitizePathName($str, $newstr = '_', $unaccent = 0)
 {
 	// List of special chars for filenames in windows are defined on page https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file
-	// Char '>' '<' '|' '$' and ';' are special chars for shells.
+	// Char '>' '<' '|' '$' ';' and '`' are special chars for shells.
+	// Char '?' and '*' are for wild card chars.
+	// Char '"' is dangerous.
+	// Char '°' is just not expected.
 	// Chars '--' can be used into filename to inject special parameters like --use-compress-program to make command with file as parameter making remote execution of command
 	$filesystem_forbidden_chars = array('<', '>', '?', '*', '|', '"', '°', '$', ';', '`');
 
