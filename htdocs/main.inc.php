@@ -75,6 +75,8 @@ require_once 'filefunc.inc.php';
 /**
  * @var ?string $php_session_save_handler
  * @var ?string $dolibarr_main_force_https
+ * @var ?string $dolibarr_main_restrict_ip
+ * @var ?string $dolibarr_nocsrfcheck
  */
 
 // If there is a POST parameter to tell to save automatically some POST parameters into cookies, we do it.
