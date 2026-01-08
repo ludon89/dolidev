@@ -1341,6 +1341,9 @@ class BlockedLog
 					$data .= '&version_full='.urlencode(DOL_VERSION);
 					$data .= '&entity='.(int) $conf->entity;
 
+					$data .= '&lastrowid='.(int) $this->id;
+					$data .= '&lastsignature='.urlencode($this->signature);
+
 					$addheaders = array();
 					$timeoutconnect = 1;
 					$timeoutresponse = 1;

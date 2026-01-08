@@ -142,6 +142,8 @@ function getURLContent($url, $postorget = 'GET', $param = '', $followlocation = 
 				$redir_list["FTPS"] = 1;
 			}
 		}
+	} else {
+		return array('http_code' => 500, 'content' => '', 'curl_error_no' => 1, 'curl_error_msg' => 'Parameter allowedschemes of getURLContent must be an array of protocol schemes');
 	}
 
 	$newtimeoutconnect = ($timeoutconnect ? $timeoutconnect : getDolGlobalInt('MAIN_USE_CONNECT_TIMEOUT', 5));
