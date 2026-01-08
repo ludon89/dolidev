@@ -1707,4 +1707,22 @@ class BlockedLog
 		include_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
 		return isBlockedLogUsed($ignoresystem);
 	}
+
+
+	/**
+	 * Check if module can be disabled.
+	 *
+	 * @return  int<0,1>		0=Can't be disabled, 1=Can be disabled
+	 */
+	public function canBeDisabled()
+	{
+		global $mysoc;
+
+		$canbedisabled = 1;
+		if (isALNEQualifiedVersion() && $mysoc->country_code == 'FR') {
+			$canbedisabled = 0;
+		}
+
+		return $canbedisabled;
+	}
 }
