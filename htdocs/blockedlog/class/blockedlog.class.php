@@ -1321,6 +1321,7 @@ class BlockedLog
 
 				$this->db->commit();
 
+				include_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
 				if (isALNERunningVersion(1) && $mysoc->country_code == 'FR') {
 					// TODO Push last rowid + signature to remote dolibarr server
 					/*
