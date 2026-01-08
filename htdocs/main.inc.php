@@ -3750,7 +3750,10 @@ if (!function_exists("llxFooter")) {
 					// Output code for ping
 					include_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 
-					$arrayofdata = array('action' => 'dolibarrping', 'country_code' => ($mysoc->country_code ? $mysoc->country_code : 'unknown'));
+					$arrayofdata = array(
+						'action' => 'dolibarrping',
+						'country_code' => ($mysoc->country_code ? $mysoc->country_code : 'unknown')
+					);
 					printCodeForPing($constanttosavelastko, $constanttosavefirstok, $arrayofdata, $forceping);
 				} else {
 					$now = dol_now();
