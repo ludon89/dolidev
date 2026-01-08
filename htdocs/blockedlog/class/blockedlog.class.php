@@ -1341,6 +1341,7 @@ class BlockedLog
 						$distrib = $dolibarr_distrib;
 					}
 
+					include_once DOL_DOCUMENT_ROOT.'/core/lib/security.lib.php';
 					$hash_unique_id = dol_hash('dolibarr'.$conf->file->instance_unique_id, 'sha256');	// Note: if the global salt changes, this hash changes too so ping may be counted twice. We don't mind. It is for statistics and inventory purpose only.
 
 					$data = 'hash_algo=dol_hash-sha256';
