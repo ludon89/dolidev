@@ -4402,7 +4402,7 @@ function dol_print_email($email, $contactid = 0, $socid = 0, $addlink = 0, $max 
 		}
 		$newemail .= '</a>';
 
-		include_once DOL_DOCUMENT_ROOT.'/core/class/CMailfile.class.php';
+		include_once DOL_DOCUMENT_ROOT.'/core/class/CMailFile.class.php';
 		$emailonly = CMailFile::getValidAddress($email, 2);
 		if ($showinvalid && !isValidEmail($emailonly)) {
 			$langs->load("errors");
@@ -4434,7 +4434,7 @@ function dol_print_email($email, $contactid = 0, $socid = 0, $addlink = 0, $max 
 	} else {
 		$newemail = ($withpicto ? img_picto($langs->trans("EMail") . ' : ' . $email, (is_numeric($withpicto) ? 'email' : $withpicto), 'class="paddingrightonly"') : '') . $newemail;
 
-		include_once DOL_DOCUMENT_ROOT.'/core/class/CMailfile.class.php';
+		include_once DOL_DOCUMENT_ROOT.'/core/class/CMailFile.class.php';
 		$emailonly = CMailFile::getValidAddress($email, 2);
 		if ($showinvalid && !isValidEmail($emailonly)) {
 			$langs->load("errors");
