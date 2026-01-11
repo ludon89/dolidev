@@ -387,7 +387,7 @@ span.massactionselect, input.inputsearch_dropdownselectedfields {
 
 .liste_titre input, .liste_titre select {
 	border: none;
-	border<?php echo getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT') ? '' : '-bottom'; ?>: solid 1px var(<?php echo getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT') ? '--colorbacktitle1' : '--inputbordercolor'; ?>);
+	border<?php echo getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT') ? '' : '-bottom'; ?>: solid 1px var(<?php echo getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT') ? '--colorbacktitle1' : '--inputbordercolor'; ?>) !important;
 }
 
 .divadvancedsearchfieldcompinput,
@@ -7414,6 +7414,9 @@ input.select2-input {
 .select2-choice {
 	border: none;
 	border-bottom: solid 1px var(--inputbordercolor) !important;	/* required to avoid to lose bottom line when focus is lost on select2. */
+}
+li.select2-selection__choice {
+	white-space: break-spaces;
 }
 .select2-results .select2-highlighted.optionblue {
 	color: #FFF !important;
