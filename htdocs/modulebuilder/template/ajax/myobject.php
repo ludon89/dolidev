@@ -53,6 +53,7 @@ if (!$res && file_exists("../../../main.inc.php")) {
 	$res = @include "../../../main.inc.php";
 }
 if (!$res) {
+	http_response_code(500);
 	die("Include of main fails");
 }
 dol_include_once('/mymodule/class/myobject.class.php');
