@@ -5654,7 +5654,7 @@ div.info, div.warning, div.error, div.green, div.neutral {
 }
 
 div.fiche div.info, div.fiche div.warning, div.fiche div.neutral {
-	box-shadow: 1px 1px 6px #e4e4e4;
+	box-shadow: 1px 1px 6px #d4d4d4;
 	margin: 1em 0em 1.2em 0em;
 }
 
