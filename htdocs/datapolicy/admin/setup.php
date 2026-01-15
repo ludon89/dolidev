@@ -197,7 +197,7 @@ foreach ($arrayofparameters as $title => $tab) {
 		if (!empty($val['config_keys']['anonymize'])) {
 			$selectedvalue = getDolGlobalString($val['config_keys']['anonymize']);
 
-			print Form::selectarray($val['config_keys']['anonymize'], $valTab, $selectedvalue);
+			print Form::selectarray($val['config_keys']['anonymize'], $valTab, $selectedvalue, 0, 0, 0, '', 0, 0, 0, '', 'minwidth100');
 
 			//var_dump($val);
 			$listoffieldsid = '';
@@ -263,7 +263,7 @@ foreach ($arrayofparameters as $title => $tab) {
 			$selectedvalue = getDolGlobalString($val['config_keys']['delete']);
 
 			// Display the dropdown only if a constant key is defined for the 'delete' action.
-			print Form::selectarray($val['config_keys']['delete'], $valTab, $selectedvalue);
+			print Form::selectarray($val['config_keys']['delete'], $valTab, $selectedvalue, 0, 0, 0, '', 0, 0, 0, '', 'minwidth100');
 
 			$sql = $arrayofelem[$logicalKey]['sql_template_delete'];
 			$sql = preg_replace('/__ENTITY__/', (string) (int) $conf->entity, $sql);
