@@ -4153,6 +4153,10 @@ div.tabBar tr.titre td {
 div.fiche table:not(.table-fiche-title) tr.titre td {
 	padding-top: 10px;
 }
+div.fiche >.table-fiche-title tr.toptitle td.col-title,
+div.fiche >form >.table-fiche-title tr.toptitle td.col-title {
+	filter: grayscale(100%);
+}
 
 div.tabBar.tabBarNoTop {
 	padding-top: 0;
