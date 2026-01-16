@@ -67,7 +67,7 @@ if (isModEnabled('blockedlog')) {
 	$s = str_replace('{s}', DOL_URL_ROOT.'/blockedlog/admin/blockedlog_list.php', $s);
 	print '<br>'.$s;
 }
-print'</div><br><br>';
+print'</div><br>';
 
 // Version
 print '<div class="div-table-responsive-no-min">';
@@ -95,7 +95,7 @@ print ' '.$form->textwithpicto('', $htmltooltip);
 print '</td></tr>'."\n";
 print '</table>';
 print '</div>';
-print '<br>';
+print '<br><br>';
 
 
 // Modified or missing files
