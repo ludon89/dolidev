@@ -1115,8 +1115,10 @@ abstract class CommonInvoice extends CommonObject
 		*/
 		if (isset($moreparams['dispute_status']) && $moreparams['dispute_status']) {
 			$labelStatus .= ' - ';
-			if ($moreparams['dispute_status'] == 9) {
-				$labelStatus .= $langs->trans("DisputeClosed");
+			if ($moreparams['dispute_status'] == 8) {
+				$labelStatus .= $langs->trans("DisputeLost");
+			} elseif ($moreparams['dispute_status'] == 9) {
+				$labelStatus .= $langs->trans("DisputeWon");
 			} else {
 				$labelStatus .= $langs->trans("DisputeOpen");
 				$statusType = 'status8';

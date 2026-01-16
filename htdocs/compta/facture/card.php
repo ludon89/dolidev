@@ -5589,9 +5589,9 @@ if ($action == 'create') {
 		}
 		print '</td></tr></table>';
 		print '</td><td>';
+		$liststatus = array('0' => "None", '1' => "DisputeOpen", '8' => "DisputeLost", '9' => "DisputeWon");
 		if ($action != 'editdispute_status') {
 			if ($object->dispute_status) {
-				$liststatus = array('0' => "None", '1' => "DisputeOpen", '9' => "DisputeClosed");
 				print $langs->trans($liststatus[$object->dispute_status]);
 			}
 		} else {
@@ -5600,7 +5600,6 @@ if ($action == 'create') {
 			print '<input type="hidden" name="token" value="'.newToken().'">';
 			print '<input type="hidden" name="id" value="'.$object->id.'">';
 			print '<input type="hidden" name="page_y" value="">';
-			$liststatus = array('0' => $langs->trans("None"), '1' => $langs->trans("DisputeOpen"), '9' => $langs->trans("DisputeClosed"));
 			print $form->selectarray('dispute_status', $liststatus, $object->dispute_status);
 			print '<input type="submit" class="button smallpaddingimp valignmiddle" value="'.$langs->trans("Save").'">';
 			print '</form>';
