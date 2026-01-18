@@ -939,7 +939,6 @@ Don
 ECM
 EmptyMessageNotAllowedError
 ErrorInputRequired
-ErrorLDAPFunctionsAreDisabledOnThisPHP
 ErrorUpdating
 Extra
 FailedToConnectToSFTPAfterSSHAuthentication
