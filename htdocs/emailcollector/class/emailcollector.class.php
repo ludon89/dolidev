@@ -1482,8 +1482,8 @@ class EmailCollector extends CommonObject
 					$fromdate = $this->datelastok;
 				}
 				if ($fromdate > 0) {
-					// $search .= ($search ? ' ' : '').'SINCE '.date('j-M-Y', $fromdate - 1); // SENTSINCE not supported. Date must be X-Abc-9999 (X on 1 digit if < 10)
-					array_push($criteria, array("SINCE" => date('j-M-Y', $fromdate - 1)));	// -1 is to add a security to no forgot some email
+					// IMAP SINCE works by day; keep a 1-day overlap so we don't miss emails left unprocessed (e.g. discarded by filters).
+					array_push($criteria, array("SINCE" => date('j-M-Y', $fromdate - 86400)));
 				}
 				//$search.=($search?' ':'').'SINCE 8-Apr-2022';
 			}
@@ -1624,7 +1624,8 @@ class EmailCollector extends CommonObject
 					$fromdate = $this->datelastok;
 				}
 				if ($fromdate > 0) {
-					$search .= ($search ? ' ' : '').'SINCE '.date('j-M-Y', $fromdate - 1); // SENTSINCE not supported. Date must be X-Abc-9999 (X on 1 digit if < 10)
+					// IMAP SINCE works by day; keep a 1-day overlap so we don't miss emails left unprocessed (e.g. discarded by filters).
+					$search .= ($search ? ' ' : '').'SINCE '.date('j-M-Y', $fromdate - 86400); // SENTSINCE not supported. Date must be X-Abc-9999 (X on 1 digit if < 10)
 				}
 				//$search.=($search?' ':'').'SINCE 8-Apr-2018';
 			}
@@ -1858,11 +1859,6 @@ class EmailCollector extends CommonObject
 				}
 
 				if ($searchfilterisanswer > 0) {
-					if (empty($headers['In-Reply-To'])) {
-						$nbemailprocessed++;
-						dol_syslog(" Discarded - Email is not an answer (no In-Reply-To header)");
-						continue; // Exclude email
-					}
 					$isanswer = 0;
 					if (preg_match('/^(Re|AW)\s*:\s+/i', $headers['Subject'])) {
 						$isanswer = 1;
@@ -1879,7 +1875,7 @@ class EmailCollector extends CommonObject
 
 					if (!$isanswer) {
 						$nbemailprocessed++;
-						dol_syslog(" Discarded - Email is not an answer (no RE prefix in subject)");
+						dol_syslog(" Discarded - Email is not an answer (no reply marker detected, and test on In-Reply-To not requested because nor reliable, or test on In-Reply-To requested but not found)");
 						continue; // Exclude email
 					}
 				}
