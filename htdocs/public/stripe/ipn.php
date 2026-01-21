@@ -252,7 +252,6 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 		$dateo = dol_now();
 		$label = $event->data->object->description;
 		$amount = $stripe->convertAmount($event->data->object->amount, $currency_code, 1);
-		$amount_to = $stripe->convertAmount($event->data->object->amount, $currency_code, 1);
 
 		require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
 
