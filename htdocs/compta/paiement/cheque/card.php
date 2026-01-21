@@ -431,11 +431,12 @@ if ($action == 'new') {
 	print '<div class="nowrapfordate">';
 	print $form->selectDate($search_date_start, 'search_date_start_', 0, 0, 1, '', 1, 1, 0, '', '', '', '', 1, '', $langs->trans('From'));
 	print '</div>';
-	print '<div class="nowrapfordate">';
+	print '<div class="nowrapfordate marginleftonly">';
 	print $form->selectDate($search_date_end, 'search_date_end_', 0, 0, 1, '', 1, 1, 0, '', '', '', '', 1, '', $langs->trans('to'));
 	print '</div>';
 	print '</td></tr>';
 	print '<tr><td>'.$langs->trans("BankAccount").'</td><td>';
+	print img_picto('', 'account', 'class="pictofixedwidth"');
 	$form->select_comptes($filteraccountid, 'accountid', 0, 'courant <> 2', 1);
 	print '</td></tr>';
 	print '</table>';
