@@ -205,7 +205,7 @@ $arrayfields = array(
 	'country.code_iso' => array('label' => "Country", 'checked' => '0', 'position' => 46),
 	'typent.code' => array('label' => "ThirdPartyType", 'checked' => $checkedtypetiers, 'position' => 48),
 	'f.vat_reverse_charge' => array('label' => "VATReverseCharge", 'checked' => '0', 'position' => 49, 'enabled' => (getDolGlobalString('ACCOUNTING_FORCE_ENABLE_VAT_REVERSE_CHARGE') ? '1' : '0')),
-	'f.fk_mode_reglement' => array('label' => "PaymentMode", 'checked' => '1', 'position' => 52),
+	'f.fk_mode_reglement' => array('label' => "PaymentMode", 'checked' => '0', 'position' => 52),
 	'f.fk_cond_reglement' => array('label' => "PaymentConditionsShort", 'checked' => '0', 'position' => 50),
 	'f.total_ht' => array('label' => "AmountHT", 'checked' => '1', 'position' => 105),
 	'f.total_vat' => array('label' => "AmountVAT", 'checked' => '0', 'position' => 110),
