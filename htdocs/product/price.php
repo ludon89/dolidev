@@ -1382,6 +1382,16 @@ if (getDolGlobalString('PRODUIT_MULTIPRICES') || getDolGlobalString('PRODUIT_CUS
 		}
 	}
 } else {
+	// Type
+	if (isModEnabled("product") && isModEnabled("service")) {
+		$typeformat = 'select;0:'.$langs->trans("Product").',1:'.$langs->trans("Service");
+		print '<tr><td class="">';
+		print (!getDolGlobalString('PRODUCT_DENY_CHANGE_PRODUCT_TYPE')) ? $form->editfieldkey("Type", 'fk_product_type', (string) $object->type, $object, 0, $typeformat) : $langs->trans('Type');
+		print '</td><td>';
+		print $form->editfieldval("Type", 'fk_product_type', $object->type, $object, 0, $typeformat);
+		print '</td></tr>';
+	}
+
 	// TVA
 	print '<tr><td class="titlefield">'.$langs->trans("DefaultTaxRate").'</td><td>';
 
