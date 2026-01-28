@@ -1025,24 +1025,25 @@ class EmailCollector extends CommonObject
 									}
 								}
 							}
+
 							if (preg_match('/^options_/', $tmpproperty)) {
-								$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> found '.dol_escape_htmltag(dol_trunc($object->array_options[preg_replace('/^options_/', '', $tmpproperty)], 128));
+								$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> extract '.dol_escape_htmltag(dol_trunc($object->array_options[preg_replace('/^options_/', '', $tmpproperty)], 128)).' so object extrafield '.dol_escape_htmltag($tmpproperty).' is set.';
 							} else {
 								if (property_exists($object, $tmpproperty)) {
-									$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> found '.dol_escape_htmltag(dol_trunc($object->$tmpproperty, 128));
+									$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> extract '.dol_escape_htmltag(dol_trunc($object->$tmpproperty, 128)).' so object property '.dol_escape_htmltag($tmpproperty).' is set.';
 								} else {
-									$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> found '.dol_escape_htmltag(dol_trunc($tmp[$tmpproperty], 128));
+									$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> extract '.dol_escape_htmltag(dol_trunc($tmp[$tmpproperty], 128)).' so var '.dol_escape_htmltag($tmpproperty).' is set.';
 								}
 							}
 						} else {
 							// Regex not found
 							if (property_exists($object, $tmpproperty)) {
 								$object->$tmpproperty = null;
+								$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> not found, so object property '.dol_escape_htmltag($tmpproperty).' is set to null.';
 							} else {
 								$tmp[$tmpproperty] = null;
+								$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> not found, so var '.dol_escape_htmltag($tmpproperty).' is set to null.';
 							}
-
-							$operationslog .= '<br>Regex /'.dol_escape_htmltag($regexstring).'/'.dol_escape_htmltag($regexoptions).' into '.strtolower($sourcefield).' -> not found, so property '.dol_escape_htmltag($tmpproperty).' is set to null.';
 						}
 					} else {
 						// Nothing can be done for this param
@@ -2691,7 +2692,8 @@ class EmailCollector extends CommonObject
 										$this->error = 'Error when getting thirdparty with name '.$nametouseforthirdparty.' (may be 2 record exists with same name ?)';
 										$this->errors[] = $this->error;
 										break;
-									} elseif ($result == 0) {	// No thirdparty found
+									}
+									if ($result == 0) {	// No thirdparty found
 										if ($operation['type'] == 'loadthirdparty') {
 											dol_syslog("Third party with id=".$idtouseforthirdparty." email=".$emailtouseforthirdparty." name=".$nametouseforthirdparty." name_alias=".$namealiastouseforthirdparty." was not found");
 
@@ -2753,7 +2755,7 @@ class EmailCollector extends CommonObject
 												}
 											}
 										}
-									} else {	// $result > 0 is ID of thirdparty
+									} else {	// if $result > 0, it is ID of thirdparty
 										dol_syslog("One and only one existing third party has been found");
 
 										$thirdpartystatic->fetch($result);
