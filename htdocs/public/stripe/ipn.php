@@ -959,6 +959,8 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 			$db->commit();
 		} else {
 			$db->rollback();
+			http_response_code(500);
+			return -1;
 		}
 	}
 } elseif ($event->type == 'payment_method.detached') {
@@ -1145,7 +1147,9 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 			return 1;
 		} else {
 			$db->rollback();
-			dol_syslog("Technicalerror ".$db->lasterror());
+
+			dol_syslog("Technicalerror ".$db->lasterror()." - ".$errormsg, LOG_ERR);
+			dol_syslog("Technicalerror ".$db->lasterror()." - ".$errormsg, LOG_ERR, 0, '_payment');
 
 			http_response_code(500);
 			print $db->lasterror();
@@ -1178,14 +1182,19 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 
 		$alreadytransferedinaccounting = $tmpinvoice->getVentilExportCompta();
 
+		dol_syslog("The invoice has alreadytransferedinaccounting=".$alreadytransferedinaccounting);
+		dol_syslog("The invoice has alreadytransferedinaccounting=".$alreadytransferedinaccounting, LOG_DEBUG, 0, '_payment');
+
+		/*
 		if ($alreadytransferedinaccounting) {
 			// TODO Test if invoice already in accountancy.
 			// If yes, what to do ?
 			$errormsg = 'Error: the invoice '.$tmpinvoice->id.' is already transferred into accounting. Don\'t know what to do.';
 			$error++;
 		}
+		*/
 
-		if (! $error && $tmpinvoice->status == Facture::STATUS_CLOSED) {
+		if (!$error && !$alreadytransferedinaccounting && $tmpinvoice->status == Facture::STATUS_CLOSED) {
 			// Switch back the invoice to status validated
 			$result = $tmpinvoice->setStatut(Facture::STATUS_VALIDATED, null, '', 'none');
 			if ($result < 0) {
@@ -1194,21 +1203,23 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 			}
 		}
 
-		if (! $error) {
-			// Add status dispute_status to Dispute Lost
-			$result = $tmpinvoice->setStatut(8, null, '', 'FACTURE_MODIFY', 'dispute_status');
+		if (!$error) {
+			// Add status dispute_status to Dispute Open
+			$result = $tmpinvoice->setStatut(1, null, '', 'FACTURE_MODIFY', 'dispute_status');
 			if ($result < 0) {
 				$errormsg = $tmpinvoice->error.implode(', ', $tmpinvoice->errors);
 				$error++;
 			}
 
 			if (!$error) {
-				dol_syslog("The dispute_status of invoice ".$tmpinvoice->ref." has been modified to 8");
-				dol_syslog("The dispute_status of invoice ".$tmpinvoice->ref." has been modified to 8", LOG_DEBUG, 0, '_payment');
+				dol_syslog("The dispute_status of invoice ".$tmpinvoice->ref." has been modified to 1");
+				dol_syslog("The dispute_status of invoice ".$tmpinvoice->ref." has been modified to 1", LOG_DEBUG, 0, '_payment');
 			}
 		}
 
-		if (! $error) {
+		if (!$error && !$alreadytransferedinaccounting) {
+			// If not yet in accountnacy, we can record the negative payment, otherwise, only the dispute status will be set and user
+			// will have to make manual correction like a credit note.
 			$paiement_id = $paiement->create($user, 0, $tmpinvoice->thirdparty); // This include regenerating documents
 			if ($paiement_id < 0) {
 				$errormsg = $paiement->error.implode(', ', $paiement->errors);
@@ -1217,19 +1228,22 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 		}
 
 		if (!$error) {
-			//$db->commit();	// Code not yet enough tested
-			$db->rollback();
+			// TODO
+			// Record a payment for Stripe fees ?
+		}
+
+		if (!$error) {
+			$db->commit();
+			//$db->rollback();
+			//http_response_code(500);
 
 			dol_syslog("Code not yet enough tested - Return HTTP 500.", LOG_WARNING);
 			dol_syslog("Code not yet enough tested - Return HTTP 500.", LOG_WARNING, 0, '_payment');
-
-			http_response_code(500);
-			return -1;
 		} else {
 			$db->rollback();
 
-			dol_syslog("Error - Return HTTP 500 - ".$errormsg, LOG_WARNING);
-			dol_syslog("Error - Return HTTP 500 - ".$errormsg, LOG_WARNING, 0, '_payment');
+			dol_syslog("Error - Return HTTP 500 - ".$errormsg, LOG_ERR);
+			dol_syslog("Error - Return HTTP 500 - ".$errormsg, LOG_ERR, 0, '_payment');
 
 			http_response_code(500);
 
