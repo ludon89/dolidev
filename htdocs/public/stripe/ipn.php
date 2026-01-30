@@ -1227,13 +1227,13 @@ if ($event->type == 'payout.created' && getDolGlobalString('STRIPE_AUTO_RECORD_P
 		$sql .= " WHERE p.ext_payment_id = '".$db->escape($paiement->ext_payment_id)."'";
 		$sql .= " AND p.ext_payment_site = '".$db->escape($service)."'";
 
-		dol_syslog("SQL = ".$sql);
-
 		$tmpresql = $db->query($sql);
 		if ($tmpresql) {
 			$obj = $db->fetch_object($tmpresql);
 			if (empty($obj)) {
 				$withdrawn_payment_already_exists = false;
+				dol_syslog("No withdraw payment already exists", LOG_DEBUG);
+			} else {
 				dol_syslog("A withdraw payment already exists", LOG_DEBUG);
 			}
 		}
