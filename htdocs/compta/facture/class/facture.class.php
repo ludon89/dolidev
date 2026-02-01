@@ -2880,7 +2880,7 @@ class Facture extends CommonInvoice
 			$facligne->desc = $remise->description; // Description ligne
 			$facligne->vat_src_code = $remise->vat_src_code;
 			$facligne->tva_tx = $remise->tva_tx;
-			$facligne->subprice = -(float) $remise->amount_ht;
+			$facligne->subprice = -(float) $remise->total_ht;
 			$facligne->fk_product = 0; // Id produit predefini
 			$facligne->qty = 1;
 			$facligne->remise_percent = 0;
@@ -2905,14 +2905,14 @@ class Facture extends CommonInvoice
 				$facligne->pa_ht = $arraytmp['pa_total'];
 			}
 
-			$facligne->total_ht  = -(float) $remise->amount_ht;
-			$facligne->total_tva = -(float) $remise->amount_tva;
-			$facligne->total_ttc = -(float) $remise->amount_ttc;
+			$facligne->total_ht  = -(float) $remise->total_ht;
+			$facligne->total_tva = -(float) $remise->total_tva;
+			$facligne->total_ttc = -(float) $remise->total_ttc;
 
 			$facligne->multicurrency_subprice = -(float) $remise->multicurrency_subprice;
-			$facligne->multicurrency_total_ht = -(float) $remise->multicurrency_amount_ht;
-			$facligne->multicurrency_total_tva = -(float) $remise->multicurrency_amount_tva;
-			$facligne->multicurrency_total_ttc = -(float) $remise->multicurrency_amount_ttc;
+			$facligne->multicurrency_total_ht = -(float) $remise->multicurrency_total_ht;
+			$facligne->multicurrency_total_tva = -(float) $remise->multicurrency_total_tva;
+			$facligne->multicurrency_total_ttc = -(float) $remise->multicurrency_total_ttc;
 
 			$lineid = $facligne->insert();
 			if ($lineid > 0) {
@@ -4324,14 +4324,14 @@ class Facture extends CommonInvoice
 				if (getDolGlobalString('PRODUCT_USE_CUSTOMER_PACKAGING')) {
 					$tmpproduct = new Product($this->db);
 					$result = $tmpproduct->fetch($fk_product);
-					if (abs($qty) < $tmpproduct->packaging) {
+					if (abs((float) $qty) < $tmpproduct->packaging) {
 						$qty = (float) $tmpproduct->packaging;
-						setEventMessages($langs->trans('QtyRecalculatedWithPackaging'), null, 'mesgs');
+						setEventMessages($langs->trans('QtyRecalculatedWithPackaging'), null, 'warnings');
 					} else {
-						if (!empty($tmpproduct->packaging) && $qty > $tmpproduct->packaging) {
-							$coeff = intval(abs($qty) / $tmpproduct->packaging) + 1;
+						if (!empty($tmpproduct->packaging) && (float) price2num(fmod((float) $qty, (float) $tmpproduct->packaging), 'MS')) {
+							$coeff = intval(abs((float) $qty) / $tmpproduct->packaging) + 1;
 							$qty = price2num((float) $tmpproduct->packaging * $coeff, 'MS');
-							setEventMessages($langs->trans('QtyRecalculatedWithPackaging'), null, 'mesgs');
+							setEventMessages($langs->trans('QtyRecalculatedWithPackaging'), null, 'warnings');
 						}
 					}
 				}
@@ -4693,14 +4693,15 @@ class Facture extends CommonInvoice
 			if (getDolGlobalString('PRODUCT_USE_CUSTOMER_PACKAGING')) {
 				if ($qty < $this->line->packaging) {
 					$qty = $this->line->packaging;
+					setEventMessage($langs->trans('QtyRecalculatedWithPackaging'), 'warnings');
 				} else {
 					if (!empty($this->line->packaging)
 						&& is_numeric($this->line->packaging)
 						&& (float) $this->line->packaging > 0
-						&& fmod((float) $qty, (float) $this->line->packaging) > 0) {
+						&& (float) price2num(fmod((float) $qty, (float) $this->line->packaging), 'MS')) {
 						$coeff = intval($qty / $this->line->packaging) + 1;
 						$qty = $this->line->packaging * $coeff;
-						setEventMessage($langs->trans('QtyRecalculatedWithPackaging'), 'mesgs');
+						setEventMessage($langs->trans('QtyRecalculatedWithPackaging'), 'warnings');
 					}
 				}
 			}

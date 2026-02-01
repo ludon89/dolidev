@@ -661,7 +661,7 @@ div.userimg.notfirst {
 	display: block-inline;
 }
 .center.inline-block.dateheight {
-	line-height: 1.2em;
+	line-height: 1.1em;
 }
 .smallheight {
 	line-height: 1em;
@@ -877,8 +877,8 @@ input#onlinepaymenturl, input#directdownloadlink {
 
 
 .formconsumeproduce {
-	border-left: solid 5px #87cfd2;		/* like for div.info */
-	background: #eff8fc;				/* like for div.info */
+	border-left: solid 5px #666;
+	background: #efefef;
 	/* background: #f3f3f3; */
 
 	padding: 20px 0px 20px 0px;
@@ -7864,6 +7864,8 @@ select.multiselectononeline {
 	box-shadow: none !important;
 	margin-top: 1px !important;
 	margin-bottom: 0 !important;
+	margin-<?php echo $left ?>: 0px !important;
+	margin-<?php echo $right ?>: 3px !important;
 }
 span.noborderoncategories a, li.noborderoncategories a {
 	line-height: normal;

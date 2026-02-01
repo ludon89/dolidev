@@ -1072,7 +1072,7 @@ class EmailCollector extends CommonObject
 						complete_substitutions_array($substitutionarray, $outputlangs, $object);
 						$matcharray = array();
 						preg_match_all('/__([a-z0-9]+(?:_[a-z0-9]+)?)__/i', $valuetouse, $matcharray);
-						if (is_array($matcharray[1])) {    // $matcharray[1] is an array with the list of substitution key found without the __X__ syntax into the SET entry
+						if (is_array($matcharray[1])) {    // $matcharray[1] is an array with the list of all substitution keys found with the __X__ syntax into the SET entry.
 							foreach ($matcharray[1] as $keytoreplace) {
 								if ($keytoreplace) {
 									if (preg_match('/^options_/', $keytoreplace)) {
@@ -1859,6 +1859,7 @@ class EmailCollector extends CommonObject
 						}
 					}
 				}
+				// If we DON'T want email if there is a trackid
 				if ($searchfilternodoltrackid > 0) {
 					$referencesForFilter = $headers['References'] ?? '';
 					if (!empty($headers['References']) && !empty($headers['In-Reply-To'])) {
@@ -2518,16 +2519,16 @@ class EmailCollector extends CommonObject
 							$tickettocreate = new Ticket($this->db);
 							$errorfetchticket = 0;
 							$alreadycreated = 0;
-							if ($ticketid > 0) {
-								$alreadycreated = $tickettocreate->fetch($ticketid);
-							}
-							if ($alreadycreated == 0 && !empty($objectid)) {
+							if (!empty($objectid) && $objectemail instanceof Ticket) {
 								$alreadycreated = $tickettocreate->fetch((int) $objectid);
 							}
-							if ($alreadycreated == 0 && !empty($trackid)) {
+							if ($alreadycreated == 0 && $ticketid > 0) {	// objectemail was on a ticket it ticketid set
+								$alreadycreated = $tickettocreate->fetch($ticketid);
+							}
+							if ($alreadycreated == 0 && !empty($trackid)) {	// objectemail was on a ticket if trackid is set
 								$alreadycreated = $tickettocreate->fetch(0, '', $trackid);
 							}
-							if ($alreadycreated == 0 && !empty($msgid)) {
+							if ($alreadycreated == 0 && !empty($msgid)) {	// objectemail was on a ticket if msgid is set
 								$alreadycreated = $tickettocreate->fetch(0, '', '', $msgid);
 							}
 							if ($alreadycreated < 0) {
@@ -2688,7 +2689,7 @@ class EmailCollector extends CommonObject
 
 									if ($result < 0) {
 										$errorforactions++;
-										$this->error = 'Error when getting thirdparty with name '.$nametouseforthirdparty.' (may be 2 record exists with same name ?)';
+										$this->error = 'Error when getting thirdparty with name '.((string) $nametouseforthirdparty).', alternative name '.((string) $namealiastouseforthirdparty).' and email '.$emailtouseforthirdparty.' (may be 2 record exists with same name ?)';
 										$this->errors[] = $this->error;
 										break;
 									}
