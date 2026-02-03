@@ -1593,9 +1593,16 @@ while ($currentdaytoshow < $lastdaytoshow) {
 		echo '<span class="bold spandayofweek">'.$langs->trans("Day".(($i + getDolGlobalInt('MAIN_START_WEEK', 1)) % 7)).'</span>';
 		print "<br>";
 		if ($i) {
-			print dol_print_date(dol_time_plus_duree($currentdaytoshow, $i, 'd'), 'day', 'tzuserrel');
+			$valtoshow = dol_time_plus_duree($currentdaytoshow, $i, 'd');
 		} else {
-			print dol_print_date($currentdaytoshow, 'day', 'tzuserrel');
+			$valtoshow = $currentdaytoshow;
+		}
+		if (dol_print_date($valtoshow, '%Y%m%d') == dol_print_date(dol_now(), '%Y%m%d')) {
+			echo '<span class="badgeneutral">';
+		}
+		print dol_print_date($valtoshow, 'dayreduceformat', 'tzuserrel');
+		if (dol_print_date($valtoshow, '%Y%m%d') == dol_print_date(dol_now(), '%Y%m%d')) {
+			echo '</span>';
 		}
 		echo "</td>\n";
 		$i++;
