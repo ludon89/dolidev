@@ -100,7 +100,7 @@ if ($multicurrency) {
 	} else {
 		$multicurrencyRemains = array();
 	}
-	
+
 	// Treatment
 	$result = ($multicurrencyAmountPayment != '') ? ((float) $multicurrencyAmountPayment - array_sum($multicurrencyAmounts)) : array_sum($multicurrencyAmounts); // Remaining amountPayment
 	$toJsonArray = array();
@@ -110,7 +110,7 @@ if ($multicurrency) {
 		// Get the current amount (from form) and the corresponding remainToPay (from invoice)
 		$currentAmount = $multicurrencyAmounts['amount_'.$currentInvId];
 		$currentRemain = $multicurrencyRemains['remain_'.$currentInvId];
-		
+
 		// If amountPayment isn't filled, breakdown invoice amount, else breakdown from amountPayment
 		if ($multicurrencyAmountPayment == '') {
 			// Check if current amount exists in amounts
@@ -122,12 +122,12 @@ if ($multicurrency) {
 			} else {
 				$currentAmount = $currentRemain;
 				$result += $currentRemain;
-    		}
+			}
 		} else {
 			// Reset the subtraction for this amount
 			$result += price2num($currentAmount);
 			$currentAmount = 0;
-			
+
 			if ($result >= 0) {			// then we need to calculate the amount to breakdown
 				$amountToBreakdown = ($result - $currentRemain >= 0 ?
 				$currentRemain : // Remain can be fully paid
@@ -138,7 +138,7 @@ if ($multicurrency) {
 		}
 		$toJsonArray['multicurrency_amount_'.$currentInvId] = price2num($currentAmount); // Param will exist only if an img has been clicked
 	}
-	
+
 	$toJsonArray['multicurrency_makeRed'] = ($totalRemaining < price2num($result) || price2num($result) < 0);
 	$toJsonArray['multicurrency_result'] = price($result); // Return value to user format
 	$toJsonArray['multicurrency_resultnum'] = price2num($result); // Return value to numeric format
@@ -167,7 +167,7 @@ if ($multicurrency) {
 	} else {
 		$remains = array();
 	}
-	
+
 	// Treatment
 	$result = ($amountPayment != '') ? ((float) $amountPayment - array_sum($amounts)) : array_sum($amounts); // Remaining amountPayment
 	$toJsonArray = array();
@@ -177,7 +177,7 @@ if ($multicurrency) {
 		// Get the current amount (from form) and the corresponding remainToPay (from invoice)
 		$currentAmount = $amounts['amount_'.$currentInvId];
 		$currentRemain = $remains['remain_'.$currentInvId];
-		
+
 		// If amountPayment isn't filled, breakdown invoice amount, else breakdown from amountPayment
 		if ($amountPayment == '') {
 			// Check if current amount exists in amounts
@@ -194,7 +194,7 @@ if ($multicurrency) {
 			// Reset the subtraction for this amount
 			$result += price2num($currentAmount);
 			$currentAmount = 0;
-			
+
 			if ($result >= 0) {			// then we need to calculate the amount to breakdown
 				$amountToBreakdown = ($result - $currentRemain >= 0 ?
 											$currentRemain : // Remain can be fully paid
@@ -205,7 +205,7 @@ if ($multicurrency) {
 		}
 		$toJsonArray['amount_'.$currentInvId] = price2num($currentAmount); // Param will exist only if an img has been clicked
 	}
-	
+
 	$toJsonArray['makeRed'] = ($totalRemaining < price2num($result) || price2num($result) < 0);
 	$toJsonArray['result'] = price($result); // Return value to user format
 	$toJsonArray['resultnum'] = price2num($result); // Return value to numeric format
