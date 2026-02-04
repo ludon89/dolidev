@@ -688,8 +688,6 @@ if (empty($reshook)) {
 					$desc = $prod->description;
 				}
 
-				//Fix #36843 $desc = dol_concatdesc($desc, $product_desc);
-
 				// Add custom code and origin country into description
 				if (!getDolGlobalString('MAIN_PRODUCT_DISABLE_CUSTOMCOUNTRYCODE') && (!empty($prod->customcode) || !empty($prod->country_code))) {
 					$tmptxt = '(';
