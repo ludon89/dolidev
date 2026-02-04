@@ -38,7 +38,7 @@ require '../main.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/receiptprinter.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/dolreceiptprinter.class.php';
+require_once DOL_DOCUMENT_ROOT.'/takepos/class/dolreceiptprinter.class.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array("admin", "receiptprinter"));
