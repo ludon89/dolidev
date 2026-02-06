@@ -468,7 +468,7 @@ if ($id > 0 || $ref) {
 	$ligne = new LignePrelevement($db);
 
 	// Lines into withdraw request
-	$sql = "SELECT pd.rowid, pd.type, pd.ext_payment_id, pd.ext_payment_site, pd.amount, pd.fk_user_demande, pd.traite, pd.date_demande,";
+	$sql = "SELECT pd.rowid, pd.type, pd.ext_payment_id, pd.ext_payment_site, pd.amount, pd.fk_facture, pd.fk_user_demande, pd.date_demande, pd.traite, ";
 	$sql .= " s.rowid as socid, s.nom as name";
 	$sql .= " FROM ".MAIN_DB_PREFIX."prelevement_demande as pd";
 	$sql .= ", ".MAIN_DB_PREFIX."prelevement_bons as pb";
@@ -555,13 +555,17 @@ if ($id > 0 || $ref) {
 			print "</td>\n";
 
 			print '<td>';
-			print $obj->fk_user_demande;
+			$tmpuser = new User($db);
+			$tmpuser->fetch($obj->fk_user_demande);
+			print $tmpuser->getNomUrl($db);
 			print '</td>';
 
 			print '<td class="right"><span class="amount">'.price($obj->amount)."</span></td>\n";
 
-			print '<td class="right">';
-			print $obj->fk_facture;
+			print '<td>';
+			$tmpinvoice = new Facture($db);
+			$tmpinvoice->fetch($obj->fk_facture);
+			print $tmpinvoice->getNomUrl(1);
 			print '</td>';
 
 			print '<td class="right">';
