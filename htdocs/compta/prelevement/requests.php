@@ -439,43 +439,43 @@ if ($id > 0 || $ref) {
 		if (empty($reshook)) {
 			if (empty($object->date_trans)) {
 				if ($object->type == 'bank-transfer') {
-					print dolGetButtonAction($langs->trans("SetToStatusSent"), '', 'default', 'card.php?action=settransmitted&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'send'));
+					print dolGetButtonAction($langs->trans("SetToStatusSent"), '', 'default', 'requests.php?action=settransmitted&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'send'));
 				} else {
-					print dolGetButtonAction($langs->trans("SetToStatusSent"), '', 'default', 'card.php?action=settransmitted&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'send'));
+					print dolGetButtonAction($langs->trans("SetToStatusSent"), '', 'default', 'requests.php?action=settransmitted&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'send'));
 				}
 			}
 
 			if (getDolGlobalString('BANK_CAN_REOPEN_DIRECT_DEBIT_OR_CREDIT_TRANSFER')) {
 				if ($object->status == BonPrelevement::STATUS_DEBITED || $object->status == BonPrelevement::STATUS_CREDITED) {
 					if ($object->type == 'bank-transfer') {
-						print dolGetButtonAction($langs->trans("ReOpen"), '', 'default', 'card.php?action=reopen&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'debit'));
+						print dolGetButtonAction($langs->trans("ReOpen"), '', 'default', 'requests.php?action=reopen&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'debit'));
 					} else {
-						print dolGetButtonAction($langs->trans("ReOpen"), '', 'default', 'card.php?action=reopen&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'credit'));
+						print dolGetButtonAction($langs->trans("ReOpen"), '', 'default', 'requests.php?action=reopen&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'credit'));
 					}
 				}
 			}
 
 			if ($object->status == BonPrelevement::STATUS_TRANSFERED) {
 				if ($object->type == 'bank-transfer') {
-					print dolGetButtonAction($langs->trans("ClassDebited"), '', 'default', 'card.php?action=setcredited&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'debit'));
+					print dolGetButtonAction($langs->trans("ClassDebited"), '', 'default', 'requests.php?action=setcredited&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'debit'));
 				} else {
-					print dolGetButtonAction($langs->trans("ClassCredited"), '', 'default', 'card.php?action=setcredited&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'credit'));
+					print dolGetButtonAction($langs->trans("ClassCredited"), '', 'default', 'requests.php?action=setcredited&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'credit'));
 				}
 			}
 
 			// Cancel
 			if ($object->status == BonPrelevement::STATUS_TRANSFERED) {
 				if ($object->type == 'bank-transfer') {
-					print dolGetButtonAction($langs->trans("Cancel"), '', 'cancel', 'card.php?action=setcancel&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'debit'));
+					print dolGetButtonAction($langs->trans("Cancel"), '', 'cancel', 'requests.php?action=setcancel&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'debit'));
 				} else {
-					print dolGetButtonAction($langs->trans("Cancel"), '', 'cancel', 'card.php?action=setcancel&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'credit'));
+					print dolGetButtonAction($langs->trans("Cancel"), '', 'cancel', 'requests.php?action=setcancel&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'credit'));
 				}
 			}
 
 			if ($object->type == 'bank-transfer') {
-				print dolGetButtonAction($langs->trans("Delete"), '', 'delete', 'card.php?action=delete&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'create'));
+				print dolGetButtonAction($langs->trans("Delete"), '', 'delete', 'requests.php?action=delete&token='.newToken().'&id='.$object->id, '', $user->hasRight('paymentbybanktransfer', 'create'));
 			} else {
-				print dolGetButtonAction($langs->trans("Delete"), '', 'delete', 'card.php?action=delete&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'creer'));
+				print dolGetButtonAction($langs->trans("Delete"), '', 'delete', 'requests.php?action=delete&token='.newToken().'&id='.$object->id, '', $user->hasRight('prelevement', 'bons', 'creer'));
 			}
 		}
 		print '</div>';
