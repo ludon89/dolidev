@@ -14,7 +14,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 /**
@@ -27,7 +26,6 @@
  * @var string $extrafieldsobjectkey
  * @var string $extrafieldsobjectprefix
  */
-
 '
 @phan-var-force CommonObject $object
 @phan-var-force stdClass $obj
@@ -83,7 +81,7 @@ if (!empty($extrafieldsobjectkey) && !empty($extrafields->attributes[$extrafield
 					}
 				}
 
-				$valuetoshow = $extrafields->showOutputField($key, $value, '', $extrafieldsobjectkey, null, $object ?? null);
+				$valuetoshow = $extrafields->showOutputField($key, $value, '', $extrafieldsobjectkey, null, $object ?? null, 'list');
 
 				$title = dol_string_nohtmltag($valuetoshow);
 
