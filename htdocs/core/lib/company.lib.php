@@ -2604,7 +2604,7 @@ function show_actions_done($conf, $langs, $db, $filterobj, $objcon = null, $nopr
 		if ($num > $MAXWITHOUTPAGINATION) {
 			$langs->load("errors");
 			$colspan = 9;
-			$out .= '<tr><td colspan="' . $colspan . '"><span class="opacitymedium">' . $langs->trans("WarningTooManyDataPleaseUseMoreFilters", $MAXWITHOUTPAGINATION) . '</span></td></tr>';
+			$out .= '<tr><td class="center" colspan="' . $colspan . '"><span class="opacitymedium">' . $langs->trans("WarningTooManyDataPleaseUseMoreFilters", $MAXWITHOUTPAGINATION) . '</span></td></tr>';
 		}
 
 		$out .= "</table>\n";
