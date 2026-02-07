@@ -80,6 +80,19 @@ if (GETPOST('search_actioncode', 'array:aZ09')) {
 } else {
 	$actioncode = GETPOST("search_actioncode", "alpha", 3) ? GETPOST("search_actioncode", "alpha", 3) : (GETPOST("search_actioncode") == '0' ? '0' : ((!getDolGlobalString('AGENDA_DEFAULT_FILTER_TYPE') || $disabledefaultvalues) ? '' : getDolGlobalString('AGENDA_DEFAULT_FILTER_TYPE')));
 }
+if (is_array($actioncode)) {
+	// Remove all -1 values
+	$actioncode = array_filter(
+		$actioncode,
+		/**
+		 * @param string $value
+		 * @return	bool
+		 */
+		function ($value) {
+			return ((string) $value !== '-1');
+		}
+	);
+}
 
 // Search Fields
 $search_id = GETPOST('search_id', 'alpha');
@@ -630,6 +643,8 @@ if (!getDolGlobalInt('MAIN_DISABLE_FULL_SCANLIST')) {
 	if (empty($sql1) && empty($sql2)) {
 		$sqlforcount = preg_replace('/^'.preg_quote($sqlfields, '/').'/', 'SELECT COUNT(*) as nbtotalofrecords', $sql);
 		$sqlforcount = preg_replace('/GROUP BY .*$/', '', $sqlforcount);
+		// TODO Add a method $sqlforcount = sqlOptimizeCount($sqlforcount, array('actioncomm_extrafields', 'societe', 'c_actioncomm')) to
+		// remove all LEFT JOIN and INNER JOIN from the $sqlforcount if there is no fields into the WHERE.
 
 		$resql = $db->query($sqlforcount);
 		if ($resql) {
