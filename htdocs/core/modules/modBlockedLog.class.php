@@ -177,7 +177,7 @@ class modBlockedLog extends DolibarrModules
 		// forceinit can be set to bypass this redirection
 		if (isALNEQualifiedVersion(1, 1) && $options != 'forceinit') {
 			// We first switch on registration page
-			header("Location: ".DOL_URL_ROOT.'/blockedlog/admin/registration.php');
+			header("Location: ".DOL_URL_ROOT.'/blockedlog/admin/registration.php?origin=setupmodule');
 			exit;
 		}
 

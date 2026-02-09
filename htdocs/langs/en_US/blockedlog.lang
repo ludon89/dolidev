@@ -7,7 +7,8 @@ UnalterableLogTool1=The law of some countries (like in France when doing B2C), a
 UnalterableLogTool1FR=In France, you MUST generate archives of the unalterable logs, at least, once every year. We recommand to do it once per month. Also, you MUST keep these archives for at least 7 years. According to the law, It is the user's responsibility to store their archives on media that guarantee their preservation, including in the event of hardware failure, so we recommand to store them on at least 2 different physical supports.
 UnalterableLogTool2=This unalterable Logs contains the history of unalterable data. It is the responsibility of the user of the application to ensure system backups in order to comply with legal obligations. If you decide to secure your unalterable logs by just exporting and storing archives files (instead of a full complete backup avaiable on tab <b>%s</b>), it is recommended to store the exported archive files in at least 2 different places (Secured cloud, External USB drive, ...).
 UnalterableLogTool3=Note that, there is no feature to purge this log and every change tried to be done directly into this log (by a hacker for example) will be reported with a non-valid fingerprint.
-UnalterableLogToolRegistrationFR=In France, before using a software certified for the Loi Finance, you must register your contact information to the entity that had requested the certification, in order to be informed of any issue or upgrade required of your installation. This is a legal requirement to be allowed to use the certified version of Dolibarr.
+UnalterableLogToolRegistrationFR=Before using a software compliant with VAT Anti-Fraud Law, you must register your contact information, in order to be informed of any issue or upgrade required of your installation. This may be a legal requirement of you country.
+InformationWillBePublishedTo=All the following information will be pushed to the following organization: %s (See %s for the data privacy policy)
 FingerprintsDesc2=If you really need to purge this table because you used your application for a demo/test purpose and want to clean your data to start your production, you can ask your reseller or integrator to reset your database (all your data will be removed).
 CompanyInitialKey=Company initial key (hash of genesis block)
 BrowseBlockedLog=Unalterable logs
@@ -60,7 +61,9 @@ ErrorPeriodMustBePastToAllowExport=Export into archives was done on a not comple
 RegistrationNumber=Registration number
 NumberOfPrints=Number of prints
 NumberOfEmailsSent=Number of emails sent
-
+SaveAndEnableModule=Register and enable module
+LastRegistrationDate=Last registration date
+ClickHereToGoBackToSetupPage=Click here to go back to the module setup page
 BLOCKEDLOG_REGISTRATION_NAME=Company name
 BLOCKEDLOG_REGISTRATION_EMAIL=Company email
 BLOCKEDLOG_REGISTRATION_COUNTRY_CODE=Company country
@@ -77,7 +80,7 @@ MAIN_INFO_ITPROVIDER_ADDRESS=IT service provider address
 MAIN_INFO_ITPROVIDER_STATE=IT service provider state/province
 MAIN_INFO_ITPROVIDER_ZIP=IT service provider zip
 MAIN_INFO_ITPROVIDER_TOWN=IT service provider town
-RegistrationDoneAndModuleEnabled=All the entered information has been saved and sent to the Dolibarr organisation server for your registration. <br>You can now use blockedlog module.
+RegistrationDoneAndModuleEnabled=All the entered information has been saved and registered. The module %s is now enabled.
 
 ## logTypes
 logBILL_DELETE=Customer invoice logically deleted
