@@ -1171,6 +1171,7 @@ if ($action == 'addcontainer' && $usercanedit) {
 		$objectpage->title = str_replace(array('<', '>'), '', GETPOST('WEBSITE_TITLE', 'alphanohtml'));
 		$objectpage->type_container = GETPOST('WEBSITE_TYPE_CONTAINER', 'aZ09');
 		$objectpage->pageurl = GETPOST('WEBSITE_PAGENAME', 'alpha');
+		$objectpage->ref = $objectpage->pageurl;
 		$objectpage->aliasalt = $newaliasnames;
 		$objectpage->description = str_replace(array('<', '>'), '', GETPOST('WEBSITE_DESCRIPTION', 'alphanohtml'));
 		$objectpage->lang = GETPOST('WEBSITE_LANG', 'aZ09');
