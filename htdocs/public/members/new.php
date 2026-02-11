@@ -55,9 +55,7 @@ if (!defined('NOBROWSERNOTIF')) {
 // Do not use GETPOST here, function is not defined and define must be done before including main.inc.php
 // Because 2 entities can have the same ref.
 $entity = (!empty($_GET['entity']) ? (int) $_GET['entity'] : (!empty($_POST['entity']) ? (int) $_POST['entity'] : 1));
-// if (is_numeric($entity)) { // $entity is casted to int
 define("DOLENTITY", $entity);
-// }
 
 
 // Load Dolibarr environment
@@ -964,7 +962,6 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 	$adht->fetch($typeid);
 	$caneditamount = $adht->caneditamount;
 	$amountbytype = $adht->amountByType(1);		// Load the array of amount per type
-	var_dump($amountbytype);
 	foreach ($amountbytype as $k => $v) {
 		$amount = max(0, (float) $v, (float) getDolGlobalInt("MEMBER_NEWFORM_AMOUNT"));
 		$amountbytype[$k] = $amount;
@@ -978,7 +975,6 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 	// Set amount for the subscription from the the type and options:
 	// - First check the amount of the member type.
 	$amount = empty($amountbytype[$typeid]) ? 0 : $amountbytype[$typeid];
-	var_dump($amountbytype);
 	// - If not found, take the default amount only if the user is authorized to edit it
 	if (empty($amount) && getDolGlobalString('MEMBER_NEWFORM_AMOUNT')) {
 		$amount = getDolGlobalString('MEMBER_NEWFORM_AMOUNT');
