@@ -748,7 +748,7 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 			$checkednature = $listetype_natures[GETPOSTINT('typeid')];
 		}
 
-		print '<tr><td class="fieldrequired">'.$langs->trans("MemberNature")."</td><td>\n";
+		print '<tr><td class="fieldrequired titlefieldmiddle">'.$langs->trans("MemberNature")."</td><td>\n";
 		//$disabledphy = ($checkednature == "mor" ? ' disabled="disabled"' : '');
 		//$disabledmor = ($checkednature == "phy" ? ' disabled="disabled"' : '');
 		print '<span id="spannature1" class="nonature-back spannature paddinglarge marginrightonly"><label for="phisicalinput" class="valignmiddle">'.$morphys["phy"].'<input id="phisicalinput" class="flat checkforselect marginleftonly valignmiddle" type="radio" name="morphy" value="phy"'.($checkednature == "phy" ? ' checked="checked"' : '').$disabledphy.'></label></span>';
@@ -840,7 +840,7 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 	}
 
 	// Company   // TODO : optional hide
-	print '<tr id="trcompany" class="trcompany"><td id="tdcompany" class="'.($checkednature == "mor" ? ' fieldrequired"' : '').'">'.$langs->trans("Company").'</td><td>';
+	print '<tr id="trcompany" class="trcompany"><td id="tdcompany" class="titlefieldmiddle'.($checkednature == "mor" ? ' fieldrequired"' : '').'">'.$langs->trans("Company").'</td><td>';
 	print img_picto('', 'company', 'class="pictofixedwidth paddingright"');
 	print '<input type="text" name="societe" class="minwidth150 widthcentpercentminusx" value="'.dol_escape_htmltag(GETPOST('societe')).'"></td></tr>'."\n";
 
