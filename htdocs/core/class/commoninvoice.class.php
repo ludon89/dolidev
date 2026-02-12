@@ -763,6 +763,7 @@ abstract class CommonInvoice extends CommonObject
 
 				include_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
 				if (isALNERunningVersion()) {
+					$this->error = 'Action not allowed on the certified version';
 					return -7;
 				}
 			}
