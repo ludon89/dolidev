@@ -49,23 +49,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 3) Install / configure GitHub CLI (gh) on the runner
-      #- name: Setup GitHub CLI (gh)
-      #  uses: cli/gh-action@v3
-      # -> Error: Unable to resolve action cli/gh-action, repository not found
-      - name: Setup GitHub CLI (gh) (install locally)
-        run: |
-          set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y gh || {
-            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-            sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-            sudo apt-get update
-            sudo apt-get install -y gh
-          }
-          gh --version
-
       # Debug information (useful for diagnostics)
       - name: Debug info
         run: |
@@ -74,7 +57,7 @@ jobs:
           echo "Run id: $GITHUB_RUN_ID"
           echo "Reviewers configured: $REVIEWERS"
 
-      # 4) Add the label to the PR (PR events only)
+      # 3) Add the label to the PR (PR events only)
       #    -> tolerant to errors: log on failure but do not fail the job
       - name: Add label to PR (pull_request events only)
         if: ${{ github.event_name == 'pull_request' }}
@@ -82,16 +65,23 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           V18_LABEL: ${{ env.V18_LABEL }}
+          REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           echo "Adding label '$V18_LABEL' to PR #${PR_NUMBER}"
-          if gh pr edit "$PR_NUMBER" --add-label "$V18_LABEL"; then
+          response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/labels" \
+            -d "{\"labels\": [\"${V18_LABEL}\"]}")
+          
+          if [ "$response" -eq 200 ]; then
             echo "Label added successfully."
           else
-            echo "Warning: failed to add label '$V18_LABEL' to PR #${PR_NUMBER}. Continuing."
+            echo "Warning: failed to add label '$V18_LABEL' to PR #${PR_NUMBER} (HTTP $response). Continuing."
           fi
 
-      # 5) Compute final reviewers list excluding the PR author
+      # 4) Compute final reviewers list excluding the PR author
       - name: Compute reviewers (exclude PR author)
         if: ${{ github.event_name == 'pull_request' }}
         id: set-reviewers
@@ -118,7 +108,7 @@ jobs:
           echo "author=$AUTHOR" >> $GITHUB_OUTPUT
           echo "Computed reviewers: ${reviewers_csv:-<none>}"
 
-      # 6) Assign reviewers one-by-one with fine-grained error handling
+      # 5) Assign reviewers one-by-one with fine-grained error handling
       #    - try each reviewer, track successes and failures
       #    - fail the step only if none could be added
       #    - succeed if at least one was added (but log failures)
@@ -128,8 +118,8 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REVIEWERS_CSV: ${{ steps.set-reviewers.outputs.reviewers }}
+          REPO: ${{ github.repository }}
         run: |
-          # Note: avoid 'set -e' to handle per-reviewer failures manually
           set -uo pipefail
           IFS=',' read -ra TO_ADD <<< "${REVIEWERS_CSV}"
           SUCCESS=0
@@ -140,26 +130,28 @@ jobs:
               continue
             fi
             echo "Attempting to add reviewer: $r_trimmed"
-            if gh pr edit "$PR_NUMBER" --add-reviewer "$r_trimmed"; then
+            response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${REPO}/pulls/${PR_NUMBER}/requested_reviewers" \
+              -d "{\"reviewers\": [\"${r_trimmed}\"]}")
+            
+            if [ "$response" -eq 201 ] || [ "$response" -eq 200 ]; then
               echo "Added reviewer: $r_trimmed"
               SUCCESS=$((SUCCESS+1))
             else
-              echo "Warning: failed to add reviewer: $r_trimmed"
-              echo "Debug: PR view:"
-              gh pr view "$PR_NUMBER" --json number,title,author,reviewRequests || true
+              echo "Warning: failed to add reviewer: $r_trimmed (HTTP $response)"
               FAILED+=("$r_trimmed")
             fi
           done
           if [ $SUCCESS -eq 0 ]; then
             echo "Error: none of the configured reviewers could be added: ${FAILED[*]:-<none>}"
-            # Fail the step because no reviewer was added
             exit 1
           else
             echo "Reviewers added: ${SUCCESS}. Failed to add: ${FAILED[*]:-none}"
-            # Step succeeds even if some reviewers failed
           fi
 
-      # 7) Push event notice (no PR-specific actions performed)
+      # 6) Push event notice (no PR-specific actions performed)
       - name: Push event notice
         if: ${{ github.event_name == 'push' }}
         run: |
