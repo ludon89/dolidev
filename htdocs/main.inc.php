@@ -3765,6 +3765,8 @@ if (!function_exists("llxFooter")) {
 		$forceping = GETPOSTINT('forceping');
 
 		if (($_SERVER["PHP_SELF"] == DOL_URL_ROOT.'/index.php') || $forceping) {
+			require_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
+
 			$hash_unique_id_ping = getHashUniqueIdOfRegistration('sha256');
 			$constanttosavelastko = 'MAIN_LAST_PING_KO_DATE';
 			$constanttosavefirstok = 'MAIN_FIRST_PING_OK_DATE';
@@ -3802,7 +3804,8 @@ if (!function_exists("llxFooter")) {
 		$forceregistration = GETPOSTINT('forceregistration');
 
 		if (isModEnabled('blockedlog') && (($_SERVER["PHP_SELF"] == DOL_URL_ROOT.'/index.php') || $forceregistration)) {
-			include_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
+			require_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
+
 			if (!isALNEQualifiedVersion()) {
 				print "\n<!-- NO JS CODE TO ENABLE the registration. Not a LNE qualified version -->\n";
 			} elseif (!isRegistrationDataSaved()) {

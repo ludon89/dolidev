@@ -3129,6 +3129,8 @@ function printCodeForPing($constanttosavelastko, $constanttosavefirstok, $arrayo
 	global $dolibarr_distrib;
 	global $db, $conf;
 
+	require_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
+
 	$algo = 'sha256';
 	$hash_unique_id = getHashUniqueIdOfRegistration($algo);
 
