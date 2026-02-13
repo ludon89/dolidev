@@ -88,6 +88,7 @@ function blockedlogadmin_prepare_head($withtabsetup)
 
 /**
  * Return if the KYC mandatory parameters are set
+ * Must be the samefields than the one defined as mandatory into the registration form.
  *
  * @return boolean		True or false
  */
@@ -105,11 +106,13 @@ function isRegistrationDataSaved()
 		return false;
 	}
 
+	/*
 	$providerset = getDolGlobalString('MAIN_INFO_ITPROVIDER_NAME');	// Can be 'myself'
 
 	if (empty($providerset)) {
 		return false;
 	}
+	*/
 
 	return true;
 }

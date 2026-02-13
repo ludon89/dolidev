@@ -3177,7 +3177,7 @@ function printCodeForPing($constanttosavelastko, $constanttosavefirstok, $arrayo
 						token: 'notrequired'
 					},
 					success: function (data, status, xhr) {   // success callback function (data contains body of response)
-							console.log("Ping ok");
+							console.log("Ping ok - we call pingresult to save this");
 							$.ajax({
 								method: 'GET',
 								url: '<?php echo DOL_URL_ROOT.'/core/ajax/pingresult.php'; ?>',
@@ -3187,7 +3187,7 @@ function printCodeForPing($constanttosavelastko, $constanttosavefirstok, $arrayo
 							});
 					},
 					error: function (data,status,xhr) {   // error callback function
-							console.log("Ping ko: " + data);
+							console.log("Ping ko - we call pingresult to save this: " + data);
 							$.ajax({
 								method: 'GET',
 								url: '<?php echo DOL_URL_ROOT.'/core/ajax/pingresult.php'; ?>',

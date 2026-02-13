@@ -65,6 +65,8 @@ if (!$user->admin) {
 if ($action == 'update') {
 	$error = 0;
 	$db->begin();
+
+	// The mandatory information must be the same than the one defined into isRegistrationDataSaved()
 	if (!GETPOST("BLOCKEDLOG_REGISTRATION_NAME")) {
 		setEventMessages($langs->trans("ErrorFieldRequired", $langs->trans("BLOCKEDLOG_REGISTRATION_NAME")), null, 'errors');
 		$error++;
