@@ -201,6 +201,13 @@ fi
 export res=$?
 
 
+# ---------------------------- Run update of demo data
+if [ "$confirm" != "confirmresetblockedlog" ]; then
+	"$mydir/updatedemo.php" confirmresetblockedlog
+	export res=$?
+fi
+
+
 # ---------------------------- Copy demo files
 export documentdir
 # shellcheck disable=2016
