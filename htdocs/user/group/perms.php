@@ -119,6 +119,15 @@ if (empty($reshook)) {
 
 		$user->clearrights();
 		$user->loadRights();
+
+		// We redirect to avoid to get an URL with token inside
+		$qs = $_SERVER["QUERY_STRING"];
+		$qs = preg_replace('/&action=addrights/', '', $qs);
+		$qs = preg_replace('/&token=[0-9a-f]+/i', '', $qs);
+		$qs = preg_replace('/&confirm=yes/', '', $qs);
+		//var_dump($qs);exit;
+		header("Location: ".$_SERVER["PHP_SELF"].($qs ? "?".$qs : ""));
+		exit;
 	}
 
 	if ($action == 'delrights' && $permissiontoedit) {
@@ -135,6 +144,15 @@ if (empty($reshook)) {
 
 		$user->clearrights();
 		$user->loadRights();
+
+		// We redirect to avoid to get an URL with token inside
+		$qs = $_SERVER["QUERY_STRING"];
+		$qs = preg_replace('/&action=delrights/', '', $qs);
+		$qs = preg_replace('/&token=[0-9a-f]+/i', '', $qs);
+		$qs = preg_replace('/&confirm=yes/', '', $qs);
+		//var_dump($qs);exit;
+		header("Location: ".$_SERVER["PHP_SELF"].($qs ? "?".$qs : ""));
+		exit;
 	}
 }
 
