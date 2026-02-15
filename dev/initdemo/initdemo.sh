@@ -197,16 +197,19 @@ fi
 
 
 # ---------------------------- Run update of demo data
+echo
 "$mydir/updatedemo.php" confirm
 export res=$?
 
 
 # ---------------------------- Run update of demo data
-if [ "$confirm" != "confirmresetblockedlog" ]; then
+if [ "$confirm" == "confirmresetblockedlog" ]; then
+	echo
 	"$mydir/updatedemo.php" confirmresetblockedlog
 	export res=$?
 fi
 
+exit;
 
 # ---------------------------- Copy demo files
 export documentdir
