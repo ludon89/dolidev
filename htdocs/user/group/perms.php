@@ -524,7 +524,7 @@ foreach ($arrayofpermission as $i => $obj) {
 		// Own permission by group
 		if ($permissiontoedit) {
 			print '<td class="center nowrap">';
-			print '<a class="reposition" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=delrights&token='.newToken().'&entity='.$entity.'&rights='.$obj->id.'&confirm=yes&updatedmodulename='.$obj->module.'">';
+			print '<a class="reposition" id="'.$obj->id.'" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=delrights&token='.newToken().'&entity='.$entity.'&rights='.$obj->id.'&confirm=yes&updatedmodulename='.$obj->module.'">';
 			//print img_edit_remove($langs->trans("Remove"));
 			print img_picto($langs->trans("Remove"), 'switch_on');
 			print '</a>';
@@ -539,7 +539,7 @@ foreach ($arrayofpermission as $i => $obj) {
 		// Do not own permission
 		if ($permissiontoedit) {
 			print '<td class="center nowrap">';
-			print '<a class="reposition addexpandedmodulesinparamlist" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=addrights&token='.newToken().'&entity='.$entity.'&rights='.$obj->id.'&confirm=yes&updatedmodulename='.$obj->module.'">';
+			print '<a class="reposition addexpandedmodulesinparamlist" id="'.$obj->id.'" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=addrights&token='.newToken().'&entity='.$entity.'&rights='.$obj->id.'&confirm=yes&updatedmodulename='.$obj->module.'">';
 			//print img_edit_add($langs->trans("Add"));
 			print img_picto($langs->trans("Add"), 'switch_off');
 			print '</a>';
