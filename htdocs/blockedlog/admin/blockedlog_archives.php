@@ -181,6 +181,7 @@ if (GETPOST('action') == 'export' && $user->hasRight('blockedlog', 'read')) {		/
 
 	if (! (GETPOSTINT('yeartoexport') > 0)) {
 		setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Year")), null, "errors");
+		$action = '';
 		$error++;
 	}
 	/*
