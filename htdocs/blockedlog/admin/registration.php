@@ -240,13 +240,9 @@ print '<span class="opacitymedium">'.$langs->trans("BlockedLogDesc")."</span><br
 
 print '<br>';
 
-// Show version
+// Version
 $versionbadge = '<span class="badge-text badge-secondary">'.DOL_VERSION.'</span>';
-/*
-print '<div class="center"><span class="opacitymedium">'.$langs->trans("CurrentVersion").'</span> ';
-print $versionbadge;
-print '</div>';
-*/
+
 
 // Special additional message for FR only
 $infotoshow = '';
