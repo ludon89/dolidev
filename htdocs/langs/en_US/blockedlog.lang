@@ -125,6 +125,6 @@ ReplacedBy=Replaced by
 VersionSignature=Version signature
 DebugTools=Debug tools
 URLToForceRegistration=URL to force the registration
-URLToForcePushOfBlockedLogCounter=URL to force the push of the last unlaterable record counter
+URLToForcePushOfBlockedLogCounter=URL to force the push of the last unalterable record counter
 UseThisFormToUpdate=Use this form to update your registration information
 ControlFile=Control the file
