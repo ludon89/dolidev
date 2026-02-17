@@ -37,9 +37,10 @@ require '../../main.inc.php'; // Load $user and permissions
  * @var Societe $mysoc
  */
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/product/class/html.formproduct.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/pdf.lib.php';
 require_once DOL_DOCUMENT_ROOT."/core/lib/takepos.lib.php";
+require_once DOL_DOCUMENT_ROOT."/blockedlog/lib/blockedlog.lib.php";
+require_once DOL_DOCUMENT_ROOT.'/product/class/html.formproduct.class.php';
 
 // Security check
 if (!$user->admin) {
@@ -116,7 +117,13 @@ print "</tr>\n";
 print '<tr class="oddeven"><td>';
 print $langs->trans('TicketVatGrouped');
 print '<td colspan="2">';
-print ajax_constantonoff("TAKEPOS_TICKET_VAT_GROUPPED", array(), $conf->entity, 0, 0, 1, 0);
+var_dump(isALNERunningVersion());
+if (isALNERunningVersion()) {
+	// Always forced to true
+	print img_picto($langs->trans("AlwaysOn"), 'switch_off', 'class="disabled"');
+} else {
+	print ajax_constantonoff("TAKEPOS_TICKET_VAT_GROUPPED", array(), $conf->entity, 0, 0, 1, 0);
+}
 print "</td></tr>\n";
 
 if (getDolGlobalString('TAKEPOS_PRINT_METHOD') == "browser" || getDolGlobalString('TAKEPOS_PRINT_METHOD') == "takeposconnector") {
