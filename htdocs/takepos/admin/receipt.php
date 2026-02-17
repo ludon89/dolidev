@@ -117,10 +117,11 @@ print "</tr>\n";
 print '<tr class="oddeven"><td>';
 print $langs->trans('TicketVatGrouped');
 print '<td colspan="2">';
-var_dump(isALNERunningVersion());
 if (isALNERunningVersion()) {
 	// Always forced to true
-	print img_picto($langs->trans("AlwaysOn"), 'switch_off', 'class="disabled"');
+	$conf->global->TAKEPOS_TICKET_VAT_GROUPPED = 1;
+	print img_picto($langs->trans("Enabled"), 'switch_on', 'class="opacitymedium valignmiddle"');
+	print ' <span class="opacitymedium valignmiddle">'.$langs->trans("Always").'</span>';
 } else {
 	print ajax_constantonoff("TAKEPOS_TICKET_VAT_GROUPPED", array(), $conf->entity, 0, 0, 1, 0);
 }
@@ -194,7 +195,7 @@ print '<tr class="oddeven"><td>';
 print $langs->trans('ShowPriceHTOnReceipt');
 print '<td colspan="2">';
 if (isALNERunningVersion()) {
-	$conf->global->TAKEPOS_PRINT_PAYMENT_METHOD = 1;
+	$conf->global->TAKEPOS_SHOW_HT_RECEIPT = 1;
 	print ajax_constantonoff("TAKEPOS_SHOW_HT_RECEIPT", array(), $conf->entity, 0, 0, 1, 0, 0, 0, '', '', 'inline-block', 0, '', 1);
 	print '<span class="opacitymedium">'.$langs->trans("Always").'</span>';
 } else {
@@ -222,7 +223,14 @@ if (getDolGlobalString('TAKEPOS_PRINT_METHOD') == "takeposconnector" && filter_v
 print '<tr class="oddeven"><td>';
 print $langs->trans('PrintWithoutDetailsButton');
 print '<td colspan="2">';
-print ajax_constantonoff('TAKEPOS_PRINT_WITHOUT_DETAILS', array(), $conf->entity, 0, 0, 1, 0, 0, 0, '', '', 'inline-block', 0, '');
+if (isALNERunningVersion()) {
+	// Always forced to true
+	$conf->global->TAKEPOS_PRINT_WITHOUT_DETAILS = 1;
+	print img_picto($langs->trans("Disabled"), 'switch_off', 'class="opacitymedium valignmiddle"');
+	print ' <span class="opacitymedium valignmiddle">'.$form->textwithpicto($langs->trans("NotAvailable"), $langs->trans("NotAvailableForCountryWhenModuleIsOn", $mysoc->country_code, $langs->transnoentitiesnoconv('Module3200Name'))).'</span>';
+} else {
+	print ajax_constantonoff('TAKEPOS_PRINT_WITHOUT_DETAILS', array(), $conf->entity, 0, 0, 1, 0, 0, 0, '', '', 'inline-block', 0, '');
+}
 print "</td></tr>\n";
 if (getDolGlobalString('TAKEPOS_PRINT_WITHOUT_DETAILS')) {
 	print '<tr class="oddeven"><td>';
