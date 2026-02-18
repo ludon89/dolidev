@@ -262,7 +262,7 @@ documentdir=$(< "$mydir/../../htdocs/conf/conf.php" grep '^\$dolibarr_main_data_
 
 	if [ "$res" = "0" ]
 	then
-		echo "Success, file successfully loaded."
+		echo "Success, file successfully loaded: Note that crypted data need to have dolibarr_main_instance_unique_id=11f3c81e86fc9e3b3fd11d81c9a31bd0 with this data set."
 	else
 		echo "Error, load failed."
 	fi
