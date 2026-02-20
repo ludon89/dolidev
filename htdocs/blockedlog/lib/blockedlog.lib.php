@@ -393,6 +393,9 @@ function callApiToPushCounter($id, $signature, $test, $previousid, $previoussign
 		$data .= '&datesys='.urlencode(dol_print_date(dol_now(), 'standard', 'gmt'));
 		$data .= '&version='.(float) DOL_VERSION;
 		$data .= '&version_full='.urlencode(DOL_VERSION);
+		$data .= '&versionblockedlog='.(float) getBlockedLogVersionToShow();
+		$data .= '&versionblockedlog_full='.urlencode(getBlockedLogVersionToShow());
+
 		$data .= '&entity='.(int) $conf->entity;
 
 		$data .= '&lastrowid='.(int) $id;
