@@ -726,7 +726,7 @@ class BlockedLog
 					'total_ht', 'total_tva', 'total_ttc', 'localtax1', 'localtax2',
 					'revenuestamp', 'datepointoftax', 'note_public',
 					'lines',
-					'module_source', 'pos_source', 'pos_print_counter', 'email_sent_counter'
+					'module_source', 'pos_source', 'pos_print_counter', 'email_sent_counter', 'link'
 				))) {
 					continue; // Discarded if not into the dedicated list
 				}
