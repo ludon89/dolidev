@@ -18,10 +18,10 @@
 /**
  *	\file       htdocs/versioncert.inc.php
  * 	\ingroup	core
- *  \brief      File included by the unalterable log module
+ *  \brief      File included by main files of the Unalterable Log module
  */
 
-// The major version of Dolibarr
+// The version of the Unalterable Log module
 define('DOLCERT_VERSION', '2.0.0');
 
 // DOL_VERSION is now a.b.c-alpha, a.b.c-beta, a.b.c-rcX or a.b.c

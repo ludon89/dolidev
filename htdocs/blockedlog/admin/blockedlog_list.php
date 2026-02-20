@@ -207,12 +207,13 @@ print dol_get_fiche_head($head, 'fingerprints', '', -1);
 //print $texttop;
 //print '<br><br>';
 
-print '<div class="opacitymedium hideonsmartphone justify">';
-
+print '<div class="justify">';
+print '<span class="opacitymedium hideonsmartphone">';
 print $langs->trans("FingerprintsDesc")."<br>";
 $s = $langs->trans("FilesIntegrityDesc", '{s}');
 $s = str_replace('{s}', DOL_URL_ROOT.'/blockedlog/admin/filecheck.php', $s);
 print $s;
+print '</span><br>';
 print "<br>\n";
 print "</div>\n";
 
