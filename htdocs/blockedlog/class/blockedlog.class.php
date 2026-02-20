@@ -675,8 +675,8 @@ class BlockedLog
 			}
 		}
 
-		// Add my company info
-		if (!empty($mysoc) && !in_array($object->element, array('cashcontrol'))) {
+		// Add my company info (Only for customer invoice and payment)
+		if (!empty($mysoc) && in_array($object->element, array('facture', 'paiement'))) {
 			$this->object_data->mycompany = new stdClass();
 
 			foreach ($mysoc as $key => $value) {
@@ -1750,7 +1750,7 @@ class BlockedLog
 		}
 		if ($search_pos_source != '') {
 			$sql .= " AND (";
-			$sql .= natural_search("pos_source", $search_pos_source);
+			$sql .= natural_search("pos_source", $search_pos_source, 0, 1);
 			$sql .= " OR pos_source = 'mix'";	// When a payment was recorded and payment was on an invoice with different terminal (pos and not pos)
 			$sql .= ")";
 		}

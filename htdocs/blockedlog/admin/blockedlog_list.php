@@ -329,7 +329,7 @@ print '</td>';
 
 // Module source
 print '<td class="liste_titre">';
-print $form->multiselectarray('search_module_source', $block_static->trackedmodules, $search_module_source, 0, 0, 'minwidth125 maxwidth200', 1);
+print $form->multiselectarray('search_module_source', $block_static->trackedmodules, $search_module_source, 0, 0, 'minwidth75 maxwidth200', 1);
 print '</td>';
 
 // POS source
