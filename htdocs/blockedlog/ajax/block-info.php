@@ -162,6 +162,7 @@ function formatObject($objtoshow, $prefix, $parentelement = '')
 		'vat_src_code' => 'VATCode',
 		'multicurrency_code' => 'Currency',
 		'qty' => 'Quantity',
+		'remise_percent' => 'DiscountInPercent',
 		'nom' => 'Name',
 		'name' => 'Name',
 		'email' => 'Email',
