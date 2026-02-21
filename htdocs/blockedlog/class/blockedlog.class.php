@@ -1589,7 +1589,7 @@ class BlockedLog
 	/**
 	 *	Get previous signature/hash in chain. If there is no previous line, return the init hash.
 	 *
-	 *	@param int<0,1>	$withlock			1=With a lock
+	 *	@param int<0,1>	$withlock			1=With a lock (Used in the ->create() transaction)
 	 *	@param int		$beforeid			ID of a record
 	 *  @return	array<string, int|string>	Hash of previous record (if beforeid is defined) or hash of last record (if beforeid is 0)
 	 */
