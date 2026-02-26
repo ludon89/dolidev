@@ -197,7 +197,9 @@ class FormSetup
 			} elseif ($editMode) {
 				$out .= '<div class="form-setup-button-container center">'; // Todo : remove .center by adding style to form-setup-button-container css class in all themes
 				$out .= $this->htmlOutputMoreButton;
-				$out .= '<input class="button button-save reposition" type="submit" value="' . $this->langs->trans($this->htmlButtonLabel ?: "Save") . '" name="save">'; // Todo fix dolibarr style for <button and use <button instead of input
+				if ($editMode !== 3) {
+					$out .= '<input class="button button-save reposition" type="submit" value="' . $this->langs->trans($this->htmlButtonLabel ?: "Save") . '" name="save">'; // Todo fix dolibarr style for <button and use <button instead of input
+				}
 				if ($editMode === 2) {
 					// Add also a cancel button
 					$out .= ' &nbsp;&nbsp; ';
@@ -1686,7 +1688,7 @@ class FormSetupItem
 
 
 	/**
-	 * Set type of input as a simple title. No data to store
+	 * Set type of input as a multiselect list.
 	 *
 	 * @param array<string,string|array{id:string,label:string,color:string,picto:string,labelhtml:string}> $fieldOptions A table of field options
 	 * @return self
@@ -1702,7 +1704,7 @@ class FormSetupItem
 	}
 
 	/**
-	 * Set type of input as a simple title. No data to store
+	 * Set type of input as a select list.
 	 *
 	 * @param ?array<string,string|array{id:string,label:string,color:string,picto:string,labelhtml:string}>  $fieldOptions  A table of field options
 	 * @return self
@@ -1719,7 +1721,7 @@ class FormSetupItem
 
 
 	/**
-	 * Set type of input as a simple title. No data to store
+	 * Set type of input as a radio button.
 	 *
 	 * @param  ?array<string,string|array{id:string,label:string,picto?:string,labelIsHtml?:bool}> $fieldOptions  A table of field options
 	 * @return self
@@ -1735,7 +1737,7 @@ class FormSetupItem
 	}
 
 	/**
-	 * Set type of input as a simple title. No data to store
+	 * Set type of input as a selection of a user from dolibarr users list
 	 *
 	 * @return self
 	 */
@@ -1746,7 +1748,7 @@ class FormSetupItem
 	}
 
 	/**
-	 * Set type of input as a simple title. No data to store
+	 * Set type of input as a bank account selection from dolibarr bank accounts list
 	 *
 	 * @return self
 	 */
