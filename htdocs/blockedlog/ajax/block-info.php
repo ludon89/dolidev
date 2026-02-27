@@ -285,6 +285,8 @@ function formatObject($objtoshow, $prefix, $parentelement = '')
 					'cash_declared', 'cheque_declared', 'card_declared', 'cash_lifetime', 'cheque_lifetime', 'card_lifetime'
 				)) || (isset($arrayoffields[$key]['type']) && in_array($arrayoffields[$key]['type'], array('price')))) {
 					$s .= '<span class="amount">'.price($val, 0, $langs, 1, 0, -2).'</span>';
+				} elseif (in_array($key, array('total_billed', 'total_collected', 'totallifetime_billed', 'totallifetime_collected'))) {
+					$s .= '<span class="amount">'.$val.'</span>';
 				} else {
 					$s .= $val;
 				}
