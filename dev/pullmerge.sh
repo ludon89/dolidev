@@ -6,6 +6,9 @@ param1="$1"
 # Configuration des versions
 START=14
 END=23
+DEV_DIR="dolibarr_dev"
+DEV_BRANCH="develop"
+
 
 if [ -z "$param1" ]; then
     echo "Usage: $0 <pull|merge|all>"
@@ -26,7 +29,7 @@ if [ "x$param1" = "xall" ] || [ "x$param1" = "xpull" ]; then
 	    DIR="dolibarr_$i.0"
 
 	    if [ -d "$DIR" ]; then
-	        echo "*** Mise à jour de $DIR..."
+	        echo "*** Update of $DIR..."
 	        cd "$DIR" || exit
 
 	        # We want to be sure we are on good brnahc and we pull
@@ -42,6 +45,14 @@ if [ "x$param1" = "xall" ] || [ "x$param1" = "xpull" ]; then
 	        echo "Warning : The directory $DIR does not exists, switch to next one."
 	    fi
 	done
+
+	# Update branch dev
+	if [ -d "$DEV_DIR" ]; then
+	    echo "*** Update of $DEV_DIR..."
+	    cd "$DEV_DIR" || exit
+	    git checkout "$DEV_BRANCH" && git pull || { echo "Error pull $DEV_DIR"; exit 1; }
+	    cd ..
+	fi
 fi
 
 
@@ -69,7 +80,7 @@ if [ "x$param1" = "xall" ] || [ "x$param1" = "xmerge" ]; then
 	        git fetch $REMOTE_NAME
 
 	        # Try to merge
-	        git merge "$REMOTE_NAME/$PREV.0" -m "Automated merge from $PREV.0 by tool pullmerge.sh"
+	        git merge "$REMOTE_NAME/$PREV.0" -m "Automated merge from $PREV.0 to $CURRENT.0 by tool pullmerge.sh"
 
 	        if [ $? -eq 0 ]; then
 	            echo "Success on merge. Try to push..."
@@ -90,6 +101,21 @@ if [ "x$param1" = "xall" ] || [ "x$param1" = "xmerge" ]; then
 	        cd ..
 	    fi
 	done
+
+	if [ -d "$DEV_DIR" ] && [ -d "dolibarr_$END.0" ]; then
+	    echo "*** Merge final of dolibarr_$END.0 vers $DEV_DIR..."
+	    cd "$DEV_DIR" || exit
+
+		REMOTE_NAME="local_prev"
+        git remote remove $REMOTE_NAME 2>/dev/null
+        git remote add $REMOTE_NAME "../dolibarr_$END.0"
+        git fetch $REMOTE_NAME
+
+	    git merge "$REMOTE_NAME/dolibarr_$END.0" -m "Automated merge from $END.0 to $DEV_BRANCH" && git push || exit 1
+
+	    git remote remove $REMOTE_NAME
+	    cd ..
+	fi
 fi
 
 echo -e "\nSuccess !"
