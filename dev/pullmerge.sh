@@ -26,7 +26,7 @@ if [ "x$param1" = "xall" ] || [ "x$param1" = "xpull" ]; then
 	    DIR="dolibarr_$i.0"
 
 	    if [ -d "$DIR" ]; then
-	        echo ">> Mise à jour de $DIR..."
+	        echo "*** Mise à jour de $DIR..."
 	        cd "$DIR" || exit
 
 	        # We want to be sure we are on good brnahc and we pull
@@ -56,9 +56,9 @@ if [ "x$param1" = "xall" ] || [ "x$param1" = "xmerge" ]; then
 	    DIR_PREV="dolibarr_$PREV.0"
 
 	    if [ -d "$DIR_CURRENT" ] && [ -d "$DIR_PREV" ]; then
-	        echo ">> Fusion de dolibarr_$PREV vers dolibarr_$CURRENT..."
+	        echo "*** Merge of dolibarr_$PREV to dolibarr_$CURRENT..."
 
-	        echo "   - Go on dir $DIR_CURRENT"
+	        echo "Go on dir $DIR_CURRENT"
 	        cd "$DIR_CURRENT" || exit
 
 	        # Add previous directory to a local remote for the merge
@@ -76,11 +76,11 @@ if [ "x$param1" = "xall" ] || [ "x$param1" = "xmerge" ]; then
 	            git push
 
 	            if [ $? -ne 0 ]; then
-	                echo "ERREUR : The push of $DIR_CURRENT has failed. We stop here."
+	                echo "ERROR : The push of $DIR_CURRENT has failed. We stop here."
 	                exit 1
 	            fi
 	        else
-	            echo "ERREUR : Conflict or error on merge into $DIR_CURRENT. We stop here."
+	            echo "ERROR : Conflict or error on merge into $DIR_CURRENT. We stop here."
 	            # Optionnel : git merge --abort pour laisser le repo propre
 	            exit 1
 	        fi
