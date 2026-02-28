@@ -68,8 +68,8 @@ if [ "x$param1" = "xall" ] || [ "x$param1" = "xmerge" ]; then
 	        git remote add $REMOTE_NAME "../$DIR_PREV"
 	        git fetch $REMOTE_NAME
 
-	        # Tentative de merge
-	        git merge "$REMOTE_NAME/$PREV" -m "Automated merge from $PREV"
+	        # Try to merge
+	        git merge "$REMOTE_NAME/$PREV.0" -m "Automated merge from $PREV.0 by tool pullmerge.sh"
 
 	        if [ $? -eq 0 ]; then
 	            echo "Success on merge. Try to push..."
