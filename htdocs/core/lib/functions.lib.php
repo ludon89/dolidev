@@ -5897,6 +5897,7 @@ function img_picto($titlealt, $picto, $moreatt = '', $pictoisfullpath = 0, $srco
 				'square' => '#888',
 				'stop-circle' => '#888',
 				'stats' => '#444',
+				'superadmin' => '#600',
 				'switch_off' => '#999',
 				'technic' => '#999',
 				'tick' => '#282',
@@ -6760,7 +6761,7 @@ function img_searchclear($titlealt = 'default', $other = '')
 		$titlealt = $langs->trans('Search');
 	}
 
-	$img = img_picto($titlealt, 'searchclear', $other, 0, 1);
+	$img = img_picto($titlealt, 'searchclear.png', $other, 0, 1);
 
 	$input = '<input type="image" class="liste_titre" name="button_removefilter" src="' . $img . '" ';
 	$input .= 'value="' . dol_escape_htmltag($titlealt) . '" title="' . dol_escape_htmltag($titlealt) . '" >';
