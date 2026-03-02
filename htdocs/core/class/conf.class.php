@@ -1392,11 +1392,11 @@ class Conf extends stdClass
 				}
 			}
 			// For backward compatibility
-			if (!empty($this->global->LDAP_MEMBER_ACTIVE) && $this->global->LDAP_MEMBER_ACTIVE == 'ldap2dolibarr') {
+			if (getDolGlobalString('LDAP_MEMBER_ACTIVE') == 'ldap2dolibarr') {
 				$this->global->LDAP_MEMBER_ACTIVE = 2;
 			}
 			// For backward compatibility
-			if (!empty($this->global->LDAP_MEMBER_TYPE_ACTIVE) && $this->global->LDAP_MEMBER_TYPE_ACTIVE == 'ldap2dolibarr') {
+			if (getDolGlobalString('LDAP_MEMBER_TYPE_ACTIVE') == 'ldap2dolibarr') {
 				$this->global->LDAP_MEMBER_TYPE_ACTIVE = 2;
 			}
 
