@@ -1199,12 +1199,12 @@ class Translate
 				if ($obj) {
 					// If a translation exists, we use it lese we use the default label
 					if ($obj->code_iso && !empty($this->tab_translate["Currency" . $obj->code_iso])) {	// Test on tab_translate is faster (possible because we knowhere the "dict" language file has been previously loaded).
-						$label = $this->trans("Currency" . $obj->code_iso);
+						$tmplabel = $this->trans("Currency" . $obj->code_iso);
 					} else {
-						$label = ($obj->label != '-' ? $obj->label : '');
+						$tmplabel = ($obj->label != '-' ? $obj->label : '');
 					}
 
-					$this->cache_currencies[$obj->code_iso]['label'] = $label;
+					$this->cache_currencies[$obj->code_iso]['label'] = $tmplabel;
 					$this->cache_currencies[$obj->code_iso]['unicode'] = (array) json_decode((empty($obj->unicode) ? '' : $obj->unicode), true);  // @phan-suppress-current-line PhanTypeMismatchProperty
 					$label[$obj->code_iso] = $this->cache_currencies[$obj->code_iso]['label'];
 				}
