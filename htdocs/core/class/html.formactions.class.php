@@ -303,7 +303,7 @@ class FormActions
 						$tmpb = dol_getdate($actioncomm->datef);
 						if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year']) {
 							// The same day
-							print '<div class="center inline-block dateheight">';
+							print '<div class="center inline-block celldateheight">';
 							if ($tmpa['hours'] != $tmpb['hours'] || $tmpa['minutes'] != $tmpb['minutes']) {
 								print dol_print_date($actioncomm->datep, 'dayreduceformat', 'tzuserrel');
 								print '<br><span class="small opacitymedium">';
