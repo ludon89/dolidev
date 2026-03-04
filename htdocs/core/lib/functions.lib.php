@@ -16270,7 +16270,7 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 	}
 
 	$histo = array();
-	'@phan-var-force array<int,array{type:string,tododone:string,id:string,datestart:int|string,dateend:int|string,note:string,message:string,percent:string,userid:string,login:string,userfirstname:string,userlastname:string,userphoto:string,msg_from?:string,contact_id?:string,socpeopleassigned?:int[],lastname?:string,firstname?:string,fk_element?:int,elementtype?:string,acode:string,alabel?:string,libelle?:string,apicto?:string}> $histo';
+	'@phan-var-force array<int,array{type:string,tododone:string,id:string,datestart:int|string,dateend:int|string,fulldayevent:int,note:string,message:string,percent:string,userid:string,login:string,userfirstname:string,userlastname:string,userphoto:string,msg_from?:string,contact_id?:string,socpeopleassigned?:int[],lastname?:string,firstname?:string,fk_element?:int,elementtype?:string,acode:string,alabel?:string,libelle?:string,apicto?:string}> $histo';
 
 	$numaction = 0;
 	$now = dol_now();
@@ -16298,7 +16298,7 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 		$sql .= " a.datep2 as dp2,";
 		$sql .= " a.percent as percent, 'action' as type,";
 		$sql .= " a.fk_element, a.elementtype,";
-		$sql .= " a.fk_contact,";
+		$sql .= " a.fk_contact, a.fulldayevent,";
 		$sql .= " a.email_from as msg_from,";
 		$sql .= " c.code as acode, c.libelle as alabel, c.picto as apicto,";
 		$sql .= " u.rowid as user_id, u.login as user_login, u.photo as user_photo, u.firstname as user_firstname, u.lastname as user_lastname";
@@ -16554,6 +16554,7 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 						'id' => $obj->id,
 						'datestart' => $db->jdate($obj->dp),
 						'dateend' => $db->jdate($obj->dp2),
+						'fulldayevent' => (int) $obj->fulldayevent,
 						'note' => $obj->label,
 						'message' => dol_htmlentitiesbr($obj->message),
 						'percent' => $obj->percent,
@@ -16584,6 +16585,7 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 						'id' => $obj->id,
 						'datestart' => $db->jdate($obj->dp),
 						'dateend' => $db->jdate($obj->dp2),
+						'fulldayevent' => (int) $obj->fulldayevent,
 						'note' => $obj->label,
 						'message' => dol_htmlentitiesbr($obj->message),
 						'percent' => $obj->percent,
