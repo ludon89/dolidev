@@ -60,7 +60,7 @@ jobs:
       # 3) Add the label to the PR (PR events only)
       #    -> tolerant to errors: log on failure but do not fail the job
       - name: Add label to PR (pull_request events only)
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request_target' }}
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -74,7 +74,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/labels" \
             -d "{\"labels\": [\"${V18_LABEL}\"]}")
-          
+
           if [ "$response" -eq 200 ]; then
             echo "Label added successfully."
           else
@@ -83,7 +83,7 @@ jobs:
 
       # 4) Compute final reviewers list excluding the PR author
       - name: Compute reviewers (exclude PR author)
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request_target' }}
         id: set-reviewers
         run: |
           set -euo pipefail
@@ -113,7 +113,7 @@ jobs:
       #    - fail the step only if none could be added
       #    - succeed if at least one was added (but log failures)
       - name: Assign reviewers on PR (per-reviewer, tolerant errors)
-        if: ${{ github.event_name == 'pull_request' && steps.set-reviewers.outputs.reviewers != '' }}
+        if: ${{ github.event_name == 'pull_request_target' && steps.set-reviewers.outputs.reviewers != '' }}
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -135,7 +135,7 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${REPO}/pulls/${PR_NUMBER}/requested_reviewers" \
               -d "{\"reviewers\": [\"${r_trimmed}\"]}")
-            
+
             if [ "$response" -eq 201 ] || [ "$response" -eq 200 ]; then
               echo "Added reviewer: $r_trimmed"
               SUCCESS=$((SUCCESS+1))
