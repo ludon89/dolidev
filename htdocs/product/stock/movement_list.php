@@ -183,6 +183,10 @@ if ($id > 0 || !empty($ref)) {
 	$id = $tmpwarehouse->id;
 }
 
+$socid = 0;
+if ($user->socid > 0) {
+	$socid = $user->socid;
+}
 
 // Security check
 //$result=restrictedArea($user, 'stock', $id, 'entrepot&stock');
