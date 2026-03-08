@@ -793,6 +793,13 @@ if ($action == 'check' || $action == 'checkconfirmed') {
 		$nbLinesModifiedInExportButKo = 0;
 		$nbLinesModifiedBeforeExport = 0;
 
+		$amounthtlifetime = array();
+		$amountvatlifetime = array();
+		$amountttclifetime = array();
+		$amounthtlifetime['BILL_VALIDATE'] = $amounthtlifetime['PAYMENT_CUSTOMER'] = null;
+		$amountvatlifetime['BILL_VALIDATE'] = $amountvatlifetime['PAYMENT_CUSTOMER'] = null;
+		$amountttclifetime['BILL_VALIDATE'] = $amountttclifetime['PAYMENT_CUSTOMER'] = null;
+
 		$handle = fopen($fullpath, "r");
 		if ($handle) {
 			$numline = 0;
@@ -931,9 +938,33 @@ if ($action == 'check' || $action == 'checkconfirmed') {
 					}
 				}
 
+				// Test if line is a summary line
 				if (preg_match('/^SUMMARY /', (string) $line[0])) {
 					// We are on a line for summary information
 					$lineanalyzed = 1;
+					if (preg_match('/^SUMMARY TURNOVER BILLED/', (string) $line[0])) {
+						// Do nothing, we recalculate amount from previous lines
+					}
+					if (preg_match('/^SUMMARY TURNOVER PAID/', (string) $line[0])) {
+						// Do nothing, we recalculate amount from previous lines
+					}
+					if (preg_match('/^SUMMARY LIFETIME BILLED/', (string) $line[0])) {
+						// We load data from line
+						$amountstring = (string) $line[0];
+						if (preg_match('/^SUMMARY LIFETIME BILLED[^\d]*\s:\s([\d\.]+)\s[^\d]+\s([\d\.]+)\s[^\d]+\s([\d\.]+)\s[^\d]+/', $amountstring, $reg)) {
+							$amounthtlifetime['BILL_VALIDATE'] = (float) $reg[1];
+							$amountvatlifetime['BILL_VALIDATE'] = (float) $reg[2];
+							$amountttclifetime['BILL_VALIDATE'] = (float) $reg[3];
+						}
+					}
+					if (preg_match('/^SUMMARY LIFETIME PAID/', (string) $line[0])) {
+						$amountstring = (string) $line[0];
+						if (preg_match('/^SUMMARY LIFETIME PAID[^\d]*\s:\s([\d\.]+)/', $amountstring, $reg)) {
+							$amounthtlifetime['PAYMENT_CUSTOMER'] = (float) $reg[1];
+							$amountvatlifetime['PAYMENT_CUSTOMER'] = 0.0;
+							$amountttclifetime['PAYMENT_CUSTOMER'] = (float) $reg[1];
+						}
+					}
 				}
 
 				if (preg_match('/END - ([a-z0-9_]+)=([a-z0-9]+) - ([a-z0-9_]+)=([a-z0-9]+)$/', (string) $line[0], $reg)) {
@@ -1048,6 +1079,44 @@ if ($action == 'check' || $action == 'checkconfirmed') {
 			}
 			print '<br>';
 		}
+
+		// Now print the value for lifetime amounts.
+		$arraykeys = array('BILL_VALIDATE', 'PAYMENT_CUSTOMER');
+		foreach ($arraykeys as $key) {
+			if (is_null($amounthtlifetime[$key])) {		// If not entry found, we discard
+				continue;
+			}
+			$totalhttoshow = $amounthtlifetime[$key];
+			$totalvattoshow = $amountvatlifetime[$key];
+			$totaltoshow = $amountttclifetime[$key];
+
+			print '<b>'.dolPrintHTML($langs->trans("LifetimeAmountShort").' '.$langs->trans('log'.$key)).'</b>';
+			if ($key == 'BILL_VALIDATE') {
+				print ' <span class="opacitymedium">('.$langs->trans("Turnover").')</span>';
+			} elseif ($key == 'PAYMENT_CUSTOMER') {
+				print ' <span class="opacitymedium">('.$langs->trans("TurnoverCollected").')</span>';
+			}
+			print ': ';
+
+			if ($key == 'PAYMENT_CUSTOMER') {
+				print '<span class="amount">'.price($totaltoshow, 0, $langs, 1, -1, -1, getDolCurrency()).'</span>';
+			} else {
+				print $langs->trans("HT").': ';
+				print '<span class="amount">'.price($totalhttoshow, 0, $langs, 1, -1, -1, getDolCurrency()).'</span>';
+
+				print ' - ';
+
+				print $langs->trans("VAT").': ';
+				print '<span class="amount">'.price($totalvattoshow, 0, $langs, 1, -1, -1, getDolCurrency()).'</span>';
+
+				print ' - ';
+
+				print $langs->trans("TTC").': ';
+				print '<span class="amount">'.price($totaltoshow, 0, $langs, 1, -1, -1, getDolCurrency()).'</span>';
+			}
+			print '<br>';
+		}
+
 
 		print '<br>';
 
