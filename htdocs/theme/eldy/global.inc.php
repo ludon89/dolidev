@@ -4247,6 +4247,9 @@ div.tabsActionNoBottom {
 div.tabsAction > a {
 	margin-bottom: 16px !important;
 }
+div.tabsAction .dropdown .textbutton {
+	text-align: <?php echo $left; ?>;
+}
 
 a.tabTitle {
 	color: rgba(0,0,0,0.4) !important;
