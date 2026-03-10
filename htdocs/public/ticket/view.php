@@ -445,7 +445,7 @@ if ($action == "view_ticket" || $action == "presend" || $action == "close" || $a
 		print '</div>';
 
 		// Message list
-		print '<div class="ticketpublicarea ticketlargemargin centpercent">';
+		print '<div class="ticketpublicarea ticketlargemargin">';
 		print load_fiche_titre($langs->trans('TicketMessagesList'), '', 'conversation');
 		print '</div>';
 
