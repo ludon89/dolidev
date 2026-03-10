@@ -603,7 +603,7 @@ if ($step == 2 && $datatoexport) {
 			    // follow change on list
 			    $("#exportmodelid").change(function() {
 					console.log("We select a new profile");
-			        if ($(this).val()) {
+			        if ($(this).val() && $(this).val() != "-1") {
 			            $("#applyprofile").show();
 			        } else {
 			            $("#applyprofile").hide();
@@ -817,7 +817,8 @@ if ($step == 3 && $datatoexport) {
 			}
 		}
 	}
-	print '<td><span class="small">'.$list.'</span></td></tr>';
+	print '<td><span class="small">'.$list.'</span></td>';
+	print '</tr>';
 
 	print '</table>';
 	print '</div>';
@@ -974,6 +975,8 @@ if ($step == 4 && $datatoexport) {
 	$hselected = (string) $h;
 	$h++;
 
+	$titleofmodule = $objexport->array_export_module[0]->getName();
+
 	print dol_get_fiche_head($head, $hselected, 'Export', -2, 'download');
 
 	print '<div class="fichecenter">';
@@ -983,8 +986,7 @@ if ($step == 4 && $datatoexport) {
 	// Module
 	print '<tr><td class="titlefield tableforfield">'.$langs->trans("Module").'</td>';
 	print '<td>';
-	//print img_object($objexport->array_export_module[0]->getName(),$objexport->array_export_module[0]->picto).' ';
-	print $objexport->array_export_module[0]->getName();
+	print dolPrintHTML($titleofmodule);
 	print '</td></tr>';
 
 	// Lot de donnees a exporter
@@ -1011,7 +1013,7 @@ if ($step == 4 && $datatoexport) {
 			}
 		}
 	}
-	print '<td>'.$list.'</td>';
+	print '<td><span class="small">'.$list.'</span></td>';
 	print '</tr>';
 
 	// List of filtered fields
@@ -1119,10 +1121,10 @@ if ($step == 4 && $datatoexport) {
 		print $value.' ';
 		print '</td><td class="center nowraponall" width="40">';
 		if ($value < count($array_selected)) {
-			print '<a href="'.$_SERVER["PHP_SELF"].'?step='.$step.'&datatoexport='.$datatoexport.'&action=downfield&field='.$code.'">'.img_down().'</a>';
+			print '<a href="'.$_SERVER["PHP_SELF"].'?step='.$step.'&datatoexport='.$datatoexport.'&action=downfield&field='.$code.'" class="paddingleft paddingright">'.img_down().'</a>';
 		}
 		if ($value > 1) {
-			print '<a href="'.$_SERVER["PHP_SELF"].'?step='.$step.'&datatoexport='.$datatoexport.'&action=upfield&field='.$code.'">'.img_up().'</a>';
+			print '<a href="'.$_SERVER["PHP_SELF"].'?step='.$step.'&datatoexport='.$datatoexport.'&action=upfield&field='.$code.'" class="paddingleft paddingright">'.img_up().'</a>';
 		}
 		print '</td>';
 
@@ -1163,6 +1165,7 @@ if ($step == 4 && $datatoexport) {
 		print '<input type="hidden" name="step" value="'.$step.'">';
 		print '<input type="hidden" name="datatoexport" value="'.$datatoexport.'">';
 		print '<input type="hidden" name="hexa" value="'.$hexa.'">';
+		print '<input type="hidden" name="page_y" value="">';
 
 		print '<div class="div-table-responsive-no-min">'; // You can use div-table-responsive-no-min if you don't need reserved height for your table
 		print '<table class="noborder centpercent">';
@@ -1172,14 +1175,20 @@ if ($step == 4 && $datatoexport) {
 		print '<td></td>';
 		print '</tr>';
 
+		$nameofexportprofile = str_replace(' ', '-', $langs->trans("ExportProfile").' '.$titleofmodule.' '.dol_print_date(dol_now('gmt'), 'dayxcard'));
+		if (GETPOST('export_name')) {	// If we have submitted a form, we take value used for the update try
+			$nameofexportprofile = $export_name;
+		}
+
+
 		print '<tr class="oddeven">';
-		print '<td><input name="export_name" value=""></td>';
+		print '<td><input name="export_name" class="minwidth300" value="'.$nameofexportprofile.'"></td>';
 		print '<td>';
 		$arrayvisibility = array('private' => $langs->trans("Private"), 'all' => $langs->trans("Everybody"));
 		print $form->selectarray('visibility', $arrayvisibility, 'private');
 		print '</td>';
 		print '<td class="right">';
-		print '<input type="submit" class="button reposition button-save small" value="'.$langs->trans("Save").'">';
+		print '<input type="submit" class="button reposition button-save smallpaddingimp" value="'.$langs->trans("Save").'">';
 		print '</td></tr>';
 
 		$tmpuser = new User($db);
@@ -1207,7 +1216,7 @@ if ($step == 4 && $datatoexport) {
 					print $langs->trans("Everybody");
 				} else {
 					$tmpuser->fetch($obj->fk_user);
-					print $tmpuser->getNomUrl(1);
+					print $tmpuser->getNomUrl(-1);
 				}
 				print '</td>';
 				print '<td class="right">';
@@ -1305,7 +1314,7 @@ if ($step == 5 && $datatoexport) {
 	// List of exported fields
 	print '<tr><td>'.$langs->trans("ExportedFields").'</td>';
 	$list = '';
-	foreach ($array_selected as $code => $label) {
+	foreach ($array_selected as $code => $value) {
 		if (isset($objexport->array_export_fields[0][$code])) {
 			$list .= (!empty($list) ? ', ' : '');
 
@@ -1317,7 +1326,8 @@ if ($step == 5 && $datatoexport) {
 			}
 		}
 	}
-	print '<td>'.$list.'</td></tr>';
+	print '<td><span class="small">'.$list.'</span></td>';
+	print '</tr>';
 
 	// List of filtered fields
 	if (isset($objexport->array_export_TypeFields[0]) && is_array($objexport->array_export_TypeFields[0])) {
