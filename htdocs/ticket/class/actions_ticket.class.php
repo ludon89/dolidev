@@ -319,12 +319,14 @@ class ActionsTicket extends CommonHookActions
 							$userstat = new User($this->db);
 							$res = $userstat->fetch($arraymsgs['fk_user_author']);
 							if ($res) {
+								print img_picto('', 'user', 'class="pictofixedwidth"');
 								print $userstat->getNomUrl(0);
 							}
 						} elseif (isset($arraymsgs['fk_contact_author'])) {
 							$contactstat = new Contact($this->db);
 							$res = $contactstat->fetch(0, null, '', $arraymsgs['fk_contact_author']);
 							if ($res) {
+								print img_picto('', 'contact', 'class="pictofixedwidth"');
 								print $contactstat->getNomUrl(0, 'nolink');
 							} else {
 								print $arraymsgs['fk_contact_author'];
@@ -336,7 +338,7 @@ class ActionsTicket extends CommonHookActions
 					}
 					print '</tr>';
 
-					print '<tr class="oddeven nohover">';
+					print '<tr class="oddeven nohover borderbottom">';
 					print '<td'.($show_user ? ' colspan="2"' : '').'>';
 					print $arraymsgs['message'];
 
