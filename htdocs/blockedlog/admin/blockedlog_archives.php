@@ -1022,6 +1022,7 @@ if ($action == 'check' || $action == 'checkconfirmed') {
 		}
 		print '<br><br>';
 
+		/*
 		if (!userIsTaxAuditor()) {
 			if ($nbLinesModifiedInExportButKo) {
 				print img_picto('', 'cross', 'class="error valignmiddle pictofixedwidth"');
@@ -1029,6 +1030,7 @@ if ($action == 'check' || $action == 'checkconfirmed') {
 				print '<br><br>';
 			}
 		}
+		*/
 
 		if ($nbLinesModifiedBeforeExport) {
 			print img_picto('', 'warning', 'class="error valignmiddle pictofixedwidth"');
