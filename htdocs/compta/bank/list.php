@@ -732,18 +732,19 @@ foreach ($accounts as $key => $type) {
 
 		// Accountancy journal
 		if (!empty($arrayfields['b.fk_accountancy_journal']['checked'])) {
-			print '<td class="tdoverflowmax125">';
 			if (isModEnabled('accounting')) {
 				if (empty($objecttmp->fk_accountancy_journal)) {
-					print img_warning($langs->trans("Mandatory"));
+					$s = img_warning($langs->trans("Mandatory"));
 				} else {
 					$accountingjournal = new AccountingJournal($db);
 					$accountingjournal->fetch($objecttmp->fk_accountancy_journal);
-					print $accountingjournal->getNomUrl(0, 1, 1, '', 1);
+					$s = $accountingjournal->getNomUrl(0, 1, 1, '', 1);
 				}
 			} else {
-				print '';
+				$s = '';
 			}
+			print '<td class="tdoverflowmax125" title="'.dolPrintHTMLForAttribute(dol_string_nohtmltag($s)).'">';
+			print $s;
 			print '</td>';
 			if (!$i) {
 				$totalarray['nbfield']++;
