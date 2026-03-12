@@ -12057,10 +12057,10 @@ function dol_eval_standard($s, $hideerrors = 1, $onlysimplestring = '1')
 	global $action, $mainmenu, $leftmenu;
 	global $mysoc;
 	global $objectoffield;	// To allow the use of $objectoffield in computed fields
+	global $object;
 
 	// Old variables (deprecated)
 	if (getDolGlobalString('MAIN_ALLOW_OLD_VAR_OBJ_IN_DOL_EVAL')) {
-		global $object;
 		global $obj; // To get $obj used into list when dol_eval() is used for computed fields and $obj is not yet $objectoffield
 	}
 
@@ -12184,14 +12184,14 @@ function dol_eval_standard($s, $hideerrors = 1, $onlysimplestring = '1')
 			$scheck = preg_replace('/\$websitepage/', '__VARWEBSITEPAGE__', $scheck);
 			$scheck = preg_replace('/\$website/', '__VARWEBSITE__', $scheck);
 			$scheck = preg_replace('/\$objectoffield/', '__VAROBJECTOFFIELD__', $scheck);
+			$scheck = preg_replace('/\$object/', '__VAROBJECT__', $scheck);
 			$scheck = preg_replace('/\$var/', '__VARVAR__', $scheck);
 
-			// deprecated (now we use $objecftoffield->canvas)
-			$scheck = preg_replace('/\$object->canvas/', '__VAROBJECTCANVAS__', $scheck);
+			// deprecated (now we use $objecf->canvas or $objectoffield->canvas)
 			$scheck = preg_replace('/\$soc->canvas/', '__VARSOCCANVAS__', $scheck);
 			$scheck = preg_replace('/\$obj->canvas/', '__VAROBJCANVAS__', $scheck);
 
-			// Now test if it remains 1 $
+			// Now test if it remains one '$'
 			if (strpos($scheck, '$') !== false) {
 				dol_syslog('Bad string syntax to evaluate (found use of $ not matching pattern: $user->hasRight, ($db), $langs, $mysoc, $action, $mainmenu, $leftmenu, $website, $websitepage, $objectoffield or $var123): ' . $s, LOG_WARNING);
 				return 'Bad string syntax to evaluate (found use of $ not matching pattern: $user->hasRight, ($db), $langs, $mysoc, $action, $mainmenu, $leftmenu, $website, $websitepage, $objectoffield or $var123): ' . $s;
