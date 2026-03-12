@@ -46,11 +46,15 @@ jobs:
         GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         prid: ${{ github.event.pull_request.number }}
         prid2: ${{ github.event.pull_request_target.number }}
+        prref: ${{ github.event.pull_request.ref }}
+        prref2: ${{ github.event.pull_request_target.ref }}
         url: ${{ github.event.pull_request.html_url }}
         url2: ${{ github.event.pull_request_target.html_url }}
       run: |
         echo "env.prid=${{env.prid}}"
-        echo "env.prid=${{env.prid2}}"
+        echo "env.prid2=${{env.prid2}}"
+        echo "env.prref=${{env.prref}}"
+        echo "env.prref2=${{env.prref2}}"
         echo "env.url=${{env.url}}"
         echo "env.url2=${{env.url2}}"
         gh pr edit "${{env.prid}}" --add-label "Issue for v18 maintenance Team"
