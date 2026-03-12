@@ -75,7 +75,7 @@ jobs:
         echo "reviewers=$(IFS=, ; echo "${FINAL_REVIEWERS[*]}")" >> $GITHUB_OUTPUT
 
     - name: Assign reviewers
-      if: steps.set-reviewers.outputs.reviewers != ''
+      if: steps.set-reviewers.outputs.reviewers != '' && ${{env.prid}} != ''
       env:
         GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         prid: ${{ github.event.pull_request.number }}
