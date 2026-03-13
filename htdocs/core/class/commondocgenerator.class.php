@@ -1741,7 +1741,7 @@ abstract class CommonDocGenerator
 
 
 	/**
-	 *  display extrafields columns content
+	 *  Display extrafields columns content on documents
 	 *
 	 *  @param	CommonObject|CommonObjectLine	$object    		line of common object
 	 *  @param 	Translate 						$outputlangs    Output language
@@ -1817,6 +1817,10 @@ abstract class CommonDocGenerator
 					if (in_array($printable, $params['printableEnableNotEmpty'])) {
 						$disableOnEmpty = 1;
 					}
+				}
+
+				if (empty($extrafields->attributes[$object->table_element]['printable'][$key])) {
+					continue;
 				}
 
 				if (empty($enabled)) {
