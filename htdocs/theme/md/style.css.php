@@ -5436,6 +5436,9 @@ span.boxstatstext {
 	color: #000;
 	font-size: 0.8em;
 }
+span.boxstatstext span.fas {
+	filter: grayscale(100%);
+}
 .boxstatsindicator.thumbstat150 {	/* If we remove this, box position is ko on ipad */
 	display: inline-flex;
 }
