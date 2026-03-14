@@ -406,7 +406,7 @@ if (GETPOSTISSET('THEME_SATURATE_RATIO')) {
 	background-color: #EEE;
 }
 .prospect-back {
-	background-color: #a7c5b0 !important;
+	background-color: #a3c0ad !important;
 	color: #FFF !important;
 }
 .customer-back {
@@ -414,21 +414,21 @@ if (GETPOSTISSET('THEME_SATURATE_RATIO')) {
 	color: #FFF !important;
 }
 .vendor-back {
-	background-color: #599caf !important;
+	background-color: #499caf !important;
 	color: #FFF !important;
 }
 .user-back {
 	background-color: #79633f !important;
 	color: #FFF !important;
 }
-.member-company-back {
-	background-color: #e4e4e4;
-	color: #666;
+.member-individual-back {
+	background-color: #258fa5;
+	color: #fff;
 	white-space: nowrap;
 }
-.member-individual-back {
-	background-color: #e4e4e4;
-	color: #666;
+.member-company-back {
+	background-color: #557b95;
+	color: #fff;
 	white-space: nowrap;
 }
 .nonature-back, .prospect-back, .customer-back, .vendor-back, .user-back, .member-company-back, .member-individual-back {
