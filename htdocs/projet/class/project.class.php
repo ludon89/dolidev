@@ -1786,7 +1786,11 @@ class Project extends CommonObject
 		if ($move_date) {
 			$clone_project->date_start = $now;
 			if (!empty($clone_project->date_end)) {
-				$clone_project->date_end += ($now - (int) $orign_dt_start);
+				if (!empty($orign_dt_start)) {
+					$clone_project->date_end += ($now - (int) $orign_dt_start);
+				} elseif (!empty($clone_project->date_c)) {
+					$clone_project->date_end += ($now - (int) $clone_project->date_c);
+				}
 			}
 		}
 
