@@ -791,9 +791,9 @@ abstract class CommonInvoice extends CommonObject
 			if (!empty($hookmanager->resArray['result'])) {
 				$this->error = $hookmanager->resArray['error'];
 				if (!empty($hookmanager->resArray['errors'])) {
-					$this->errors[] = array_merge($this->errors, $this->error, $hookmanager->resArray['errors']);
+					$this->errors = array_merge($this->errors, array($this->error), $hookmanager->resArray['errors']);
 				} else {
-					$this->errors[] = array_merge($this->errors, $this->error);
+					$this->errors = array_merge($this->errors, array($this->error));
 				}
 				return $hookmanager->resArray['result'];
 			}
