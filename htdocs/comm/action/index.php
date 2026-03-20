@@ -49,7 +49,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/agenda.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
 
-$MAXAGENDA = getDolGlobalString('AGENDA_EXT_NB', 5);
+$MAXAGENDA = getDolGlobalString('AGENDA_EXT_NB', 6);
 $DELAYFORCACHE = 300;	// 300 seconds
 
 $action = GETPOST('action', 'aZ09');
@@ -269,60 +269,58 @@ $nowday = $nowarray['mday'];
 $listofextcals = array();
 
 // Define list of external calendars (global admin setup)
-if (!getDolGlobalString('AGENDA_DISABLE_EXT')) {
-	$i = 0;
-	while ($i < $MAXAGENDA) {
-		$i++;
-		$source = 'AGENDA_EXT_SRC'.$i;
-		$name = 'AGENDA_EXT_NAME'.$i;
-		$offsettz = 'AGENDA_EXT_OFFSETTZ'.$i;
-		$color = 'AGENDA_EXT_COLOR'.$i;
-		$default = 'AGENDA_EXT_ACTIVEBYDEFAULT'.$i;
-		$buggedfile = 'AGENDA_EXT_BUGGEDFILE'.$i;
-		if (getDolGlobalString($source) && getDolGlobalString($name)) {
-			// Note: $conf->global->buggedfile can be empty or 'uselocalandtznodaylight' or 'uselocalandtzdaylight'
-			$listofextcals[] = array(
-				'type' => 'globalsetup',
-				'src' => getDolGlobalString($source),
-				'name' => dol_string_nohtmltag(getDolGlobalString($name)),
-				'offsettz' => (int) getDolGlobalInt($offsettz, 0),
-				'color' => dol_string_nohtmltag(getDolGlobalString($color)),
-				// @phan-suppress-next-line PhanPluginSuspiciousParamPosition
-				'default' => dol_string_nohtmltag(getDolGlobalString($default)),
-				'buggedfile' => dol_string_nohtmltag(getDolGlobalString('buggedfile', ''))
-			);
-		}
+$i = 0;
+while ($i < $MAXAGENDA) {
+	$i++;
+	$source = 'AGENDA_EXT_SRC'.$i;
+	$name = 'AGENDA_EXT_NAME'.$i;
+	$offsettz = 'AGENDA_EXT_OFFSETTZ'.$i;
+	$color = 'AGENDA_EXT_COLOR'.$i;
+	$enabled = 'AGENDA_EXT_ENABLED'.$i;
+	$default = 'AGENDA_EXT_ACTIVEBYDEFAULT'.$i;
+	$buggedfile = 'AGENDA_EXT_BUGGEDFILE'.$i;
+	if (getDolGlobalString($source) && getDolGlobalString($name) && getDolGlobalString($enabled)) {
+		// Note: $conf->global->buggedfile can be empty or 'uselocalandtznodaylight' or 'uselocalandtzdaylight'
+		$listofextcals[] = array(
+			'type' => 'globalsetup',
+			'src' => getDolGlobalString($source),
+			'name' => dol_string_nohtmltag(getDolGlobalString($name)),
+			'offsettz' => (int) getDolGlobalInt($offsettz, 0),
+			'color' => dol_string_nohtmltag(getDolGlobalString($color)),
+			// @phan-suppress-next-line PhanPluginSuspiciousParamPosition
+			'default' => dol_string_nohtmltag(getDolGlobalString($default)),
+			'buggedfile' => dol_string_nohtmltag(getDolGlobalString('buggedfile', ''))
+		);
 	}
 }
 
 // Define list of external calendars (user setup)
-if (!getDolUserString('AGENDA_DISABLE_EXT')) {
-	$i = 0;
-	while ($i < $MAXAGENDA) {
-		$i++;
-		$source = 'AGENDA_EXT_SRC_'.$user->id.'_'.$i;
-		$name = 'AGENDA_EXT_NAME_'.$user->id.'_'.$i;
-		$offsettz = 'AGENDA_EXT_OFFSETTZ_'.$user->id.'_'.$i;
-		$color = 'AGENDA_EXT_COLOR_'.$user->id.'_'.$i;
-		$enabled = 'AGENDA_EXT_ENABLED_'.$user->id.'_'.$i;
-		$default = 'AGENDA_EXT_ACTIVEBYDEFAULT_'.$user->id.'_'.$i;
-		$buggedfile = 'AGENDA_EXT_BUGGEDFILE_'.$user->id.'_'.$i;
+$i = 0;
+while ($i < $MAXAGENDA) {
+	$i++;
+	$source = 'AGENDA_EXT_SRC_'.$user->id.'_'.$i;
+	$name = 'AGENDA_EXT_NAME_'.$user->id.'_'.$i;
+	$offsettz = 'AGENDA_EXT_OFFSETTZ_'.$user->id.'_'.$i;
+	$color = 'AGENDA_EXT_COLOR_'.$user->id.'_'.$i;
+	$enabled = 'AGENDA_EXT_ENABLED_'.$user->id.'_'.$i;
+	$default = 'AGENDA_EXT_ACTIVEBYDEFAULT_'.$user->id.'_'.$i;
+	$buggedfile = 'AGENDA_EXT_BUGGEDFILE_'.$user->id.'_'.$i;
 
-		if (getDolUserString($source) && getDolUserString($name)) {
-			// Note: $conf->global->buggedfile can be empty or 'uselocalandtznodaylight' or 'uselocalandtzdaylight'
-			$listofextcals[] = array(
-				'type' => 'usersetup',
-				'src' => getDolUserString($source),
-				'name' => dol_string_nohtmltag(getDolUserString($name)),
-				'offsettz' => (int) (empty($user->conf->$offsettz) ? 0 : $user->conf->$offsettz),
-				'color' => dol_string_nohtmltag(getDolUserString($color)),
-				// @phan-suppress-next-line PhanPluginSuspiciousParamPosition
-				'default' => dol_string_nohtmltag(getDolUserString($default)),
-				'buggedfile' => dol_string_nohtmltag(isset($user->conf->buggedfile) ? $user->conf->buggedfile : '')
-			);
-		}
+	if (getDolUserString($source) && getDolUserString($name)) {
+		// Note: $conf->global->buggedfile can be empty or 'uselocalandtznodaylight' or 'uselocalandtzdaylight'
+		$listofextcals[] = array(
+			'type' => 'usersetup',
+			'src' => getDolUserString($source),
+			'name' => dol_string_nohtmltag(getDolUserString($name)),
+			'offsettz' => (int) (empty($user->conf->$offsettz) ? 0 : $user->conf->$offsettz),
+			'color' => dol_string_nohtmltag(getDolUserString($color)),
+			// @phan-suppress-next-line PhanPluginSuspiciousParamPosition
+			'default' => dol_string_nohtmltag(getDolUserString($default)),
+			'buggedfile' => dol_string_nohtmltag(isset($user->conf->buggedfile) ? $user->conf->buggedfile : '')
+		);
 	}
 }
+
 $firstdaytoshow = 0;
 $max_day_in_month = 0;
 $lastdaytoshow = 0;
