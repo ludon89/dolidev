@@ -256,6 +256,7 @@ RefOrLabel=Ref. or label
 Info=Log
 Family=Family
 Description=Description
+NoDescription=No description
 Designation=Description
 DescriptionOfLine=Description of line
 DateOfLine=Date of line
