@@ -157,19 +157,22 @@ if (empty($mode) && !GETPOSTISSET('mode')) {
 if ($mode == 'default') {	// When action is default, we want a calendar view and not the list
 	$mode = (($defaultview != 'show_list') ? $defaultview : 'show_month');
 }
+// View by month
 if (GETPOST('viewcal') && GETPOST('mode') != 'show_day' && GETPOST('mode') != 'show_week') {
 	$mode = 'show_month';
 	$day = '';
-} // View by month
+}
+// View by week
 if (GETPOST('viewweek') || GETPOST('mode') == 'show_week') {
 	$mode = 'show_week';
 	$week = ($week ? $week : date("W"));
 	$day = ($day ? $day : date("d"));
-} // View by week
+}
+// View by day
 if (GETPOST('viewday') || GETPOST('mode') == 'show_day') {
 	$mode = 'show_day';
 	$day = ($day ? $day : date("d"));
-} // View by day
+}
 
 $object = new ActionComm($db);
 
@@ -413,10 +416,12 @@ if ($status == 'todo') {
 */
 
 $param = '';
-if ($actioncode || GETPOSTISSET('search_actioncode')) {
+if (($actioncode && $actioncode !== '-1') || GETPOSTISSET('search_actioncode')) {
 	if (is_array($actioncode)) {
 		foreach ($actioncode as $str_action) {
-			$param .= "&search_actioncode[]=".urlencode($str_action);
+			if ($str_action != '-1') {
+				$param .= "&search_actioncode[]=".urlencode($str_action);
+			}
 		}
 	} else {
 		$param .= "&search_actioncode=".urlencode($actioncode);
@@ -660,8 +665,7 @@ if (!empty($conf->use_javascript_ajax)) {	// If javascript on
 	// Holiday calendar
 	if ($user->hasRight("holiday", "read")) {
 		$s .= '
-            <div class="nowrap inline-block minheight30"><input type="checkbox" id="check_holiday" name="check_holiday" value="1" class="marginleftonly check_holiday"' . ($check_holiday
-					? ' checked' : '') . '>
+            <div class="nowrap inline-block minheight30"><input type="checkbox" id="check_holiday" name="check_holiday" value="1" class="marginleftonly check_holiday"' . ($check_holiday ? ' checked' : '') . '>
                 <label for="check_holiday" class="labelcalendar">
                     <span class="check_holiday_text">' . $langs->trans("Holidays") . '</span>
                 </label> &nbsp;
