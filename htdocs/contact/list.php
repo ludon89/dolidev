@@ -1108,7 +1108,7 @@ if ($optioncss != '') {
 }
 print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
-print '<input type="hidden" name="view" value="'.dol_escape_htmltag($view).'">';
+print '<input type="hidden" name="view" value="'.dolPrintHTMLForAttribute($view).'">';
 print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
 print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
 //print '<input type="hidden" name="page" value="'.$page.'">';
@@ -1229,54 +1229,54 @@ if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
 }
 if (!empty($arrayfields['p.rowid']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring" type="text" name="search_id" size="1" value="'.dol_escape_htmltag($search_id).'">';
+	print '<input class="flat searchstring" type="text" name="search_id" size="1" value="'.dolPrintHTMLForAttribute($search_id).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.lastname']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth75imp" type="text" name="search_lastname" value="'.dol_escape_htmltag($search_lastname).'">';
+	print '<input class="flat searchstring maxwidth75imp" type="text" name="search_lastname" value="'.dolPrintHTMLForAttribute($search_lastname).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.firstname']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth75imp" type="text" name="search_firstname" value="'.dol_escape_htmltag($search_firstname).'">';
+	print '<input class="flat searchstring maxwidth75imp" type="text" name="search_firstname" value="'.dolPrintHTMLForAttribute($search_firstname).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.ref_ext']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_ref_ext" value="'.dol_escape_htmltag($search_ref_ext).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_ref_ext" value="'.dolPrintHTMLForAttribute($search_ref_ext).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.poste']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_poste" value="'.dol_escape_htmltag($search_poste).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_poste" value="'.dolPrintHTMLForAttribute($search_poste).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.address']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_address" value="'.dol_escape_htmltag($search_address).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_address" value="'.dolPrintHTMLForAttribute($search_address).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.zip']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_zip" value="'.dol_escape_htmltag($search_zip).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_zip" value="'.dolPrintHTMLForAttribute($search_zip).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.town']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_town" value="'.dol_escape_htmltag($search_town).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_town" value="'.dolPrintHTMLForAttribute($search_town).'">';
 	print '</td>';
 }
 // State
 if (!empty($arrayfields['state.nom']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_state" value="'.dol_escape_htmltag($search_state).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_state" value="'.dolPrintHTMLForAttribute($search_state).'">';
 	print '</td>';
 }
 // Region
 if (!empty($arrayfields['region.nom']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_region" value="'.dol_escape_htmltag($search_region).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_region" value="'.dolPrintHTMLForAttribute($search_region).'">';
 	print '</td>';
 }
 // Country
@@ -1287,27 +1287,27 @@ if (!empty($arrayfields['country.code_iso']['checked'])) {
 }
 if (!empty($arrayfields['p.phone']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_phone_pro" size="6" value="'.dol_escape_htmltag($search_phone_pro).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_phone_pro" size="6" value="'.dolPrintHTMLForAttribute($search_phone_pro).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.phone_perso']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_phone_perso" size="6" value="'.dol_escape_htmltag($search_phone_perso).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_phone_perso" size="6" value="'.dolPrintHTMLForAttribute($search_phone_perso).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.phone_mobile']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_phone_mobile" size="6" value="'.dol_escape_htmltag($search_phone_mobile).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_phone_mobile" size="6" value="'.dolPrintHTMLForAttribute($search_phone_mobile).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.fax']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_fax" size="6" value="'.dol_escape_htmltag($search_fax).'">';
+	print '<input class="flat searchstring maxwidth50imp" type="text" name="search_fax" size="6" value="'.dolPrintHTMLForAttribute($search_fax).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.email']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchemail maxwidth50imp" type="text" name="search_email" size="6" value="'.dol_escape_htmltag($search_email).'">';
+	print '<input class="flat searchemail maxwidth50imp" type="text" name="search_email" size="6" value="'.dolPrintHTMLForAttribute($search_email).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['unsubscribed']['checked'])) {
@@ -1320,7 +1320,7 @@ if (isModEnabled('socialnetworks')) {
 		if ($value['active']) {
 			if (!empty($arrayfields['p.'.$key]['checked'])) {
 				print '<td class="liste_titre">';
-				print '<input class="flat" type="text" name="search_'.$key.'" size="6" value="'.dol_escape_htmltag($search_[$key]).'">';
+				print '<input class="flat" type="text" name="search_'.$key.'" size="6" value="'.dolPrintHTMLForAttribute($search_[$key]).'">';
 				print '</td>';
 			}
 		}
@@ -1328,13 +1328,13 @@ if (isModEnabled('socialnetworks')) {
 }
 if (!empty($arrayfields['p.fk_soc']['checked']) || !empty($arrayfields['s.nom']['checked'])) {
 	print '<td class="liste_titre">';
-	print '<input class="flat searchstring maxwidth75imp" type="text" name="search_societe" size="8" value="'.dol_escape_htmltag($search_societe).'">';
+	print '<input class="flat searchstring maxwidth75imp" type="text" name="search_societe" size="8" value="'.dolPrintHTMLForAttribute($search_societe).'">';
 	print '</td>';
 }
 // Alias of ThirdParty
 if (!empty($arrayfields['s.name_alias']['checked'])) {
 	print '<td class="liste_titre left">';
-	print '<input class="flat searchstring maxwidth75imp" type="text" name="search_societe_alias" value="'.dol_escape_htmltag($search_societe_alias).'">';
+	print '<input class="flat searchstring maxwidth75imp" type="text" name="search_societe_alias" value="'.dolPrintHTMLForAttribute($search_societe_alias).'">';
 	print '</td>';
 }
 if (!empty($arrayfields['p.priv']['checked'])) {
@@ -1412,7 +1412,7 @@ if (!empty($arrayfields['p.statut']['checked'])) {
 }
 if (!empty($arrayfields['p.import_key']['checked'])) {
 	print '<td class="liste_titre center">';
-	print '<input class="flat searchstring maxwidth50" type="text" name="search_import_key" size="3" value="'.dol_escape_htmltag($search_import_key).'">';
+	print '<input class="flat searchstring maxwidth50" type="text" name="search_import_key" size="3" value="'.dolPrintHTMLForAttribute($search_import_key).'">';
 	print '</td>';
 }
 // Action column
@@ -1669,7 +1669,7 @@ while ($i < $imaxinloop) {
 		// ID
 		if (!empty($arrayfields['p.rowid']['checked'])) {
 			print '<td class="tdoverflowmax50">';
-			print dol_escape_htmltag($obj->rowid);
+			print dolPrintHTML($obj->rowid);
 			print "</td>\n";
 			if (!$i) {
 				$totalarray['nbfield']++;
@@ -1712,7 +1712,7 @@ while ($i < $imaxinloop) {
 
 		// Job position
 		if (!empty($arrayfields['p.poste']['checked'])) {
-			print '<td class="tdoverflowmax100">'.dol_escape_htmltag($obj->poste).'</td>';
+			print '<td class="tdoverflowmax100">'.dolPrintHTML($obj->poste).'</td>';
 			if (!$i) {
 				$totalarray['nbfield']++;
 			}
@@ -1720,7 +1720,7 @@ while ($i < $imaxinloop) {
 
 		// Address
 		if (!empty($arrayfields['p.address']['checked'])) {
-			print '<td>'.dol_escape_htmltag($obj->address).'</td>';
+			print '<td>'.dolPrintHTML($obj->address).'</td>';
 			if (!$i) {
 				$totalarray['nbfield']++;
 			}
@@ -1728,7 +1728,7 @@ while ($i < $imaxinloop) {
 
 		// Zip
 		if (!empty($arrayfields['p.zip']['checked'])) {
-			print '<td>'.dol_escape_htmltag($obj->zip).'</td>';
+			print '<td>'.dolPrintHTML($obj->zip).'</td>';
 			if (!$i) {
 				$totalarray['nbfield']++;
 			}
@@ -1736,21 +1736,21 @@ while ($i < $imaxinloop) {
 
 		// Town
 		if (!empty($arrayfields['p.town']['checked'])) {
-			print '<td class="tdoverflowmax100" title="'.dol_escape_htmltag($obj->town).'">'.dol_escape_htmltag($obj->town).'</td>';
+			print '<td class="tdoverflowmax100" title="'.dolPrintHTMLForAttribute($obj->town).'">'.dolPrintHTML($obj->town).'</td>';
 			if (!$i) {
 				$totalarray['nbfield']++;
 			}
 		}
 		// State
 		if (!empty($arrayfields['state.nom']['checked'])) {
-			print "<td>".dol_escape_htmltag($obj->state_name)."</td>\n";
+			print "<td>".dolPrintHTML($obj->state_name)."</td>\n";
 			if (!$i) {
 				$totalarray['nbfield']++;
 			}
 		}
 		// Region
 		if (!empty($arrayfields['region.nom']['checked'])) {
-			print "<td>".dol_escape_htmltag($obj->region_name)."</td>\n";
+			print "<td>".dolPrintHTML($obj->region_name)."</td>\n";
 			if (!$i) {
 				$totalarray['nbfield']++;
 			}
@@ -1759,7 +1759,7 @@ while ($i < $imaxinloop) {
 		if (!empty($arrayfields['country.code_iso']['checked'])) {
 			print '<td class="center">';
 			$tmparray = getCountry($obj->fk_pays, 'all');
-			print dol_escape_htmltag($tmparray['label']);
+			print dolPrintHTML($tmparray['label']);
 			print '</td>';
 			if (!$i) {
 				$totalarray['nbfield']++;
@@ -1866,8 +1866,8 @@ while ($i < $imaxinloop) {
 
 		// Alias name
 		if (!empty($arrayfields['s.name_alias']['checked'])) {
-			print '<td class="tdoverflowmax100" title="'.dol_escape_htmltag($obj->alias).'">';
-			print dol_escape_htmltag($obj->alias);
+			print '<td class="tdoverflowmax100" title="'.dolPrintHTMLForAttribute($obj->alias).'">';
+			print dolPrintHTML($obj->alias);
 			print '</td>';
 			if (!$i) {
 				$totalarray['nbfield']++;
@@ -1990,7 +1990,7 @@ while ($i < $imaxinloop) {
 		// Import key
 		if (!empty($arrayfields['p.import_key']['checked'])) {
 			print '<td class="tdoverflowmax100">';
-			print dol_escape_htmltag($obj->import_key);
+			print dolPrintHTML($obj->import_key);
 			print "</td>\n";
 			if (!$i) {
 				$totalarray['nbfield']++;
