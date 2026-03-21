@@ -4665,6 +4665,9 @@ table.liste, table.noborder, table.formdoc, div.noborder {
 
 	border-radius: 0.1em;
 }
+table.tagtable.liste.listwithfilterbefore {
+	margin-bottom: 8px;
+}
 table.noborder tr, div.noborder form {
 	border-top-color: #FEFEFE;
 
