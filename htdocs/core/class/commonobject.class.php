@@ -10540,6 +10540,7 @@ abstract class CommonObject
 	 */
 	public function createCommon(User $user, $notrigger = 0)
 	{
+		global $conf;
 		//global $langs;  		// Should be able to work with $langs loaded
 
 		dol_syslog(get_class($this)."::createCommon create", LOG_DEBUG);
