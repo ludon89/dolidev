@@ -10611,7 +10611,7 @@ abstract class CommonObject
 				global $langs;
 				if (empty($langs)) {
 					require_once DOL_DOCUMENT_ROOT.'/core/class/translate.class.php';
-					$langs = new Translate($this->db);
+					$langs = new Translate($this->db, $conf);
 					$langs->setDefaultLang();
 					$langs->load("errors");
 				}
