@@ -2284,9 +2284,16 @@ abstract class CommonObject
 			$id_field = 'rowid';
 		}
 
+		$propfield = $field;
+
 		// Special case
 		if ($table == 'product' && $field == 'note_private') {
 			$field = 'note';
+			$propfield = 'note_private';
+		}
+		if ($table == 'product' && $field == 'status') {
+			$field = 'tosell';
+			$propfield = 'status';
 		}
 
 		if (in_array($table, array('actioncomm', 'adherent', 'advtargetemailing', 'cronjob', 'establishment'))) {
@@ -2298,9 +2305,9 @@ abstract class CommonObject
 
 		$oldvalue = null;
 		if ($trigkey) {
-			$sql = "SELECT " . $field;
-			$sql .= " FROM " . MAIN_DB_PREFIX . $table;
-			$sql .= " WHERE " . $id_field . " = " . ((int) $id);
+			$sql = "SELECT " . $this->db->sanitize($field);
+			$sql .= " FROM " . MAIN_DB_PREFIX . $this->db->sanitize($table);
+			$sql .= " WHERE " . $this->db->sanitize($id_field) . " = " . ((int) $id);
 
 			$resql = $this->db->query($sql);
 			if ($resql) {
@@ -2326,13 +2333,13 @@ abstract class CommonObject
 		$sql = "UPDATE ".$this->db->prefix().$table." SET ";
 
 		if ($format == 'text') {
-			$sql .= $field." = '".$this->db->escape($value)."'";
+			$sql .= $this->db->sanitize($field)." = '".$this->db->escape($value)."'";
 		} elseif ($format == 'int') {
-			$sql .= $field." = ".((int) $value);
+			$sql .= $this->db->sanitize($field)." = ".((int) $value);
 		} elseif ($format == 'date') {
-			$sql .= $field." = ".($value ? "'".$this->db->idate($value)."'" : "null");
+			$sql .= $this->db->sanitize($field)." = ".($value ? "'".$this->db->idate($value)."'" : "null");
 		} elseif ($format == 'dategmt') {
-			$sql .= $field." = ".($value ? "'".$this->db->idate($value, 'gmt')."'" : "null");
+			$sql .= $this->db->sanitize($field)." = ".($value ? "'".$this->db->idate($value, 'gmt')."'" : "null");
 		}
 
 		if ($fk_user_field) {
@@ -2343,7 +2350,7 @@ abstract class CommonObject
 			}
 		}
 
-		$sql .= " WHERE ".$id_field." = ".((int) $id);
+		$sql .= " WHERE ".$this->db->sanitize($id_field)." = ".((int) $id);
 
 		$resql = $this->db->query($sql);
 		if ($resql) {
@@ -2354,9 +2361,16 @@ abstract class CommonObject
 				} else {
 					$result = $this->fetchCommon($id);
 				}
+				if (property_exists($this, $field)) {	// Set again the property field because it may have been erased by the previous fetch
+					$this->$field = $value;
+				}
+				if ($propfield != $field && property_exists($this, $propfield)) {	// Set again the property field because it may have been erased by the previous fetch
+					$this->$propfield = $value;
+				}
+
 				$this->oldcopy = clone $this;
-				if (property_exists($this->oldcopy, $field)) {
-					$this->oldcopy->$field = $oldvalue;
+				if (property_exists($this->oldcopy, $propfield)) {
+					$this->oldcopy->$propfield = $oldvalue;
 				}
 
 				if (empty($this->context['actionmsgmore'])) {
@@ -2369,15 +2383,25 @@ abstract class CommonObject
 				if ($result < 0) {
 					$error++;
 				}
-			}
-
-			if (!$error) {
+			} else {
 				if (property_exists($this, $field)) {
 					$this->$field = $value;
 				}
+				if ($propfield != $field && property_exists($this, $propfield)) {
+					$this->$propfield = $value;
+				}
+			}
+
+			if (!$error) {
 				$this->db->commit();
 				return 1;
 			} else {
+				if (property_exists($this, $field)) {
+					$this->$field = $oldvalue;
+				}
+				if ($propfield != $field && property_exists($this, $propfield)) {
+					$this->$propfield = $oldvalue;
+				}
 				$this->db->rollback();
 				return -2;
 			}
