@@ -2287,13 +2287,20 @@ abstract class CommonObject
 		$propfield = $field;
 
 		// Special case
-		if ($table == 'product' && $field == 'note_private') {
-			$field = 'note';
-			$propfield = 'note_private';
-		}
-		if ($table == 'product' && $field == 'status') {
-			$field = 'tosell';
-			$propfield = 'status';
+		if ($table == 'product') {
+			if ($field == 'note_private') {
+				$field = 'note';
+				$propfield = 'note_private';
+			} elseif ($field == 'status') {
+				$field = 'tosell';
+				$propfield = 'status';
+			} elseif ($field == 'status_buy') {
+				$field = 'tobuy';
+				$propfield = 'status_buy';
+			} elseif ($field == 'status_batch') {
+				$field = 'tobatch';
+				$propfield = 'status_batch';
+			}
 		}
 
 		if (in_array($table, array('actioncomm', 'adherent', 'advtargetemailing', 'cronjob', 'establishment'))) {
