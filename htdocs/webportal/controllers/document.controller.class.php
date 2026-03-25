@@ -89,7 +89,7 @@ class DocumentController extends Controller
 	 */
 	public function init()
 	{
-		global $db, $conf, $hookmanager;
+		global $conf, $hookmanager;
 
 		define('MAIN_SECURITY_FORCECSP', "default-src 'none'");
 
@@ -196,15 +196,15 @@ class DocumentController extends Controller
 					// List of module supported in security tests (others are forbidden if not security test to check that document is owned by company is done)
 					if (in_array($moduleName, array('facture', 'invoice', 'commande', 'order', 'propal'))) {
 						$sql = "SELECT rowid, src_object_id, src_object_type FROM ".MAIN_DB_PREFIX.'ecm_files';
-						$sql .= " WHERE filename = '".$db->escape(basename($original_file))."'";
-						$sql .= " AND filepath = '".$db->escape(basename($tmparray['dir_output']).'/'.dirname($original_file))."'";
-						$resql = $db->query($sql);
+						$sql .= " WHERE filename = '".$this->db->escape(basename($original_file))."'";
+						$sql .= " AND filepath = '".$this->db->escape(basename($tmparray['dir_output']).'/'.dirname($original_file))."'";
+						$resql = $this->db->query($sql);
 						if ($resql) {
-							$obj = $db->fetch_object($resql);
+							$obj = $this->db->fetch_object($resql);
 
 							if ($obj->src_object_id && $obj->src_object_type) {
 								// Create the virtual user
-								$tmpuser = new User($db);
+								$tmpuser = new User($this->db);
 								$tmpuser->socid = $socId;
 
 								include_once DOl_DOCUMENT_ROOT.'/core/lib/security.lib.php';
@@ -215,7 +215,7 @@ class DocumentController extends Controller
 								$pathdir = $tmparray['dir_output'];
 							}
 						} else {
-							dol_print_error($db);
+							dol_print_error($this->db);
 						}
 					}
 				}
