@@ -48,14 +48,6 @@ if (is_numeric($entity)) {
 
 // Load Dolibarr environment
 require '../../main.inc.php';
-require_once DOL_DOCUMENT_ROOT.'/ticket/class/actions_ticket.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formticket.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/CMailFile.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/ticket.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/security.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/payments.lib.php';
-
 /**
  * @var Conf $conf
  * @var DoliDB $db
@@ -63,6 +55,13 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/payments.lib.php';
  * @var Societe $mysoc
  * @var Translate $langs
  */
+require_once DOL_DOCUMENT_ROOT.'/ticket/class/actions_ticket.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formticket.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/CMailFile.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/ticket.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/security.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/payments.lib.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array("companies", "other", "ticket"));
@@ -584,6 +583,7 @@ if ($action == "view_ticketlist") {
 				print_liste_field_titre($selectedfields, $url_page_current, "", '', '', 'align="right"', $sortfield, $sortorder, 'center maxwidthsearch ');
 				print '</tr>';
 
+				$i = 0;
 				while ($obj = $db->fetch_object($resql)) {
 					print '<tr class="oddeven">';
 
@@ -719,6 +719,12 @@ if ($action == "view_ticketlist") {
 
 					$i++;
 					print '</tr>';
+				}
+
+				if ($i == 0) {
+					print '<tr><td colspan="9">';
+					print '<span class="opacitymedium">'.$langs->trans("None").'</span>';
+					print '</td></tr>';
 				}
 
 				print '</table>';
