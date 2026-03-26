@@ -238,7 +238,6 @@ class DocumentController extends Controller
 
 		$fullpath_original_file = $pathdir . '/' . $original_file; // $fullpath_original_file is now a full path name
 
-		var_dump($pathdir);
 		// Security:
 		// We refuse directory transversal change and pipes in file names
 		if (preg_match('/\.\./', $fullpath_original_file) || preg_match('/[<>|]/', $fullpath_original_file)) {
