@@ -81,14 +81,21 @@ if (!defined('USE_CUSTOM_REPORT_AS_INCLUDE')) {
 	$search_yaxis = GETPOST('search_yaxis', 'array:alphanohtml');
 	$search_graph = (string) GETPOST('search_graph', 'restricthtml');
 
-	$search_measures = array_map(function ($value) {
-		return preg_replace('/[^a-z0-9\._\-]+/', '', $value); }, $search_measures);
-	$search_xaxis = array_map(function ($value) {
-		return preg_replace('/[^a-z0-9\._\-]+/', '', $value); }, $search_xaxis);
-	$search_yaxis = array_map(function ($value) {
-		return preg_replace('/[^a-z0-9\._\-]+/', '', $value); }, $search_yaxis);
-	$search_groupby = array_map(function ($value) {
-		return preg_replace('/[^a-z0-9\._\-]+/', '', $value); }, $search_groupby);
+	/**
+	 * Sanitize key
+	 *
+	 * @param	string	$value		Value
+	 * @return	string				Sanitized value
+	 */
+	function sanititzekey($value)
+	{
+		return preg_replace('/[^a-z0-9\._\-]+/', '', $value);
+	}
+
+	$search_measures = array_map('sanititzekey', $search_measures);
+	$search_xaxis = array_map('sanititzekey', $search_xaxis);
+	$search_yaxis = array_map('sanititzekey', $search_yaxis);
+	$search_groupby = array_map('sanititzekey', $search_groupby);
 
 	// Load variable for pagination
 	$limit = GETPOSTINT('limit') ? GETPOSTINT('limit') : $conf->liste_limit;
