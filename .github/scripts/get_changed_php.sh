@@ -42,6 +42,7 @@ repo="${GITHUB_REPOSITORY##*/}"   # Extract text after the last '/'
 page=1
 per_page=100
 changed_php_files=()
+changed_lang_files=()
 
 # Loop through all pages to gather changed files
 while true; do
@@ -52,6 +53,9 @@ while true; do
 	mapfile -t files < <(echo "$response" | jq -r '.[] | select(.filename | test("\\.php$")) | .filename')
 	changed_php_files+=("${files[@]}")
 
+	mapfile -t files < <(echo "$response" | jq -r '.[] | select(.filename | test("\\.lang$")) | .filename')
+    changed_lang_files+=("${files[@]}")
+
 	# Check if we have reached the last page (less than per_page results)
 	count=$(echo "$response" | jq 'length')
 	if (( count < per_page )); then
@@ -61,14 +65,15 @@ while true; do
 done
 
 
-# Build a space-separated string of changed PHP files
+# Build a space-separated string of changed PHP and lang files
 # This does not cope with files that have spaces.
 # But such files do not exist in the project (at least not for the
 # files we are filtering).
 all_changed_files=$(IFS=" " ; echo "${changed_php_files[*]}")
+all_changed_lang=$(IFS=" " ; echo "${changed_lang_files[*]}")
 
 
-forbidden_files=$(echo "$all_changed_files" | grep -E 'htdocs/langs/([^/]+)/.*\.lang$' | grep -v 'htdocs/langs/en_US/')
+forbidden_files=$(echo "$all_changed_lang" | grep -E 'htdocs/langs/([^/]+)/.*\.lang$' | grep -v 'htdocs/langs/en_US/')
 #if [ -n "$forbidden_files" ]; then
 #  echo "You tried to modify one or more language files that are not allowed to be modified in Pull requests."
 #  echo "$forbidden_files"
