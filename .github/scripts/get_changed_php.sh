@@ -1,4 +1,4 @@
-#!/bin/bash
+b!/bin/bash
 # Copyright (C) 2025		MDW	<mdeweerd@users.noreply.github.com>
 
 set -euo pipefail
@@ -70,6 +70,7 @@ done
 # files we are filtering).
 all_changed_files=$(IFS=" " ; echo "${changed_php_files[*]}")
 all_changed_lang=$(IFS=" " ; echo "${changed_lang_files[*]}")
+
 
 forbidden_files=""
 #forbidden_files=$(echo "$all_changed_lang" | grep -E 'htdocs/langs/([^/]+)/.*\.lang$' | grep -v 'htdocs/langs/en_US/')
