@@ -2049,17 +2049,18 @@ class Project extends CommonObject
 		$sql = "UPDATE ".MAIN_DB_PREFIX.$tableName;
 
 		if ($tableName == "actioncomm") {
-			$sql .= " SET fk_project=".$this->id;
-			$sql .= " WHERE id=".((int) $elementSelectId);
-		} elseif (in_array($tableName, ["entrepot","mrp_mo","stocktransfer_stocktransfer"])) {
-			$sql .= " SET fk_project=".$this->id;
-			$sql .= " WHERE rowid=".((int) $elementSelectId);
+			$sql .= " SET fk_project = ".((int) $this->id);
+			$sql .= " WHERE id = ".((int) $elementSelectId);
+		} elseif (in_array($tableName, ["entrepot", "mrp_mo", "stocktransfer_stocktransfer"])) {
+			$sql .= " SET fk_project = ".((int) $this->id);
+			$sql .= " WHERE rowid = ".((int) $elementSelectId);
 		} else {
-			$sql .= " SET fk_projet=".$this->id;
-			$sql .= " WHERE rowid=".((int) $elementSelectId);
+			$sql .= " SET fk_projet = ".((int) $this->id);
+			$sql .= " WHERE rowid = ".((int) $elementSelectId);
 		}
 
 		dol_syslog(get_class($this)."::update_element", LOG_DEBUG);
+
 		$resql = $this->db->query($sql);
 		if (!$resql) {
 			$this->error = $this->db->lasterror();
@@ -2084,14 +2085,15 @@ class Project extends CommonObject
 		$sql = "UPDATE ".MAIN_DB_PREFIX.$tableName;
 
 		if ($tableName == "actioncomm") {
-			$sql .= " SET fk_project=NULL";
-			$sql .= " WHERE id=".((int) $elementSelectId);
+			$sql .= " SET fk_project = NULL";
+			$sql .= " WHERE id = ".((int) $elementSelectId);
 		} else {
-			$sql .= " SET ".$projectfield."=NULL";
-			$sql .= " WHERE rowid=".((int) $elementSelectId);
+			$sql .= " SET ".$projectfield." = NULL";
+			$sql .= " WHERE rowid = ".((int) $elementSelectId);
 		}
 
 		dol_syslog(get_class($this)."::remove_element", LOG_DEBUG);
+
 		$resql = $this->db->query($sql);
 		if (!$resql) {
 			$this->error = $this->db->lasterror();
