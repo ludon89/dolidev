@@ -896,7 +896,7 @@ class Project extends CommonObject
 		} elseif ($type == 'loan') {
 			$sql = "SELECT l.rowid, l.fk_user_author as fk_user FROM ".MAIN_DB_PREFIX."loan as l WHERE l.entity IN (".getEntity('loan').") AND l.fk_projet IN (".$this->db->sanitize((string) $ids).")";
 		} else {
-			$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX.$tablename." WHERE ".$projectkey." IN (".$this->db->sanitize((string) $ids).") AND entity IN (".getEntity($type).")";
+			$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX.$this->db->sanitize($tablename)." WHERE ".$this->db->sanitize($projectkey)." IN (".$this->db->sanitize((string) $ids).") AND entity IN (".getEntity($type).")";
 		}
 
 		if (isDolTms($date_start) && $type == 'loan') {
@@ -1021,7 +1021,7 @@ class Project extends CommonObject
 			} else {
 				$fieldname = $value;
 			}
-			$sql = "UPDATE ".MAIN_DB_PREFIX.$key." SET ".$fieldname." = NULL where ".$fieldname." = ".((int) $this->id);
+			$sql = "UPDATE ".MAIN_DB_PREFIX.$this->db->sanitize($key)." SET ".$this->db->sanitize($fieldname)." = NULL WHERE ".$this->db->sanitize($fieldname)." = ".((int) $this->id);
 
 			$resql = $this->db->query($sql);
 			if (!$resql) {
@@ -1058,7 +1058,7 @@ class Project extends CommonObject
 			$elements = array('categorie_project'); // elements to delete. TODO Make goodway to delete
 			foreach ($elements as $table) {
 				if (!$error) {
-					$sql = "DELETE FROM ".MAIN_DB_PREFIX.$table;
+					$sql = "DELETE FROM ".MAIN_DB_PREFIX.$this->db->sanitize($table);
 					$sql .= " WHERE fk_project = ".((int) $this->id);
 
 					$result = $this->db->query($sql);
@@ -1161,7 +1161,7 @@ class Project extends CommonObject
 		} elseif ($type == 'loan') {
 			$sql = "SELECT COUNT(l.rowid) as nb FROM ".MAIN_DB_PREFIX."loan as l WHERE l.entity IN (".getEntity('loan').") AND l.fk_projet = ".((int) $this->id);
 		} else {
-			$sql = "SELECT COUNT(rowid) as nb FROM ".MAIN_DB_PREFIX.$tablename." WHERE ".$projectkey." = ".((int) $this->id)." AND entity IN (".getEntity($type).")";
+			$sql = "SELECT COUNT(rowid) as nb FROM ".MAIN_DB_PREFIX.$this->db->sanitize($tablename)." WHERE ".$this->db->sanitize($projectkey)." = ".((int) $this->id)." AND entity IN (".getEntity($type).")";
 		}
 
 		$result = $this->db->query($sql);
@@ -2076,7 +2076,6 @@ class Project extends CommonObject
 	 *    @param	string	$tableName			Table of the element to update
 	 *    @param	int		$elementSelectId	Key-rowid of the line of the element to update
 	 *    @param	string	$projectfield	    The column name that stores the link with the project
-	 *
 	 *    @return	int							1 if OK or < 0 if KO
 	 */
 	public function remove_element($tableName, $elementSelectId, $projectfield = 'fk_projet')
