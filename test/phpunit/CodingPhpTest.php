@@ -365,12 +365,13 @@ class CodingPhpTest extends CommonClassTest
 		//exit;
 
 		// Check bad casting on forge sql
+		// with $sql = "... '" . $...
 		$ok = true;
 		$matches = array();
-		preg_match_all('/\$sql\s*\.?=\s*[\"\'][a-z\s=_,]+[\'\"]\s*\.\$([a-z->_]+)/', $filecontent, $matches, PREG_SET_ORDER);
+		preg_match_all('/\$sql\s*\.?=\s*[\"\'][a-z\s=_,]+[\'\"]\s*\.\s*\$([a-z->_]+)/', $filecontent, $matches, PREG_SET_ORDER);
 		//var_dump($matches);
 		foreach ($matches as $key => $val) {
-			if (in_array($val[1], array('object->get', 'user', 'this->sanitize', 'this->db->sanitize', 'this->db->escape', 'this->db->encrypt', 'this->db->ifsql', 'this->db->plimit', 'db->decrypt', 'db->encrypt', 'db->sanitize', 'db->ifsql', 'this->db->prefix', 'clause', 'pk', 'sqlwhere', 'sqlorder'))) {		// exclude $db->escape( and $this->
+			if (in_array($val[1], array('object->get', 'user', 'this->sanitize', 'this->db->sanitize', 'this->db->escape', 'this->db->encrypt', 'this->db->ifsql', 'this->db->plimit', 'db->decrypt', 'db->encrypt', 'db->sanitize', 'db->ifsql', 'this->db->prefix', 'clause', 'pk', 'sqlwhere', 'sqlorder', 'sqldesiredstock', 'sqlalertstock'))) {		// exclude $db->escape( and $this->
 				continue;
 			}
 			//if ($val[1] != '\'"' && $val[1] != '\'\'') {
