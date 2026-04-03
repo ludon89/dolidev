@@ -1605,7 +1605,7 @@ class pdf_octopus extends ModelePDFFactures
 					$posy += 2;
 
 					// SHOW EPC QR CODE at bottom, but only if unpaid amount exists
-					if (getDolGlobalString('INVOICE_ADD_EPC_QR_CODE') == 'bottom') { && ($object->getRemainToPay() > 0))
+					if (getDolGlobalString('INVOICE_ADD_EPC_QR_CODE') == 'bottom' && ($object->getRemainToPay() > 0)) {
 						$qrPosX = $this->marge_gauche + 5;
 						$qrPosY = $posy;
 						$qrCodeColor = array('25', '25', '25');
