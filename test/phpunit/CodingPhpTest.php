@@ -329,7 +329,7 @@ class CodingPhpTest extends CommonClassTest
 		//  with xxx that is not 'thi' (for $this->db->sanitize) and 'db-' (for $db->sanitize). It means we forget a ' if string, or an (int) if int, when forging sql request.
 		$ok = true;
 		$matches = array();
-		preg_match_all('/(DELETE|OR|AND|WHERE|INSERT)\s.*([^\s][^\s][^\s])\s*=\s*(\'|")\s*\.\s*\$(...)/', $filecontent, $matches, PREG_SET_ORDER);
+		preg_match_all('/(DELETE|OR|AND|WHERE|INSERT|UPDATE)\s.*([^\s][^\s][^\s])\s*=\s*(\'|")\s*\.\s*\$(...)/', $filecontent, $matches, PREG_SET_ORDER);
 		foreach ($matches as $key => $val) {
 			if ($val[2] == 'ity' && $val[4] == 'con') {		// exclude entity = ".$conf->entity
 				continue;
