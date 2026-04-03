@@ -17014,7 +17014,16 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 					$link = dolGetElementUrl($histo[$key]['fk_element'], $histo[$key]['elementtype'], 1);
 					$conf->cache['elementlinkcache'][$histo[$key]['elementtype']][$histo[$key]['fk_element']] = $link;
 				}
-				if ($link) {
+
+				// We do not show if link if on object we are filtering on (no need to show the link to ticket X when we are on page of events for the ticket X)
+				$showlink = 1;
+				if (is_object($filterobj) && get_class($filterobj) == 'Ticket') {
+					if ($histo[$key]['elementtype'] == 'ticket') {
+						$showlink = 0;
+					}
+				}
+
+				if ($link && $showlink) {
 					$out .= ' - ' . $link;
 				}
 			}
