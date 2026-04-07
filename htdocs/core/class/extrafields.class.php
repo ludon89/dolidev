@@ -533,7 +533,7 @@ class ExtraFields
 			$sql .= " '".$this->db->escape($type)."',";
 			$sql .= " ".((int) $pos).",";
 			$sql .= " '".$this->db->escape($size)."',";
-			$sql .= " ".($entity === '' ? $conf->entity : $entity).",";
+			$sql .= " ".((int) ($entity === '' ? $conf->entity : $entity)).",";
 			$sql .= " '".$this->db->escape($elementtype)."',";
 			$sql .= " ".((int) $unique).",";
 			$sql .= " ".((int) $required).",";
@@ -1563,9 +1563,9 @@ class ExtraFields
 					}
 					if (count($InfoFieldList) > 4 && !empty($InfoFieldList[4])) {
 						if (strpos($InfoFieldList[4], 'extra.') !== false) {
-							$keyList = 'main.'.$InfoFieldList[2].' as rowid';
+							$keyList = 'main.'.$this->db->sanitize($InfoFieldList[2]).' as rowid';
 						} else {
-							$keyList = $InfoFieldList[2].' as rowid';
+							$keyList = $this->db->sanitize($InfoFieldList[2]).' as rowid';
 						}
 					}
 
@@ -1586,8 +1586,8 @@ class ExtraFields
 						// WARNING!! This code is duplicated into core/ajax/ajaxextrafield.php
 
 						$sqlwhere = '';
-						$sql = "SELECT ".$keyList;
-						$sql .= ' FROM '.$this->db->prefix().$InfoFieldList[0];
+						$sql = "SELECT ".$this->db->sanitize($keyList, 0, 0, 1);
+						$sql .= ' FROM '.$this->db->prefix().$this->db->sanitize($InfoFieldList[0]);
 
 						// Add filter from 4th field
 						if (!empty($InfoFieldList[4])) {
