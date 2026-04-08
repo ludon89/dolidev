@@ -506,15 +506,18 @@ if ($checklock) {
 		foreach ($arraylocked as $line) {
 			$tmparray = preg_split("/\s+/", $line, 4);
 			if ($tmparray[0] == $checklockmajorversion && $tmparray[2] == $algo) {
-				$checksuminlockedfile = $tmparray[3];
+				$checksuminlockedfile = trim($tmparray[3]);
 			}
 		}
 		if (empty($checksuminlockedfile)) {
-			print "The major version ".$checklockmajorversion." is not locked on the scope '".$checksource."' (file found but no matching entry found into dev/lockedfiles.txt).\n";
-		} elseif ($checksuminlockedfile != $hashunalterable_files) {
+			print "The major version ".$checklockmajorversion." is not locked on the scope '".$checksource."' (file found but no lock entry found into dev/lockedfiles.txt).\n";
+		} else {
 			print "The major version ".$checklockmajorversion." is locked on scope '".$checksource."' with the checksum : ".$algo." ".$checksuminlockedfile."\n";
-			if ($checklockmajorversion != $checksource) {
-				print "The checksum now differs from the locked one, so we return an error.\n";
+			print "\n";
+			if (hash_equals($checksuminlockedfile, $hashunalterable_files)) {
+				print "OK - The checksum of current files is the same than the locked one.\n";
+			} else {
+				print "ERROR - The checksum of current files differs from the locked one, so we return an error.\n";
 				print "\n";
 				exit(10);
 			}
