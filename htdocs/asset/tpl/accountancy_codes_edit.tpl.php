@@ -27,11 +27,17 @@
  */
 
 /**
+ * @var Conf $conf
  * @var DoliDB $db
  * @var Form $form
  * @var FormAccounting $formaccounting
  * @var HookManager $hookmanager
  * @var Translate $langs
+ *
+ * @var ?Object $object (asset, assetmodel, ...)
+ * @var AssetAccountancyCodes $assetaccountancycodes
+ * @var string $action
+ * @var array<string,mixed> $parameters
  */
 
 // Protection to avoid direct call of template
