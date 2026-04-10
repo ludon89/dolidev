@@ -685,6 +685,13 @@ print '<td>';
 print ajax_constantonoff('PROPOSAL_ALLOW_ONLINESIGN', array(), null, 0, 0, 0, 2, 0, 1, '', '', 'inline-block', 0, $langs->transnoentitiesnoconv("WarningOnlineSignature"));
 print '</td></tr>';
 
+if (getDolGlobalString('PROPOSAL_ALLOW_ONLINESIGN')) {
+	print '<tr class="oddeven">';
+	print '<td>'.$langs->trans("SecureKey").'</td>';
+	print '<td>';
+	print ajax_constantonoff('PROPOSAL_ONLINE_SIGNATURE_SECURITY_TOKEN', array(), null, 0, 0, 0, 2, 0, 1, '', '', 'inline-block', 0, 'rr');
+	print '</td></tr>';
+}
 
 // Notifications
 print '<tr class="oddeven">';

@@ -17,7 +17,7 @@ WARNING:
 --------
 The following changes may create regressions for some external modules, but were necessary to make Dolibarr better:
 * UniversalSearch Syntax is required on all filter parameters of function. Non USF filters are no more allowed.
-
+* Old option PAYMENT_SECURITY_TOKEN_UNIQUE has been removed.
 
 
 ***** ChangeLog for 23.0.2 compared to 23.0.1 *****
