@@ -1426,12 +1426,12 @@ class pdf_zenith extends ModelePDFSupplierProposal
 
 
 
-			// If SUPPLIER/SERVICE contact defined on proposal, we use it. Note: Even if this is a supplier object, the code for external contact that follow order is 'SERVICE'
+			// If CUSTOMER contact defined on proposal, we use it. Note: Even if this is a supplier object, the code for external contact that follow-up a supplier proposal is 'CUSTOMER'
 			$usecontact = false;
 			if (!getDolGlobalInt('SUPPLIER_PROPOSAL_ADD_BILLING_CONTACT')) {
-				$arrayidcontact = $object->getIdContact('external', 'SERVICE');
+				$arrayidcontact = $object->getIdContact('external', 'CUSTOMER');
 			} else {
-				$arrayidcontact = array_merge($object->getIdContact('external', 'SERVICE'), $object->getIdContact('external', 'BILLING'));
+				$arrayidcontact = array_merge($object->getIdContact('external', 'CUSTOMER'), $object->getIdContact('external', 'BILLING'));
 			}
 			if (is_array($arrayidcontact) && count($arrayidcontact) > 0) {
 				$usecontact = true;
