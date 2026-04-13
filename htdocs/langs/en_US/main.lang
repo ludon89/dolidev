@@ -1430,3 +1430,4 @@ except=except
 DUPLICATA=DUPLICATA
 ErrorFailedTriggerCall=Failed to call trigger
 History=History
+Delay=Delay
