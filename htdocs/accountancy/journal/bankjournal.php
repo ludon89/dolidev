@@ -671,7 +671,7 @@ if (!$error && $action == 'writebookkeeping' && $user->hasRight('accounting', 'b
 	$accountingaccountpayment->fetch(0, getDolGlobalString('SALARIES_ACCOUNTING_ACCOUNT_PAYMENT'), true);
 
 	$accountingaccountexpensereport = new AccountingAccount($db);
-	$accountingaccountexpensereport->fetch(0, $conf->global->ACCOUNTING_ACCOUNT_EXPENSEREPORT, true);
+	$accountingaccountexpensereport->fetch(0, getDolGlobalString('ACCOUNTING_ACCOUNT_EXPENSEREPORT'), true);
 
 	$accountingaccountsuspense = new AccountingAccount($db);
 	$accountingaccountsuspense->fetch(0, getDolGlobalString('ACCOUNTING_ACCOUNT_SUSPENSE'), true);
