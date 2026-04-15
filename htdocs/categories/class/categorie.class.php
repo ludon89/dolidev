@@ -797,12 +797,14 @@ class Categorie extends CommonObject
 			'categorie' => 'rowid',
 		);
 		foreach ($arraydelete as $key => $value) {
+			$sanitizedvalue = $value;
 			if (is_array($value)) {
 				if (empty($value['enabled'])) {
 					continue;
 				}
 				$sanitizedvalue = $value['field'];
 			}
+
 			$sql  = "DELETE FROM ".$this->db->sanitize(MAIN_DB_PREFIX.$key);
 			$sql .= " WHERE ".$sanitizedvalue." = ".((int) $this->id);
 			if (!$this->db->query($sql)) {
