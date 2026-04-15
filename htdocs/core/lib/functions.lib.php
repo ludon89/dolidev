@@ -452,6 +452,7 @@ define(
 		'fichinter' => 'intervention', // Has old directory
 		'ficheinter' => 'intervention',  // Backup for 'fichinter'
 		'propale' => 'propal', // Has old directory
+		'societe' => 'thirdparty',  // Has old directory
 		'socpeople' => 'contact', // Has old directory
 		'fournisseur' => 'supplier',  // Has old directory
 
