@@ -26,13 +26,6 @@
 
 // Load Dolibarr environment
 require '../../main.inc.php';
-
-// Libraries
-require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
-require_once __DIR__ . '/../lib/quickmemo.lib.php';
-require_once __DIR__ . '/../class/memo.class.php';
-//require_once "../class/myclass.class.php";
-
 /**
  * @var Conf $conf
  * @var DoliDB $db
@@ -40,6 +33,10 @@ require_once __DIR__ . '/../class/memo.class.php';
  * @var Translate $langs
  * @var User $user
  */
+require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
+require_once __DIR__ . '/../lib/quickmemo.lib.php';
+require_once __DIR__ . '/../class/memo.class.php';
+//require_once "../class/myclass.class.php";
 
 // Translations
 $langs->loadLangs(array("admin", "quickmemo"));

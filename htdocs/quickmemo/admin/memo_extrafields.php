@@ -30,10 +30,6 @@
 
 // Load Dolibarr environment
 require '../../main.inc.php';
-
-require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
-require_once '../lib/quickmemo.lib.php';
-
 /**
  * @var Conf $conf
  * @var DoliDB $db
@@ -41,6 +37,8 @@ require_once '../lib/quickmemo.lib.php';
  * @var Translate $langs
  * @var User $user
  */
+require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
+require_once '../lib/quickmemo.lib.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array('quickmemo', 'admin'));

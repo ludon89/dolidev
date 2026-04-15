@@ -39,18 +39,18 @@ if (! defined("NOREDIRECTBYMAINTOLOGIN"))  define('NOREDIRECTBYMAINTOLOGIN', 1);
 
 // Load Dolibarr environment
 require '../main.inc.php';
-
+/**
+ * @var DoliDB $db
+ * @var User $user
+ * @var HookManager $hookmanager
+ * @var Translate $langs
+ */
 // Load required classes
 require_once DOL_DOCUMENT_ROOT . '/core/class/jsonResponse.class.php';
 require_once __DIR__ . '/class/memo.class.php';
 if (!class_exists('Validate')) {
 	require_once DOL_DOCUMENT_ROOT . '/core/class/validate.class.php';
 }
-
-global $langs, $db, $hookmanager, $user, $mysoc;
-/**
- * @var DoliDB $db
- */
 
 // Initialize hooks for the interface
 $hookmanager->initHooks(['quickmemoInterface']);
