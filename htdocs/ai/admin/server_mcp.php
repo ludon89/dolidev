@@ -371,11 +371,12 @@ if (getDolGlobalString('AI_MCP_ENABLED')) {
 	print '</td>';
 	print '</tr>';
 
+	$endpoint = dol_buildpath('/ai/server/mcp_server.php', 3);
+
 	print '<tr class="oddeven">';
 	print '<td>Endpoint URL</td>';
 	print '<td>';
-	 $endpoint = dol_buildpath('/ai/server/mcp_server.php', 2);
-	print '<input type="text" value="'.$endpoint.'" readonly style="width:600px; border:none; background:transparent;">';
+	print '<input type="text" id="endpoint" value="'.$endpoint.'" readonly style="width:600px; border:none; background:transparent;">';
 	print '</td>';
 	print '</tr>';
 
