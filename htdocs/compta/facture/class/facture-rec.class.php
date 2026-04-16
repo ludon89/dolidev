@@ -1500,7 +1500,7 @@ class FactureRec extends CommonInvoice
 							$errorforinvoice++;
 						}
 					}
-					if (!$errorforinvoice && $facturerec->generate_pdf) {
+					if (!$errorforinvoice && ($facturerec->generate_pdf || $facturerec->auto_validate == 2)) {	// ->generate_pdf is 1 by default (can be edited if INVOICE_REC_CAN_DISABLE_DOCUMENT_FILE_GENERATION is set to 1)
 						// We reload the object in order to have all necessary data (like date_lim_reglement)
 						$facture->fetch($facture->id);
 						$outputlangs = $langs;
@@ -1512,11 +1512,14 @@ class FactureRec extends CommonInvoice
 								$outputlangs->loadLangs(array('main', 'bills'));
 							}
 						}
-						$result = $facture->generateDocument($facturerec->model_pdf, $outputlangs);
-						if ($result <= 0) {
-							$this->setErrorsFromObject($facture);
-							$error++;
-							$errorforinvoice++;
+
+						if ($facturerec->generate_pdf) {
+							$result = $facture->generateDocument($facturerec->model_pdf, $outputlangs);
+							if ($result <= 0) {
+								$this->setErrorsFromObject($facture);
+								$error++;
+								$errorforinvoice++;
+							}
 						}
 
 						// Auto sending of the invoice
