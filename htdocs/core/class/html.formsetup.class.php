@@ -367,7 +367,7 @@ class FormSetup
 			}
 
 			if (!empty($item->errors)) {
-				// TODO : move set event message in a methode to be called by cards not by this class
+				// TODO : move set event message in a method to be called by cards not by this class
 				setEventMessages(null, $item->errors, 'errors');
 			}
 
@@ -1004,7 +1004,7 @@ class FormSetupItem
 		if (empty($this->fieldAttr) || empty($this->fieldAttr['class'])) {
 			$this->fieldAttr['class'] = 'flat '.(empty($this->cssClass) ? 'minwidth200' : $this->cssClass);
 		}
-		return '<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' />';
+		return '<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' spellcheck="false">';
 	}
 
 	/**
@@ -1020,7 +1020,7 @@ class FormSetupItem
 			$this->fieldAttr['class'] = 'flat '.(empty($this->cssClass) ? 'minwidth40 maxwidth75' : $this->cssClass);
 		}
 		//return img_picto('', 'currency', 'class="pictofixedwidth"').'<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' /> '.$langs->getCurrencySymbol($mysoc->currency_code);
-		return '<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' /> '.$langs->getCurrencySymbol($mysoc->currency_code);
+		return '<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' spellcheck="false"> '.$langs->getCurrencySymbol($mysoc->currency_code);
 	}
 
 	/**
@@ -1033,7 +1033,7 @@ class FormSetupItem
 		if (empty($this->fieldAttr) || empty($this->fieldAttr['class'])) {
 			$this->fieldAttr['class'] = 'flat '.(empty($this->cssClass) ? 'minwidth100 maxwidth500' : $this->cssClass);
 		}
-		return img_picto('', 'email', 'class="pictofixedwidth"').'<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' />';
+		return img_picto('', 'email', 'class="pictofixedwidth"').'<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' spellcheck="false">';
 	}
 
 	/**
@@ -1046,7 +1046,7 @@ class FormSetupItem
 		if (empty($this->fieldAttr) || empty($this->fieldAttr['class'])) {
 			$this->fieldAttr['class'] = 'flat '.(empty($this->cssClass) ? 'minwidth100 maxwidth500' : $this->cssClass);
 		}
-		return img_picto('', 'url', 'class="pictofixedwidth"').'<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' />';
+		return img_picto('', 'url', 'class="pictofixedwidth"').'<input '.FormSetup::generateAttributesStringFromArray($this->fieldAttr).' spellcheck="false">';
 	}
 
 	/**
@@ -1056,7 +1056,7 @@ class FormSetupItem
 	 */
 	public function generateInputFieldTextarea()
 	{
-		$out = '<textarea class="flat" name="'.$this->confKey.'" id="'.$this->confKey.'" cols="50" rows="5" wrap="soft">' . "\n";
+		$out = '<textarea class="flat" name="'.$this->confKey.'" id="'.$this->confKey.'" cols="50" rows="5" wrap="soft" spellcheck="false">' . "\n";
 		$out .= dol_htmlentities($this->fieldValue);
 		$out .= "</textarea>\n";
 		return $out;
