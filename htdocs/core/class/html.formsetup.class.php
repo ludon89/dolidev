@@ -632,7 +632,7 @@ class FormSetupItem
 	/** @var string the conf key used in database */
 	public $confKey;
 
-	/** @var string|false */
+	/** @var string|false 	The label of field */
 	public $nameText = false;
 
 	/** @var string */
@@ -650,7 +650,7 @@ class FormSetupItem
 	/** @var array{name?:string,id?:string,value?:mixed,class?:string,disabled?:?int<0,1>,type?:string,size?:int,placeholder?:string,step?:float|string,min?:int,max?:int}  fields attribute only for compatible fields like input text */
 	public $fieldAttr = array();
 
-	/** @var bool|string set this var to override field output will override and too */
+	/** @var bool|string set this var to override field value on both input and output */
 	public $fieldOverride = false;
 
 	/** @var bool|string set this var to override field input */
