@@ -1922,7 +1922,7 @@ class FormTicket
 		$htmlname = 'message';
 
 		$formai->substit = $this->substit;
-		$formai->substit_lines = $this->substit_lines;
+		//$formai->substit_lines = $this->substit_lines;
 
 		// Fill $out
 		$db = $this->db;
