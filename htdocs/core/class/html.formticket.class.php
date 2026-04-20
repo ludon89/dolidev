@@ -1910,7 +1910,7 @@ class FormTicket
 		$formai = new FormAI($this->db);
 
 		$formmail->withfckeditor = $ckeditorenabledforticket ? 1 : 0;
-		$formmail->withlayout = $ckeditorenabledforticket ? 1 : 0;
+		$formmail->withlayout = $ckeditorenabledforticket ? 'email' : '';
 		$formmail->withaiprompt = 'text';
 		$formai = new FormAI($this->db);
 
