@@ -1272,12 +1272,12 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 
 								// Description formula or default text
 								if (amountFormulaDescription.trim() !== "") {
-										$(".hideifautoturnover").html(" - " + amountFormulaDescription);
+										$(".amountdescription").html(" - " + amountFormulaDescription);
 								} else {
 										if (amountVal > 0) {
-												$(".hideifautoturnover").html(" - " + langs.trans("AnyAmountWithAdvisedAmount", formattedAmount + " " + currencySymbol));
+												$(".amountdescription").html(" - " + langs.trans("AnyAmountWithAdvisedAmount", formattedAmount + " " + currencySymbol));
 										} else {
-												$(".hideifautoturnover").html(" - " + langs.trans("AnyAmountWithoutAdvisedAmount"));
+												$(".amountdescription").html(" - " + langs.trans("AnyAmountWithoutAdvisedAmount"));
 										}
 								}
 
