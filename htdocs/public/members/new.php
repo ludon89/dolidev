@@ -30,7 +30,6 @@
  *	\brief      Example of form to add a new member
  *
  *  Note that you can add following constant to change behaviour of page
- *  MEMBER_NEWFORM_AMOUNT               Default amount for auto-subscribe form
  *  MEMBER_MIN_AMOUNT                   Minimum amount
  *  MEMBER_NEWFORM_PAYONLINE            Suggest payment with 'all', 'paypal', 'paybox', 'stripe', ...
  *  MEMBER_NEWFORM_DOLIBARRTURNOVER     Show field turnover (specific for dolibarr foundation)
@@ -586,7 +585,7 @@ if (empty($reshook) && $action == 'add') {	// Test on permission not required he
 
 				if (getDolGlobalString('MEMBER_NEWFORM_PAYONLINE') && getDolGlobalString('MEMBER_NEWFORM_PAYONLINE') != '-1') {
 					if (empty($adht->caneditamount)) {			// If edition of amount not allowed
-						// TODO Check amount is same than the amount required for the type of member or if not defined as the default amount into $conf->global->MEMBER_NEWFORM_AMOUNT
+						// TODO Check amount is same than the amount required for the type of member
 						// It is not so important because a test is done on return of payment validation.
 					}
 
@@ -985,7 +984,7 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 	$amountbytype = $adht->amountByType(1);		// Load the array of amount per type
 	$minimumamountbytype = $adht->minimumamountbytype(1); // Load the array of minimum amount per type
 	foreach ($amountbytype as $k => $v) {
-		$amount = max(0, (float) $v, (float) getDolGlobalInt("MEMBER_MIN_AMOUNT"), (float) getDolGlobalInt("MEMBER_NEWFORM_AMOUNT"), $minimumamountbytype[$k]);
+		$amount = max(0, (float) $v, (float) getDolGlobalInt("MEMBER_MIN_AMOUNT"), $minimumamountbytype[$k]);
 		$amountbytype[$k] = $amount;
 	}
 
@@ -995,10 +994,6 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 	// Set amount for the subscription from the type and options:
 	// - First check the amount of the member type.
 	$amount = empty($amountbytype[$typeid]) ? 0 : $amountbytype[$typeid];
-	// - If not found, take the default amount only if the user is authorized to edit it
-	if (empty($amount) && getDolGlobalString('MEMBER_NEWFORM_AMOUNT')) {
-		$amount = getDolGlobalString('MEMBER_NEWFORM_AMOUNT');
-	}
 	// - If not set, we accept to have amount defined as parameter (for backward compatibility).
 	if (empty($amount)) {
 		$amount = (GETPOST('amount') ? price2num(GETPOST('amount', 'alpha'), 'MT', 2) : '');
@@ -1020,7 +1015,6 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 	}
 	// TODO Move this into previous hook
 	if (getDolGlobalString('MEMBER_NEWFORM_DOLIBARRTURNOVER')) {
-		// Do not set a default amount MEMBER_NEWFORM_AMOUNT if you use MEMBER_NEWFORM_DOLIBARRTURNOVER
 		$s = $langs->trans("AreYouAPreferredPartner", '<a href="https://partners.dolibarr.org" target="_blank">{s1}</a>');
 		$s = str_replace('{s1}', 'Peferred Partner', $s);
 		print '<tr id="trbudget" class="trcompany"><td class="paddingrightonly"><label for="pp" class="small">'.$s.'</label></td><td>';
@@ -1150,10 +1144,6 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 			print '</a>';
 		}
 		print '</td><td class="nowrap">';
-
-		if (empty($amount) && getDolGlobalString('MEMBER_NEWFORM_AMOUNT')) {
-			$amount = getDolGlobalString('MEMBER_NEWFORM_AMOUNT');
-		}
 
 		$amountformuladescription = $amountformuladescriptionbytype[$typeid];
 
@@ -1400,10 +1390,6 @@ if (getDolGlobalString('MEMBER_SKIP_TABLE') || getDolGlobalString('MEMBER_NEWFOR
 			// - First check the amount of the member type.
 			$amount = empty($amountbytype[$objp->rowid]) ? 0 : $amountbytype[$objp->rowid];
 			$minimumamount = empty($minimumamountbytype[$objp->rowid]) ? 0 : $minimumamountbytype[$objp->rowid];
-			// - If not found, take the default amount only if the user is authorized to edit it
-			if (empty($amount) && getDolGlobalString('MEMBER_NEWFORM_AMOUNT')) {
-				$amount = getDolGlobalString('MEMBER_NEWFORM_AMOUNT');
-			}
 			// - If not set, we accept to have amount defined as parameter (for backward compatibility).
 			if (empty($amount)) {
 				$amount = (GETPOST('amount') ? price2num(GETPOST('amount', 'alpha'), 'MT', 2) : '');
