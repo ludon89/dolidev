@@ -347,11 +347,11 @@ print '</td>';
 // Value
 if ($mode != 'focus' && $mode != 'mandatory') {
 	print '<td>';
-	print '<input type="text" class="flat maxwidth100onsmartphone" name="defaultvalue" value="'.dol_escape_htmltag($defaultvalue).'">';
+	print '<span class="nowraponall"><input type="text" class="flat maxwidth100onsmartphone" name="defaultvalue" value="'.dol_escape_htmltag($defaultvalue).'">';
 	if ($mode != 'sortorder') {
 		print $form->textwithpicto('', $texthelp, 1, 'list-alt', 'paddingleftimp cursorpointer', 0, 2, 'subsitutiontooltip');
 	}
-	print '</td>';
+	print '</span></td>';
 }
 // Limit to superadmin
 if (isModEnabled('multicompany') && !$user->entity) {
