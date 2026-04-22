@@ -297,7 +297,7 @@ print load_fiche_titre(img_picto('', 'member_nocolor', 'class="pictofixedwidth"'
 print '<div align="center">';
 print '<div id="divsubscribe">';
 
-print '<div class="center subscriptionformhelptext opacitymedium justify">';
+print '<div class="center subscriptionformhelptext opacitymedium">';
 if (getDolGlobalString('COMPANY_NEWFORM_TEXT')) {
 	print $langs->trans(getDolGlobalString('COMPANY_NEWFORM_TEXT')) . "<br>\n";
 } else {
