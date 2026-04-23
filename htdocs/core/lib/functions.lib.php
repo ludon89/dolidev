@@ -16774,7 +16774,7 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 		$out .= '<tr class="liste_titre">';
 
 		// Action column
-		if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+		if ($conf->main_checkbox_left_column) {
 			$out .= '<th class="liste_titre width50 middle">';
 			$searchpicto = $form->showFilterAndCheckAddButtons($massactionbutton ? 1 : 0, 'checkforselect', 1);
 			$out .= $searchpicto;
@@ -16799,7 +16799,7 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 		$out .= '</th>';
 
 		// Action column
-		if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+		if (!$conf->main_checkbox_left_column) {
 			$out .= '<th class="liste_titre width50 middle">';
 			$searchpicto = $form->showFilterAndCheckAddButtons($massactionbutton ? 1 : 0, 'checkforselect', 1);
 			$out .= $searchpicto;

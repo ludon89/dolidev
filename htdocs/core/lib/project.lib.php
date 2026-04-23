@@ -763,7 +763,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 				$taskstatic->fk_statut = $lines[$i]->fk_statut;
 
 				// Action column
-				if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+				if ($conf->main_checkbox_left_column) {
 					print '<td class="nowrap center">';
 					$selected = 0;
 					if (in_array($lines[$i]->id, $arrayofselected)) {
@@ -1042,7 +1042,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 				print '<td class="tdlineupdown center"></td>';
 
 				// Action column
-				if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+				if (!$conf->main_checkbox_left_column) {
 					print '<td class="nowrap center">';
 					$selected = 0;
 					if (in_array($lines[$i]->id, $arrayofselected)) {
@@ -1086,7 +1086,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 		&& $level <= 0) {
 		print '<tr class="liste_total nodrag nodrop">';
 
-		if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+		if ($conf->main_checkbox_left_column) {
 			print '<td class="liste_total"></td>';
 		}
 
@@ -1229,7 +1229,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 		// Column for the drag and drop
 		print '<td class="liste_total"></td>';
 
-		if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+		if (!$conf->main_checkbox_left_column) {
 			print '<td class="liste_total"></td>';
 		}
 

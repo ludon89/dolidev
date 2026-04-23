@@ -1623,7 +1623,7 @@ if (!empty($moreforfilter)) {
 
 
 $varpage = empty($contextpage) ? $_SERVER["PHP_SELF"] : $contextpage;
-$selectedfields = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage, getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')); // This also change content of $arrayfields
+$selectedfields = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage, $conf->main_checkbox_left_column); // This also change content of $arrayfields
 
 // Show the massaction checkboxes only when this page is not opened from the Extended POS
 if ($massactionbutton && $contextpage != 'poslist') {
@@ -1638,7 +1638,7 @@ print '<table class="tagtable nobottomiftotal liste'.($moreforfilter ? " listwit
 print '<tr class="liste_titre_filter">';
 
 // Action column
-if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+if ($conf->main_checkbox_left_column) {
 	print '<td class="liste_titre center maxwidthsearch actioncolumn">';
 	$searchpicto = $form->showFilterButtons('left');
 	print $searchpicto;
@@ -1991,7 +1991,7 @@ if (!empty($arrayfields['f.fk_statut']['checked'])) {
 	print '</td>';
 }
 // Action column
-if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+if (!$conf->main_checkbox_left_column) {
 	print '<td class="liste_titre center maxwidthsearch actioncolumn">';
 	$searchpicto = $form->showFilterButtons();
 	print $searchpicto;
@@ -2006,7 +2006,7 @@ $totalarray['nbfield'] = 0;
 // --------------------------------------------------------------------
 print '<tr class="liste_titre">';
 // Action column
-if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+if ($conf->main_checkbox_left_column) {
 	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', '', 'align="center"', $sortfield, $sortorder, 'maxwidthsearch ');
 	$totalarray['nbfield']++;
 }
@@ -2240,7 +2240,7 @@ if (!empty($arrayfields['f.fk_statut']['checked'])) {
 	$totalarray['nbfield']++;
 }
 // Action column
-if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+if (!$conf->main_checkbox_left_column) {
 	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', $param, '', $sortfield, $sortorder, 'maxwidthsearch center ');
 	$totalarray['nbfield']++;
 }
@@ -2430,7 +2430,7 @@ if ($num > 0) {
 			print '>';
 
 			// Action column
-			if (getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+			if ($conf->main_checkbox_left_column) {
 				print '<td class="nowrap center">';
 				if (($massactionbutton || $massaction) && $contextpage != 'poslist') {   // If we are in select mode (massactionbutton defined) or if we have already selected and sent an action ($massaction) defined
 					$selected = 0;
@@ -3131,7 +3131,7 @@ if ($num > 0) {
 
 			// Action column (Show the massaction button only when this page is not opened from the Extended POS)
 
-			if (!getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+			if (!$conf->main_checkbox_left_column) {
 				print '<td class="nowrap center">';
 				if (($massactionbutton || $massaction) && $contextpage != 'poslist') {   // If we are in select mode (massactionbutton defined) or if we have already selected and sent an action ($massaction) defined
 					$selected = 0;
