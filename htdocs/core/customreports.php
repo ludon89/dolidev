@@ -484,7 +484,7 @@ if (count($search_groupby)) {
 			$fieldtocount = $gvalsanitized;
 		}
 
-		$sql = "SELECT DISTINCT ".$fieldtocount." as val";	// $fieldtocount has been sanitized by previous lines as we can't use db->sanitie()
+		$sql = "SELECT DISTINCT ".$fieldtocount." as val";	// $fieldtocount has been sanitized by previous lines as we can't use db->sanitize()
 
 		if (strpos($fieldtocount, 'te') === 0) {
 			$tabletouse = $object->table_element;
