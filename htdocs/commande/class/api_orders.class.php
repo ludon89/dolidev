@@ -323,6 +323,7 @@ class Orders extends DolibarrApi
 		// Check mandatory fields
 		$this->_validate($request_data);
 
+		// Check thirdparty validity
 		$socid = (int) $request_data['socid'];
 		$thirdpartytmp = new Societe($this->db);
 		$thirdparty_result = $thirdpartytmp->fetch($socid);
