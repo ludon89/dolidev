@@ -383,7 +383,7 @@ class DolEditor
 				$out .= '		promotion: false,'."\n";
 				$out .= '		license_key: "gpl",'."\n";
 				$out .= '		readonly: '.($this->readonly ? 'true' : 'false').','."\n";
-				$out .= '		height: '.(int) $this->height.','."\n";
+				$out .= '		height: '.((int) $this->height + 60).','."\n";
 				if ($this->width) {
 					$out .= '		width: "'.dol_escape_js($this->width).'",'."\n";
 				}
@@ -394,6 +394,7 @@ class DolEditor
 				$out .= '		entity_encoding: "raw",'."\n";
 				$out .= '		protect: [/<\?[\s\S]*?\?>/g],'."\n";	// protect PHP tags like CKEditor did
 				$out .= '		paste_data_images: true,'."\n";
+				$out .= '		content_style: \'p { margin: unset; line-height: 1.2em; } .mce-content-body { margin: 10px; } \',';
 				$out .= '		toolbar_mode: '.($this->toolbarstartexpanded ? '"wrap"' : '"sliding"').','."\n";
 				$out .= '		browser_spellcheck: '.(getDolGlobalString('CKEDITOR_NATIVE_SPELLCHECKER') ? 'true' : 'false').','."\n";
 				$out .= '		language: (tinyLang && tinyLang.indexOf("en") === 0) ? "en" : tinyLang,'."\n";

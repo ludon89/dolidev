@@ -145,6 +145,7 @@ button.dropdown-item.global-search-item {
 
 .ai_dropdown{
 	margin-top: 14px !important;
+	margin-left: -2px !important;
 }
 
 .dropdown-toggle{
