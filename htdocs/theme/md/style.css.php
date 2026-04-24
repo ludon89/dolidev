@@ -589,9 +589,11 @@ input:focus:not(.input-icon-user, .input-icon-password, .input-icon-security):no
  select:focus, .select2-container--open [aria-expanded="false"].select2-selection--single,
  .select2-container--focus span.selection span.select2-selection:not(.noborderfocus):not(.massactionselect) {
 <?php if (getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT')) { ?>
-	border: 1px solid #666 !important;
+	border: 1px solid var(--inputbordercolor) !important;
 <?php } else { ?>
-	border-bottom: 1px solid #666;
+	border-bottom: 1px solid var(--inputbordercolor) !important;
+	border-bottom-left-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
 <?php } ?>
 }
 
@@ -7421,11 +7423,15 @@ li.select2-selection__choice {
 .select2-container .select2-selection--multiple {
 	min-height: 28px !important;
 }
-
+.select2-container--default .select2-selection--multiple {
+	border<?php echo getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT') ? '' : '-bottom'; ?>: solid 1px var(--inputbordercolor);
+}
+<?php if (!getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT')) { ?>
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
 	/* border: 1px solid #e4e4e4; */
 	border: none;
 }
+<?php } ?>
 
 .blockvmenusearch .select2-container--default .select2-selection--single
 {
@@ -7512,6 +7518,7 @@ li.select2-selection__choice {
 	border-radius: 0;
 	box-shadow: none !important;
 }
+<?php if (!getDolGlobalString('THEME_SHOW_BORDER_ON_INPUT')) { ?>
 .select2-container--default.select2-container--focus .select2-selection--multiple {
 	border-top: none;
 	border-left: none;
@@ -7525,6 +7532,7 @@ li.select2-selection__choice {
 	border-radius: 0 !important;
 	line-height: normal;
 }
+<?php } ?>
 .select2-container--default .select2-selection--multiple .select2-selection__rendered {
 	line-height: 1.4em;
 }
