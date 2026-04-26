@@ -4646,9 +4646,6 @@ if ($action == 'create') {
 		include_once DOL_DOCUMENT_ROOT.'/core/modules/facture/modules_facture.php';
 		$list = ModelePDFFactures::liste_modeles($db);
 		if (is_array($list) && count($list) > 0) {
-			print '<tr><td>'.$langs->trans('Model').'</td>';
-			print '<td colspan="2">';
-			print img_picto('', 'pdf', 'class="pictofixedwidth"');
 			if (getDolGlobalString('INVOICE_USE_DEFAULT_DOCUMENT')) {
 				$type = GETPOSTISSET('type') ? GETPOSTINT('type') : $object->type;
 				// Hidden conf
@@ -4657,8 +4654,15 @@ if ($action == 'create') {
 			} else {
 				$preselected = getDolGlobalString('FACTURE_ADDON_PDF');
 			}
-			print $form->selectarray('model', $list, $preselected, 0, 0, 0, '', 0, 0, 0, '', 'maxwidth200 widthcentpercentminusx', 1);
-			print "</td></tr>";
+			if (count($list) > 1) {
+				print '<tr><td>'.$langs->trans('Model').'</td>';
+				print '<td colspan="2">';
+				print img_picto('', 'pdf', 'class="pictofixedwidth"');
+				print $form->selectarray('model', $list, $preselected, 0, 0, 0, '', 0, 0, 0, '', 'maxwidth200 widthcentpercentminusx', 1);
+				print "</td></tr>";
+			} else {
+				print '<input type="hidden" name="model" value="'.$preselected.'">';
+			}
 		}
 
 		// Multicurrency
