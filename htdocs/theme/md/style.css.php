@@ -1753,10 +1753,10 @@ if ($conf->browser->layout == 'phone') {
 } ?>
 
 
-.a-filter, .a-mesure {
+.a-filter, .a-mesure, .a-selection {
 	border-radius: 50px;
 	background: var(--colortexttitlenotab);
-	color: #fff;
+	color: #fff !important;
 	padding: 8px 10px 8px 6px;
 }
 .a-filter:before {
@@ -1771,7 +1771,7 @@ if ($conf->browser->layout == 'phone') {
 	padding-right: 5px;
 	padding-left: 5px;
 }
-.a-filter-disabled, .a-mesure-disabled {
+.a-filter-disabled, .a-mesure-disabled, .a-mesure-disabled {
 	border-radius: 50px;
 	background: var(--colorbacktitle1);
 	padding: 8px;

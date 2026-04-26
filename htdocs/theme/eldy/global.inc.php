@@ -1633,10 +1633,10 @@ div.divsearchfield {
 	position: absolute;
 }
 
-.a-filter, .a-mesure {
+.a-filter, .a-mesure, .a-selection {
 	border-radius: 50px;
 	background: var(--colortexttitlenotab);
-	color: #fff;
+	color: #fff !important;
 	padding: 8px 10px 8px 6px;
 }
 .a-filter:before {
@@ -1651,7 +1651,7 @@ div.divsearchfield {
 	padding-right: 5px;
 	padding-left: 5px;
 }
-.a-filter-disabled, .a-mesure-disabled {
+.a-filter-disabled, .a-mesure-disabled, .a-selection-disabled {
 	border-radius: 50px;
 	background: var(--colorbacktitle1);
 	padding: 8px;
