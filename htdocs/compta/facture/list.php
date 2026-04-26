@@ -76,7 +76,7 @@ if (isModEnabled('category')) {
 }
 
 // Load translation files required by the page
-$langs->loadLangs(array('bills', 'companies', 'products', 'categories'));
+$langs->loadLangs(array('bills', 'companies', 'products', 'categories', 'cashdesk'));
 
 $search_all = trim(GETPOST('search_all', 'alphanohtml'));
 
