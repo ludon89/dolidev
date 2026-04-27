@@ -562,12 +562,12 @@ class FormTicket
 		// If public form, display more information
 		$toolbarname = 'dolibarr_notes';
 		if ($this->ispublic) {
-			$toolbarname = 'dolibarr_details';	// TODO Allow image so use can do paste of image into content but disallow file manager
+			$toolbarname = 'dolibarr_details';	// TODO Allow image so user can do paste of image into content but we disallow file manager
 			print '<div class="warning hideonsmartphone">'.(getDolGlobalString("TICKET_PUBLIC_TEXT_HELP_MESSAGE", $langs->trans('TicketPublicPleaseBeAccuratelyDescribe'))).'</div>';
 		}
 		include_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 		$uselocalbrowser = false;
-		$ckeditorenabledforticket = (getDolGlobalString('FCKEDITOR_ENABLE_TICKET') >= 2);		// 0=no, 1=from backoffice only, 2=from backoffice+public (very dangerous)
+		$ckeditorenabledforticket = (getDolGlobalString('FCKEDITOR_ENABLE_TICKET') >= ($this->ispublic ? 2 : 1));		// 0=no, 1=from backoffice only, 2=from backoffice+public (very dangerous)
 		if (!$ckeditorenabledforticket) {
 			$msg = dol_string_nohtmltag($msg, 2);
 		}
@@ -849,9 +849,9 @@ class FormTicket
 
 		if ($withdolfichehead) {
 			print dol_get_fiche_end();
+		} else {
+			print '<br><br>';
 		}
-
-		print '<br><br>';
 
 		if ($mode == 'create') {
 			print $form->buttonsSaveCancel(((isset($this->withreadid) && $this->withreadid > 0) ? "SendResponse" : "CreateTicket"), ($this->withcancel ? "Cancel" : ""));
@@ -2002,6 +2002,6 @@ class FormTicket
 			print '</script>';
 		}
 
-		print "<!-- End form TICKET -->\n";
+		print "<!-- End message_form TICKET -->\n";
 	}
 }
