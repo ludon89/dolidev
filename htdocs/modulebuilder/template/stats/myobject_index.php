@@ -78,7 +78,7 @@ dol_include_once('/mymodule/lib/mymodule_myobject.lib.php');
 $WIDTH = DolGraph::getDefaultGraphSizeForStats('width');
 $HEIGHT = DolGraph::getDefaultGraphSizeForStats('height');
 
-$mode = GETPOSTISSET("mode") ? GETPOST("mode", 'aZ09') : 'statistcs';
+$mode = GETPOSTISSET("mode") ? GETPOST("mode", 'aZ09') : 'statistics';
 
 $userid = GETPOSTINT('userid');
 $categ_id = GETPOSTINT('categ_id');
