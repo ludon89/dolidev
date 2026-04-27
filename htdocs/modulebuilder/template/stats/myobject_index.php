@@ -187,14 +187,17 @@ if (!$mesg) {
 	$px1->SetMinValue(min(0, $px1->GetFloorMinValue()));
 	$px1->SetWidth($WIDTH);
 	$px1->SetHeight($HEIGHT);
-	$px1->SetYLabel($langs->trans("NbOfOrder"));
+	$px1->SetYLabel($langs->trans("Nb"));
 	$px1->SetShading(3);
 	$px1->SetHorizTickIncrement(1);
 	$px1->mode = 'depth';
-	$px1->SetTitle($langs->trans("NumberOfOrdersByMonth"));
+	$px1->SetTitle($langs->trans("ByMonth"));
 
 	$px1->draw($filenamenb, $fileurlnb);
 }
+
+
+/*
 
 // Build graphic amount of object
 $data = $stats->getAmountByMonthWithPrevYear($endyear, $startyear);
@@ -245,6 +248,7 @@ if (!$mesg) {
 }
 
 
+
 $data = $stats->getAverageByMonthWithPrevYear($endyear, $startyear);
 
 
@@ -291,6 +295,7 @@ if (!$mesg) {
 	$px3->draw($filename_avg, $fileurl_avg);
 }
 
+*/
 
 
 // Show array
@@ -304,7 +309,7 @@ foreach ($data as $val) {
 if (!count($arrayyears)) {
 	$arrayyears[$nowyear] = $nowyear;
 }
-*/
+
 
 
 $h = 0;
@@ -322,7 +327,7 @@ print dol_get_fiche_head($head, 'byyear', '', -1);
 
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
-/*
+
 // Show filter box
 print '<form name="stats" method="POST" action="'.dolBuildUrl($_SERVER["PHP_SELF"]).'">';
 print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -331,6 +336,7 @@ print '<input type="hidden" name="mode" value="'.$mode.'">';
 print '<table class="noborder centpercent">';
 print '<tr class="liste_titre"><td class="liste_titre" colspan="2">'.$langs->trans("Filter").'</td></tr>';
 // Company
+/*
 print '<tr><td class="left">'.$langs->trans("ThirdParty").'</td><td class="left">';
 $filter = '';
 if ($mode == 'customer') {
@@ -342,68 +348,18 @@ if ($mode == 'supplier') {
 print img_picto('', 'company', 'class="pictofixedwidth"');
 print $form->select_company($socid, 'socid', $filter, 1, 0, 0, array(), 0, 'widthcentpercentminusx maxwidth300');
 print '</td></tr>';
-// ThirdParty Type
-print '<tr><td>'.$langs->trans("ThirdPartyType").'</td><td>';
-$sortparam_typent = (!getDolGlobalString('SOCIETE_SORT_ON_TYPEENT') ? 'ASC' : $conf->global->SOCIETE_SORT_ON_TYPEENT); // NONE means we keep sort of original array, so we sort on position. ASC, means next function will sort on label.
-print $form->selectarray("typent_id", $formcompany->typent_array(0), $typent_id, 1, 0, 0, '', 0, 0, 0, $sortparam_typent, '', 1);
-if ($user->admin) {
-	print ' '.info_admin($langs->trans("YouCanChangeValuesForThisListFromDictionarySetup"), 1);
-}
-print '</td></tr>';
-// Category societe
-$cat_type = 0;
-$cat_label = '';
-if ($mode == 'customer') {
-	$cat_type = Categorie::TYPE_CUSTOMER;
-	$cat_label = $langs->trans("Category").' '.lcfirst($langs->trans("Customer"));
-}
-if ($mode == 'supplier') {
-	$cat_type = Categorie::TYPE_SUPPLIER;
-	$cat_label = $langs->trans("Category").' '.lcfirst($langs->trans("Supplier"));
-}
-print '<tr><td>'.$cat_label.'</td><td>';
-print img_picto('', 'category', 'class="pictofixedwidth"');
-print $formother->select_categories($cat_type, $categ_id, 'categ_id', 0, 1, 'widthcentpercentminusx maxwidth300');
-print '</td></tr>';
-// Category commande
-if (isModEnabled('category')) {
-	$cat_type = '';
-	$cat_label = '';
-	if ($mode == 'customer') {
-		$cat_type = Categorie::TYPE_ORDER;
-		$cat_label = $langs->trans("Category").' '.lcfirst($langs->trans("CustomersOrders"));
-	}
-	if ($mode == 'supplier') {
-		$cat_type = Categorie::TYPE_SUPPLIER_ORDER;
-		$cat_label = $langs->trans("Category").' '.lcfirst($langs->trans("SuppliersOrders"));
-	}
-	print '<tr><td>'.$cat_label.'</td><td>';
-	$cate_arbo = $form->select_all_categories($cat_type, '', 'parent', 0, 0, 1);
-	print img_picto('', 'category', 'class="pictofixedwidth"');
-	print $form->multiselectarray('select_categ_comande_id', $cate_arbo, GETPOST('select_categ_comande_id', 'array'), 0, 0, 'widthcentpercentminusx maxwidth300');
-	//print $formother->select_categories($cat_type, $categ_id, 'categ_id', true);
-	print '</td></tr>';
-}
+*/
 // User
 print '<tr><td>'.$langs->trans("CreatedBy").'</td><td>';
 print img_picto('', 'user', 'class="pictofixedwidth"');
 print $form->select_dolusers($userid, 'userid', 1, null, 0, '', '', '0', 0, 0, '', 0, '', 'widthcentpercentminusx maxwidth300');
 // Status
-print '<tr><td>'.$langs->trans("Status").'</td><td>';
-if ($mode == 'customer') {
-	$liststatus = array(
-		Commande::STATUS_DRAFT => $langs->trans("StatusOrderDraft"),
-		Commande::STATUS_VALIDATED => $langs->trans("StatusOrderValidated"),
-		Commande::STATUS_SHIPMENTONPROCESS => $langs->trans("StatusOrderSent"),
-		Commande::STATUS_CLOSED => $langs->trans("StatusOrderDelivered"),
-		Commande::STATUS_CANCELED => $langs->trans("StatusOrderCanceled")
-	);
+if (array_key_exists('status', $object->fields)) {
+	print '<tr><td>'.$langs->trans("Status").'</td><td>';
+	$liststatus = $object->fields['status']['arrayofkeyvalue'];
 	print $form->selectarray('object_status', $liststatus, GETPOST('object_status', 'intcomma'), -4);
+	print '</td></tr>';
 }
-if ($mode == 'supplier') {
-	$formorder->selectSupplierOrderStatus((strstr($object_status, ',') ? -1 : $object_status), 0, 'object_status');
-}
-print '</td></tr>';
 // Year
 print '<tr><td class="left">'.$langs->trans("Year").'</td><td class="left">';
 if (!in_array($year, $arrayyears)) {
@@ -476,11 +432,18 @@ print '<table class="border centpercent"><tr class="pair nohover"><td align="cen
 if ($mesg) {
 	print $mesg;
 } else {
-	print $px1->show();
-	print "<br>\n";
-	print $px2->show();
-	print "<br>\n";
-	print $px3->show();
+	if (isset($px1)) {
+		print $px1->show();
+		print "<br>\n";
+	}
+	if (isset($px2)) {
+		print $px2->show();
+		print "<br>\n";
+	}
+	if (isset($px2)) {
+		print $px3->show();
+		print "<br>\n";
+	}
 }
 print '</td></tr></table>';
 

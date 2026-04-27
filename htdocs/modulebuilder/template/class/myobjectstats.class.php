@@ -112,10 +112,12 @@ class MyObjectStats extends Stats
 		$this->from_line = MAIN_DB_PREFIX.$object->table_element_line." as tl";
 		$this->field = 'total_ht';
 		$this->field_line = 'total_ht';
-		//$this->where .= " c.fk_statut > 0"; // Not draft and not cancelled
+		//$this->where .= " c.status > 0"; // Not draft and not cancelled
 		$this->categ_link = MAIN_DB_PREFIX.'categorie_societe';
-		//$this->where.= " AND c.fk_soc = s.rowid AND c.entity = ".$conf->entity;
-		$this->where .= ($this->where ? ' AND ' : '').'c.entity IN ('.getEntity('myobject@mymodule').')';
+		//$this->where.= " AND c.socid = s.rowid AND c.entity = ".$conf->entity;
+		if ($object->ismultientitymanaged) {
+			$this->where .= ($this->where ? ' AND ' : '').'c.entity IN ('.getEntity('myobject@mymodule').')';
+		}
 
 		if ($this->socid) {
 			$this->where .= " AND c.fk_soc = ".((int) $this->socid);
@@ -240,7 +242,8 @@ class MyObjectStats extends Stats
 	{
 		global $user;
 
-		$sql = "SELECT date_format(c.date_creation, '%Y') as year, COUNT(*) as nb, SUM(c.".$this->db->sanitize($this->field).") as total, AVG(".$this->db->sanitize($this->field).") as avg";
+		$sql = "SELECT date_format(c.date_creation, '%Y') as year, COUNT(*) as nb";
+		//$sql .= ", SUM(c.".$this->db->sanitize($this->field).") as total, AVG(".$this->db->sanitize($this->field).") as avg";
 		$sql .= " FROM ".$this->db->sanitize($this->from, 0, 1, 1);
 		if (empty($user->socid) && !$user->hasRight('societe', 'client', 'voir')) {
 			$sql .= "  INNER JOIN ".MAIN_DB_PREFIX."societe_commerciaux as sc ON c.fk_soc = sc.fk_soc AND sc.fk_user = ".((int) $user->id);
