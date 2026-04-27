@@ -724,7 +724,7 @@ class FormTicket
 					print '<tr><td>'.$langs->trans("Contact").'</td><td>';
 					// If no socid, set to -1 to avoid full contacts list
 					$selectedCompany = ($this->withfromsocid > 0) ? $this->withfromsocid : -1;
-					print img_picto('', 'contact', 'class="paddingright"');
+					print img_picto('', 'contact', 'class="pictofixedwidth"');
 					// @phan-suppress-next-line PhanPluginSuspiciousParamOrder
 					print $form->select_contact($selectedCompany, $this->withfromcontactid, 'contactid', 3, '', '', 1, 'maxwidth300 widthcentpercentminusx', true);
 
