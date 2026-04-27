@@ -53,6 +53,7 @@ class FormContract
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	/**
 	 *	Show a combo list with contracts qualified for a third party
+	 *  TODO This is a bugged function. It downloads all contracts into the select hanging the browser on large database.
 	 *
 	 *	@param	int		$socid      Id third party (-1=all, 0=only contracts not linked to a third party, id=contracts not linked or linked to third party id)
 	 *	@param  int		$selected   Id contract preselected
@@ -88,7 +89,7 @@ class FormContract
 			if (!getDolGlobalString('CONTRACT_ALLOW_TO_LINK_FROM_OTHER_COMPANY')) {
 				$sql .= " AND (c.fk_soc=".((int) $socid)." OR c.fk_soc IS NULL)";
 			} elseif (getDolGlobalString('CONTRACT_ALLOW_TO_LINK_FROM_OTHER_COMPANY') != 'all') {
-				$sql .= " AND (c.fk_soc IN (".$this->db->sanitize(((int) $socid).",".((int) $conf->global->CONTRACT_ALLOW_TO_LINK_FROM_OTHER_COMPANY)).")";
+				$sql .= " AND (c.fk_soc IN (".$this->db->sanitize(((int) $socid).",".getDolGlobalInt('CONTRACT_ALLOW_TO_LINK_FROM_OTHER_COMPANY')).")";
 				$sql .= " OR c.fk_soc IS NULL)";
 			}
 		}
@@ -133,11 +134,11 @@ class FormContract
 							$disabled = 0;
 							if ($obj->status == 0) {
 								$disabled = 1;
-								$labeltoshow .= ' ('.$langs->trans("Draft").')';
+								$labeltoshow .= ' ('.$langs->transnoentitiesnoconv("Draft").')';
 							}
 							if (!getDolGlobalString('CONTRACT_ALLOW_TO_LINK_FROM_OTHER_COMPANY') && $socid > 0 && (!empty($obj->fk_soc) && $obj->fk_soc != $socid)) {
 								$disabled = 1;
-								$labeltoshow .= ' - '.$langs->trans("LinkedToAnotherCompany");
+								$labeltoshow .= ' - '.$langs->transnoentitiesnoconv("LinkedToAnotherCompany");
 							}
 
 							if ($hideunselectables && $disabled) {
@@ -149,7 +150,7 @@ class FormContract
 								}
 								//if ($obj->public) $labeltoshow.=' ('.$langs->trans("Public").')';
 								//else $labeltoshow.=' ('.$langs->trans("Private").')';
-								$resultat .= '>'.$labeltoshow;
+								$resultat .= '>'.dolPrintHTML($labeltoshow);
 								$resultat .= '</option>'."\n";
 							}
 							$ret .= $resultat;
