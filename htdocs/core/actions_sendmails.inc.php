@@ -25,14 +25,14 @@
  */
 
 /**
- * @var Societe $mysoc
- * @var CommonObject $object
  * @var Conf $conf
  * @var DoliDB $db
  * @var HookManager $hookmanager
  * @var Societe $mysoc
  * @var Translate $langs
  * @var User $user
+ *
+ * @var CommonObject $object
  *
  * @var int		$id
  * @var int 	$error
@@ -48,6 +48,7 @@
 '
 @phan-var-force Societe      $mysoc
 @phan-var-force CommonObject $object
+@phan-var-force int 		 $error
 ';
 
 
