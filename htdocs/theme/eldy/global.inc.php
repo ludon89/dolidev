@@ -1635,11 +1635,16 @@ div.divsearchfield {
 	position: absolute;
 }
 
+.a-filter, .a-mesure {
+	padding: 8px 10px 8px 6px;
+}
+.a-selection {
+	padding: 8px 10px 8px 10px;
+}
 .a-filter, .a-mesure, .a-selection {
 	border-radius: 50px;
 	background: var(--colortexttitlenotab);
 	color: #fff !important;
-	padding: 8px 10px 8px 6px;
 }
 .a-filter:before {
 	content: "\f0b0";
