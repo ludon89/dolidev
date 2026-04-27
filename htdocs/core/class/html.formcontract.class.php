@@ -54,6 +54,7 @@ class FormContract
 	/**
 	 *	Show a combo list with contracts qualified for a third party
 	 *  TODO This is a bugged function. It downloads all contracts into the select hanging the browser on large database.
+	 *  To allow its use, you must set the constant CONTRACT_CAN_USE_THE_BUGGED_SELECT_COMPONENT.
 	 *
 	 *	@param	int		$socid      Id third party (-1=all, 0=only contracts not linked to a third party, id=contracts not linked or linked to third party id)
 	 *	@param  int		$selected   Id contract preselected

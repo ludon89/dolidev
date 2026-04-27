@@ -771,17 +771,20 @@ class FormTicket
 		}
 
 		if ($subelement != 'contract' && $subelement != 'contrat') {
-			if (isModEnabled('contract') && !$this->ispublic) {
-				// This feature hang the application on large list of contracts, because the select component is not complete: it does not work like select of thirdparty or product to support large lists
-				// So we add a hidden option to avoid to have it used and the application locked, until the select_contract is fixed.
-				if (getDolGlobalString("TICKET_CAN_SELECT_CONTRACT_WITH_BUGGED_SELECT_LIST")) {
-					$langs->load('contracts');
-					$formcontract = new FormContract($this->db);
-					print '<tr><td><label for="contract"><span class="">'.$langs->trans("Contract").'</span></label></td><td>';
-					print img_picto('', 'contract', 'class="pictofixedwidth"');
-					// socid is for internal users null and not 0 or -1
-					print $formcontract->select_contract($user->socid ?? -1, GETPOSTINT('contractid'), 'contractid', 0, 1, 1, 1);
-					print '</td></tr>';
+			if (getDolGlobalString('TICKET_LINK_TO_CONTRACT_WITH_HARDLINK')) {
+				// Deprecated. Duplicate feature. Ticket can already be linked to contract with the generic "Link to" feature.
+				if (isModEnabled('contract') && !$this->ispublic) {
+					// This feature hang the application on large list of contracts, because the select component is not complete: it does not work like select of thirdparty or product to support large lists
+					// So we add a hidden option to avoid to have it used and the application locked, until the select_contract is fixed.
+					if (getDolGlobalString("CONTRACT_CAN_USE_THE_BUGGED_SELECT_COMPONENT")) {
+						$langs->load('contracts');
+						$formcontract = new FormContract($this->db);
+						print '<tr><td><label for="contract"><span class="">'.$langs->trans("Contract").'</span></label></td><td>';
+						print img_picto('', 'contract', 'class="pictofixedwidth"');
+						// socid is for internal users null and not 0 or -1
+						print $formcontract->select_contract($user->socid ?? -1, GETPOSTINT('contractid'), 'contractid', 0, 1, 1, 1);
+						print '</td></tr>';
+					}
 				}
 			}
 		}
