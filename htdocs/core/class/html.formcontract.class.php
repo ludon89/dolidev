@@ -77,7 +77,7 @@ class FormContract
 		$ret = '';
 
 		// Search all contacts
-		$sql = "SELECT c.rowid, c.ref, c.fk_soc, c.statut, s.nom,";
+		$sql = "SELECT c.rowid, c.ref, c.fk_soc, c.statut as status, s.nom,";
 		$sql .= " c.ref_customer, c.ref_supplier";
 		$sql .= " FROM ".$this->db->prefix()."contrat as c";
 		$sql .= " INNER JOIN ".$this->db->prefix()."societe as s ON s.rowid = c.fk_soc";
@@ -102,7 +102,7 @@ class FormContract
 		if ($resql) {
 			$ret .= '<select class="flat'.($morecss ? ' '.$morecss : '').'" name="'.$htmlname.'" id="'.$htmlname.'">';
 			if ($showempty) {
-				$ret .= '<option value="0">&nbsp;</option>';
+				$ret .= '<option value="0">&nbsp;</option>'."\n";
 			}
 			$num = $this->db->num_rows($resql);
 			$i = 0;
@@ -127,11 +127,11 @@ class FormContract
 
 						//if ($obj->public) $labeltoshow.=' ('.$langs->trans("SharedProject").')';
 						//else $labeltoshow.=' ('.$langs->trans("Private").')';
-						if (!empty($selected) && $selected == $obj->rowid && $obj->statut > 0) {
+						if (!empty($selected) && $selected == $obj->rowid && $obj->status > 0) {
 							$ret .= '<option value="'.$obj->rowid.'" selected>'.$labeltoshow.'</option>';
 						} else {
 							$disabled = 0;
-							if ($obj->statut == 0) {
+							if ($obj->status == 0) {
 								$disabled = 1;
 								$labeltoshow .= ' ('.$langs->trans("Draft").')';
 							}
@@ -150,7 +150,7 @@ class FormContract
 								//if ($obj->public) $labeltoshow.=' ('.$langs->trans("Public").')';
 								//else $labeltoshow.=' ('.$langs->trans("Private").')';
 								$resultat .= '>'.$labeltoshow;
-								$resultat .= '</option>';
+								$resultat .= '</option>'."\n";
 							}
 							$ret .= $resultat;
 						}
