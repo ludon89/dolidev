@@ -72,12 +72,16 @@ if (!$res) {
 require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/dolgraph.class.php';
 dol_include_once('/mymodule/class/myobject.class.php');
+dol_include_once('/mymodule/class/myobjectstats.class.php');
 dol_include_once('/mymodule/lib/mymodule_myobject.lib.php');
 
 $WIDTH = DolGraph::getDefaultGraphSizeForStats('width');
 $HEIGHT = DolGraph::getDefaultGraphSizeForStats('height');
 
-$mode = GETPOSTISSET("mode") ? GETPOST("mode", 'aZ09') : 'customer';
+$mode = GETPOSTISSET("mode") ? GETPOST("mode", 'aZ09') : 'statistcs';
+
+$userid = GETPOSTINT('userid');
+$categ_id = GETPOSTINT('categ_id');
 
 $hookmanager->initHooks(array('mymodulestats', 'myobjectstats', 'globalcard'));
 
@@ -85,9 +89,13 @@ $objecttype = 'myobject';
 $object = new MyObject($db);
 
 // List of object we want to manage statistics
-$usercanreadstatistic = $user->hasRight($objecttype, 'read');
-if (getDolGlobalInt('MAIN_NEED_EXPORT_PERMISSION_TO_READ_STATISTICS')) {
-	$usercanreadstatistic = $user->hasRight($objecttype, 'export');
+$usercanreadstatistic = 1;
+$enablepermissioncheck = getDolGlobalInt('MYMODULE_ENABLE_PERMISSION_CHECK');
+if ($enablepermissioncheck) {
+	$usercanreadstatistic = $user->hasRight($objecttype, 'read');
+	if (getDolGlobalInt('MAIN_NEED_EXPORT_PERMISSION_TO_READ_STATISTICS')) {
+		$usercanreadstatistic = $user->hasRight($objecttype, 'export');
+	}
 }
 
 if (!$usercanreadstatistic) {
@@ -121,20 +129,19 @@ $langs->loadLangs(array('companies', 'other', 'mymodule@mymodule'));
 
 $form = new Form($db);
 
-$picto = 'graph';
 $title = $langs->trans("Statistics");
-
+$dir = getMultidirTemp($object);
 
 llxHeader('', $title, '', '', 0, 0, '', '', '', 'mod-order page-stats');
 
 $permissiontoadd = 1;
 $param = '';
 $newcardbutton = '';
-$newcardbutton .= dolGetButtonTitle($langs->trans('ViewList'), '', 'fa fa-bars imgforviewmode', $_SERVER["PHP_SELF"].'?mode=common'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ((empty($mode) || $mode == 'common') ? 2 : 1), array('morecss' => 'reposition'));
-$newcardbutton .= dolGetButtonTitle($langs->trans('ViewKanban'), '', 'fa fa-th-list imgforviewmode', $_SERVER["PHP_SELF"].'?mode=kanban'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'kanban' ? 2 : 1), array('morecss' => 'reposition'));
-//$newcardbutton .= dolGetButtonTitle($langs->trans('ViewKanbanGroupBy'), '', 'fa fa-grip-vertical imgforviewmode', $_SERVER["PHP_SELF"].'?mode=kanbangroupby&groupby=p.fk_opp_status'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'kanbangroupby' ? 2 : 1), array('morecss' => 'reposition'));
-//$newcardbutton .= dolGetButtonTitle($langs->trans('HierarchicView'), '', 'fa fa-stream paddingleft imgforviewmode', $_SERVER["PHP_SELF"].'?mode=hierarchy'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', (($mode == 'hierarchy') ? 2 : 1), array('morecss' => 'reposition'));
-$newcardbutton .= dolGetButtonTitle($langs->trans('Statistics'), '', 'fa fa-chart-bar imgforviewmode', dol_buildpath('/mymodule/stats/index.php', 1).'?objecttype=myobject'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'statistics' ? 2 : 1), array('morecss' => 'reposition'));
+$newcardbutton .= dolGetButtonTitle($langs->trans('ViewList'), '', 'fa fa-bars imgforviewmode', dol_buildpath('/mymodule/myobject_list.php', 1).'?mode=common'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ((empty($mode) || $mode == 'common') ? 2 : 1), array('morecss' => 'reposition'));
+$newcardbutton .= dolGetButtonTitle($langs->trans('ViewKanban'), '', 'fa fa-th-list imgforviewmode', dol_buildpath('/mymodule/myobject_list.php', 1).'?mode=kanban'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'kanban' ? 2 : 1), array('morecss' => 'reposition'));
+//$newcardbutton .= dolGetButtonTitle($langs->trans('ViewKanbanGroupBy'), '', 'fa fa-grip-vertical imgforviewmode', dol_buildpath('/mymodule/aaa_index.php', 1).'?mode=kanbangroupby&groupby=p.fk_opp_status'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'kanbangroupby' ? 2 : 1), array('morecss' => 'reposition'));
+//$newcardbutton .= dolGetButtonTitle($langs->trans('HierarchicView'), '', 'fa fa-stream paddingleft imgforviewmode', dol_buildpath('/mymodule/aaa_index.php', 1).'?mode=hierarchy'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', (($mode == 'hierarchy') ? 2 : 1), array('morecss' => 'reposition'));
+$newcardbutton .= dolGetButtonTitle($langs->trans('Statistics'), '', 'fa fa-chart-bar imgforviewmode', dol_buildpath('/mymodule/stats/mymodule_index.php', 1).'?mode=statistics&objecttype=myobject@mymodule'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'statistics' ? 2 : 1), array('morecss' => 'reposition'));
 $newcardbutton .= dolGetButtonTitleSeparator();
 $newcardbutton .= dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/mymodule/myobject_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
 
@@ -150,12 +157,12 @@ $limit = 0;
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, $object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 
 
-print load_fiche_titre($title, '', $picto);
+//print load_fiche_titre($title, '', $picto);
 
-/*
 dol_mkdir($dir);
 
-$stats = new MyObjectStats($db, $socid, $mode, ($userid > 0 ? $userid : 0), ($typent_id > 0 ? $typent_id : 0), ($categ_id > 0 ? $categ_id : 0));
+$stats = new MyObjectStats($db, $socid, $mode, ($userid > 0 ? $userid : 0), ($categ_id > 0 ? $categ_id : 0));
+
 
 // Build graphic number of object
 $data = $stats->getNbByMonthWithPrevYear($endyear, $startyear);
@@ -164,7 +171,7 @@ $data = $stats->getNbByMonthWithPrevYear($endyear, $startyear);
 $filenamenb = $dir.'/myobjectnbinyear-'.$user->id.'-'.$year.'.png';
 $fileurlnb = DOL_URL_ROOT.'/viewimage.php?modulepart=orderstats&file=ordersnbinyear-'.$user->id.'-'.$year.'.png';
 
-
+/*
 $px1 = new DolGraph();
 $mesg = $px1->isGraphKo();
 if (!$mesg) {

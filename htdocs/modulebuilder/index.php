@@ -380,6 +380,7 @@ if ($dirins && $action == 'initmodule' && $modulename /* && $user->hasRight("mod
 		dol_delete_file($destdir.'/sql/llx_'.strtolower($modulename).'_myobject.key.sql');
 		dol_delete_file($destdir.'/sql/llx_'.strtolower($modulename).'_myobject_extrafields.key.sql');
 		dol_delete_file($destdir.'/class/myobject.class.php');
+		dol_delete_file($destdir.'/class/myobjectstats.class.php');
 
 		dol_delete_dir($destdir.'/class', 1);
 		dol_delete_dir($destdir.'/css', 1);
@@ -1410,7 +1411,8 @@ if ($dirins && $action == 'initobject' && $module && $objectname /* && $user->ha
 			'sql/llx_mymodule_myobject_extrafields.key.sql' => 'sql/llx_'.strtolower($module).'_'.strtolower($objectname).'_extrafields.key.sql',
 			//'scripts/mymodule.php' => 'scripts/'.strtolower($objectname).'.php',
 			'class/myobject.class.php' => 'class/'.strtolower($objectname).'.class.php',
-			//'class/api_mymodule.class.php' => 'class/api_'.strtolower($module).'.class.php',
+			'class/myobjectstats.class.php' => 'class/'.strtolower($objectname).'stats.class.php',
+		//'class/api_mymodule.class.php' => 'class/api_'.strtolower($module).'.class.php',
 			'stats/myobject_index.php' => 'stats/'.strtolower($objectname).'_index.php',
 		);
 
@@ -2078,12 +2080,14 @@ if ($dirins && $action == 'confirm_deleteobject' && $objectname /* && $user->has
 			'sql/llx_mymodule_myobject_extrafields.key.sql' => 'sql/llx_'.strtolower($module).'_'.strtolower($objectname).'_extrafields.key.sql',
 			'scripts/myobject.php' => 'scripts/'.strtolower($objectname).'.php',
 			'class/myobject.class.php' => 'class/'.strtolower($objectname).'.class.php',
+			'class/myobjectstats.class.php' => 'class/'.strtolower($objectname).'stats.class.php',
 			'class/api_myobject.class.php' => 'class/api_'.strtolower($module).'.class.php',
 			'core/modules/mymodule/mod_myobject_advanced.php' => 'core/modules/'.strtolower($module).'/mod_'.strtolower($objectname).'_advanced.php',
 			'core/modules/mymodule/mod_myobject_standard.php' => 'core/modules/'.strtolower($module).'/mod_'.strtolower($objectname).'_standard.php',
 			'core/modules/mymodule/modules_myobject.php' => 'core/modules/'.strtolower($module).'/modules_'.strtolower($objectname).'.php',
 			'core/modules/mymodule/doc/doc_generic_myobject_odt.modules.php' => 'core/modules/'.strtolower($module).'/doc/doc_generic_'.strtolower($objectname).'_odt.modules.php',
-			'core/modules/mymodule/doc/pdf_standard_myobject.modules.php' => 'core/modules/'.strtolower($module).'/doc/pdf_standard_'.strtolower($objectname).'.modules.php'
+			'core/modules/mymodule/doc/pdf_standard_myobject.modules.php' => 'core/modules/'.strtolower($module).'/doc/pdf_standard_'.strtolower($objectname).'.modules.php',
+			'stats/myobject_index.php' => 'stats/'.strtolower($objectname).'_index.php',
 		);
 
 		//menu for the object selected
@@ -5843,8 +5847,9 @@ if ($module == 'initmodule') {
 			if ($action != 'editfile' || empty($file)) {
 				print '<!-- Tab to manage permissions -->'."\n";
 				print '<span class="opacitymedium">';
-				$htmlhelp = $langs->trans("PermissionsDefDescTooltip", '{s1}');
-				$htmlhelp = str_replace('{s1}', '<a target="adminbis" class="nofocusvisible" href="'.DOL_URL_ROOT.'/admin/perms.php">'.$langs->trans('DefaultRights').'</a>', $htmlhelp);
+				$htmlhelp = $langs->trans("PermissionsDefDescTooltip");
+				//$htmlhelp = $langs->trans("PermissionsDefDescTooltip", '{s1}');
+				//$htmlhelp = str_replace('{s1}', '<a target="adminbis" class="nofocusvisible" href="'.DOL_URL_ROOT.'/admin/perms.php">'.$langs->trans('DefaultRights').'</a>', $htmlhelp);
 				print $form->textwithpicto($langs->trans("PermissionsDefDesc"), $htmlhelp, 1, 'help', '', 0, 2, 'helpondesc').'<br>';
 				print '</span>';
 				print '<br>';
