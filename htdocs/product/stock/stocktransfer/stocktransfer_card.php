@@ -422,7 +422,6 @@ $help_url = '';
 llxHeader('', $title, $help_url, '', 0, 0, '', '', '', 'mod-product page-stock-stocktransfer_stocktransfer_card');
 
 
-
 // Example : Adding jquery code
 print '<script type="text/javascript" language="javascript">
 jQuery(document).ready(function() {';
@@ -697,6 +696,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<div class="clearboth"></div>';
 
 
+
 	/*
 	 * Lines
 	 */
@@ -913,6 +913,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '</tr>';
 	}
 
+	// Line to add a new line
 	if (empty($object->status) && $action !== 'editline' && $permissiontoadd) {
 		print '<tr class="oddeven">';
 		// Product
@@ -977,7 +978,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '</td>';
 
 		// Qty
-		print '<td class="center"><input type="text" class="flat maxwidth50" name="qty" '.(!empty($error) ? 'value="'.$qty.'"' : '').'></td>';
+		print '<td class="center"><input type="text" class="flat maxwidth50" name="qty" '.(!empty($error) ? 'value="'.(GETPOSTISSET('qty') ? GETPOST('qty') : $qty).'"' : '').'></td>';
 
 		// PMP
 		print '<td></td>';

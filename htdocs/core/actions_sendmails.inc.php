@@ -35,6 +35,7 @@
  * @var User $user
  *
  * @var int		$id
+ * @var int 	$error
  * @var string 	$dolibarr_main_url_root
  * @var string 	$action
  * @var ?string $subject
@@ -49,7 +50,6 @@
 @phan-var-force CommonObject $object
 ';
 
-$error = 0;
 
 /*
  * Add file in email form
