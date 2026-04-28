@@ -410,7 +410,7 @@ if ($type == 'directory') {
 		if ($module == 'medias') {
 			$useinecm = 6;
 			$modulepart = 'medias';
-			$perm = ($user->hasRight("website", "write") || $user->hasRight("emailing", "creer"));
+			$perm = $user->hasRight("website", "write");
 			$title = 'none';
 		} elseif ($module == 'ecm') { // DMS/ECM -> manual structure
 			if ($user->hasRight("ecm", "read")) {
