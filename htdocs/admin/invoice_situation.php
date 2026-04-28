@@ -105,7 +105,8 @@ $item->fieldAttr = array(
 	'type' => 'number',
 	'step' => '0.01',
 	'min' => 0,
-	'max' => 100
+	'max' => 100,
+	'class' => 'width75 right',
 );
 
 
@@ -131,6 +132,8 @@ include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
  * View
  */
 
+$action = 'edit';
+
 $dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 
 $help_url = 'EN:Invoice_Configuration|FR:Configuration_module_facture|ES:ConfiguracionFactura';
@@ -153,11 +156,7 @@ print '<span class="opacitymedium">'.$langs->trans("InvoiceFirstSituationDesc").
  *  Numbering module
  */
 
-if ($action == 'edit') {
-	print $formSetup->generateOutput(true);
-} else {
-	print $formSetup->generateOutput();
-}
+print $formSetup->generateOutput(true);
 
 if (count($formSetup->items) > 0) {
 	if ($action != 'edit') {
