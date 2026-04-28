@@ -2,7 +2,7 @@
 /* Copyright (C) 2017 		Laurent Destailleur  	<eldy@users.sourceforge.net>
  * Copyright (C) 2024-2025	MDW						<mdeweerd@users.noreply.github.com>
  * Copyright (C) 2024-2025  Frédéric France         <frederic.france@free.fr>
- * Copyright (C) 2025       Pierre Ardoin           <developpeur@lesmetiersdubatiment.fr>
+ * Copyright (C) 2025-2026       Pierre Ardoin           <developpeur@lesmetiersdubatiment.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -363,6 +363,11 @@ if (empty($reshook)) {
 			$object->status = $object::STATUS_CLOSED;
 			$object->date_reelle_arrivee = dol_now();
 			$object->update($user);
+			$result = $object->call_trigger('STOCKTRANSFER_CLOSE', $user);
+			if ($result < 0) {
+				$error++;
+				setEventMessages($object->error, $object->errors, 'errors');
+			}
 			setEventMessage('StockStransferIncrementedShort');
 		}
 	}
@@ -1135,9 +1140,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 
 	// Presend form
-	$modelmail = 'stocktransfer';
+	$modelmail = 'stocktransfer_send';
 	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->stocktransfer->dir_output;
+	$diroutput = $conf->stocktransfer->dir_output.'/'.$object->element;
 	$trackid = 'stocktransfer'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';

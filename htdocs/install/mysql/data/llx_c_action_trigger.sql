@@ -132,6 +132,12 @@ insert into llx_c_action_trigger (code,label,description,elementtype,rang) value
 insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('PRODUCT_MODIFY','Product or service modified','Executed when a product or sevice is modified','product',151);
 insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('PRODUCT_DELETE','Product or service deleted','Executed when a product or sevice is deleted','product',152);
 
+insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('STOCKTRANSFER_CREATE','Stock transfer created','Executed when a stock transfer is created','stocktransfer',670);
+insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('STOCKTRANSFER_MODIFY','Stock transfer modified','Executed when a stock transfer is modified','stocktransfer',671);
+insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('STOCKTRANSFER_VALIDATE','Stock transfer validated','Executed when a stock transfer is validated','stocktransfer',672);
+insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('STOCKTRANSFER_UNVALIDATE','Stock transfer back to draft','Executed when a stock transfer is set back to draft','stocktransfer',673);
+insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('STOCKTRANSFER_CLOSE','Stock transfer closed','Executed when a stock transfer is closed after destination stock increment','stocktransfer',676);
+
 insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('EXPENSE_REPORT_CREATE','Expense report created','Executed when an expense report is created','expensereport',201);
 insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('EXPENSE_REPORT_VALIDATE','Expense report validated','Executed when an expense report is validated','expensereport',202);
 insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('EXPENSE_REPORT_MODIFY','Expense report modified','Executed when an expense report is modified','expensereport',202);
