@@ -2402,6 +2402,8 @@ class ActionComm extends CommonObject
 						$link_subscription .= '&securekey='.urlencode($encodedsecurekey);
 
 						$event['url'] = $link_subscription;
+					} else {
+						$event['url'] = $dolibarr_main_url_root.'/comm/action/card.php?id='.$obj->id;
 					}
 
 					$event['created'] = (int) $this->db->jdate($obj->datec) - (getDolGlobalInt('AGENDA_EXPORT_FIX_TZ') * 3600);
