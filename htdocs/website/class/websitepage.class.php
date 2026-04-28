@@ -285,7 +285,16 @@ class WebsitePage extends CommonObject
 			$phpcontent = dolKeepOnlyPhpCode($this->content);
 
 			if ($phpcontent) {
-				$this->error = 'Error: you try to create a page with PHP content without having permissions for that.';
+				$this->error = 'Error: you try to create a page with PHP content in HTML body without having permissions for that.';
+				$this->errors[] = $this->error;
+				return -1;
+			}
+
+			// Check there is no PHP content into the imported file (must be only HTML + JS)
+			$phpcontent = dolKeepOnlyPhpCode($this->htmlheader);
+
+			if ($phpcontent) {
+				$this->error = 'Error: you try to create a page with PHP content in HTML header without having permissions for that.';
 				$this->errors[] = $this->error;
 				return -1;
 			}
