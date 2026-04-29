@@ -296,6 +296,7 @@ class WebsitePage extends CommonObject
 			}
 
 			// Check there is no PHP content into the imported file (must be only HTML + JS)
+			// Note: This one may be uselss because this->htmlheader should be retrieved now using GETPOST(..., 'restricthtmlallowlinkscript') so without PHP content. We keep it in case of.
 			$phpcontent = dolKeepOnlyPhpCode($this->htmlheader);
 
 			if ($phpcontent) {
