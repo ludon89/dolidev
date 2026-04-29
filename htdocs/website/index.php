@@ -1182,6 +1182,7 @@ if ($action == 'addcontainer' && $usercanedit) {
 		$objectpage->keywords = str_replace(array('<', '>'), '', GETPOST('WEBSITE_KEYWORDS', 'alphanohtml'));
 		$objectpage->allowed_in_frames = GETPOST('WEBSITE_ALLOWED_IN_FRAMES', 'aZ09') ? 1 : 0;
 		$objectpage->htmlheader = GETPOST('htmlheader', 'none');	// Must accept tags like '<script>' and '<link>'
+
 		$objectpage->author_alias = GETPOST('WEBSITE_AUTHORALIAS', 'alphanohtml');
 		$objectpage->object_type = GETPOST('WEBSITE_OBJECTCLASS');
 		$objectpage->fk_object = GETPOST('WEBSITE_OBJECTID');
@@ -5167,6 +5168,7 @@ if ($action == 'editmeta' || $action == 'createcontainer') {	// Edit properties 
 	print '<input type="text" class="flat minwidth300" name="WEBSITE_AUTHORALIAS" value="'.dol_escape_htmltag($pageauthoralias).'" placeholder="'.dol_escape_htmltag($langs->trans("Anonymous")).'">';
 	print '</td></tr>';
 
+	// Web page header
 	print '<tr><td class="tdhtmlheader tdtop">';
 	$htmlhelp = $langs->trans("EditTheWebSiteForACommonHeader").'<br><br>';
 	$htmlhelp .= $langs->trans("Examples").' :<br>';
@@ -5191,12 +5193,13 @@ if ($action == 'editmeta' || $action == 'createcontainer') {	// Edit properties 
 
 	print '</table>';
 
+
 	if ($action == 'createcontainer') {
 		$langs->load("website");
 
 		print '<div class="center tablecheckboxcreatemanually'.$hiddenmanuallyafterload.'">';
 
-		print '<input type="submit" class="button small" name="addcontainer" value="'.$langs->trans("Create").'">';
+		print '<input type="submit" class="button small buttonforacesave" name="addcontainer" value="'.$langs->trans("Create").'">';
 		print '<input class="button button-cancel small" type="submit" name="preview" value="'.$langs->trans("Cancel").'">';
 
 		print '</div>';
