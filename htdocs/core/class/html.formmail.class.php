@@ -624,11 +624,12 @@ class FormMail extends Form
 
 				// Language selector for predefined message templates (only when multilang is enabled)
 				if (getDolGlobalInt('MAIN_MULTILANGS')) {
+					// This feature is in conflict with the existing one where all templates are show with the language in a flag so user can choose the template in the correct language
 					include_once DOL_DOCUMENT_ROOT.'/core/class/html.formadmin.class.php';
 					$formadmin = new FormAdmin($this->db);
 					$currentlang = (is_object($outputlangs) ? $outputlangs->defaultlang : $langs->defaultlang);
 					$out .= ' &nbsp; ';
-					$out .= $formadmin->select_language($currentlang, 'lang_id', 0, array(), 1, 0, 0, 'maxwidth150');
+					$out .= $formadmin->select_language($currentlang, 'lang_id', 0, array(), 1, 0, 0, 'maxwidth150', 3);
 				}
 
 				$out .= '<input type="submit" class="button reposition smallpaddingimp" value="'.$langs->trans('Apply').'" name="modelselected" id="modelselected">';
