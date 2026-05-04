@@ -528,11 +528,9 @@ if ($step == 2 && $datatoimport) {
 
 	$filetoimport = '';
 
+	// Add format information and link to download example
 	print '<table class="noborder centpercent" cellpadding="4">';
 
-	$filetoimport = '';
-
-	// Add format information and link to download example
 	print '<tr class="liste_titre"><td colspan="4">';
 	print $langs->trans("FileMustHaveOneOfFollowingFormat").'...';
 	print '</td></tr>';
@@ -558,6 +556,7 @@ if ($step == 2 && $datatoimport) {
 	}
 
 	print '</table>';
+
 
 	print '<br>';
 
