@@ -1566,7 +1566,7 @@ class BonPrelevement extends CommonObject
 					if ($sourcetype == 'salary') {
 						$userid = $this->context['factures_prev'][0][2];
 					}
-					$result = $this->generate($format, $executiondate, $type, $fk_bank_account, $userid, (int) $thirdpartyBANId);
+					$result = $this->generate($format, $executiondate, $type, $fk_bank_account, $userid, 0);
 					if ($result < 0) {
 						//var_dump($this->error);
 						//var_dump($this->invoice_in_error);
@@ -1881,7 +1881,7 @@ class BonPrelevement extends CommonObject
 	 * @param	string	$type				'direct-debit' or 'bank-transfer'
 	 * @param   int     $fk_bank_account	Bank account ID the receipt is generated for. Will use the ID into the setup of module Direct Debit or Credit Transfer if 0.
 	 * @param   int  	$forsalary          If the SEPA is to pay salaries
-	 * @param   int  	$thirdpartyBANId	If defined, will use this ID to get the RIB. Otherwise, the first default BAN of thirdparty will be taken.
+	 * @param   int  	$thirdpartyBANId	If defined, will use this ID to get the RIB. Otherwise, the BAN of request will be used. If not defined, the first default BAN of thirdparty will be taken.
 	 * @return	int							>=0 if OK, <0 if KO
 	 */
 	public function generate(string $format = 'ALL', int $executiondate = 0, string $type = 'direct-debit', int $fk_bank_account = 0, int $forsalary = 0, int $thirdpartyBANId = 0)
@@ -1940,7 +1940,8 @@ class BonPrelevement extends CommonObject
 
 				$sql = "SELECT soc.rowid as socid, soc.code_client as code, soc.address, soc.zip, soc.town, c.code as country_code,";
 				$sql .= " pl.client_nom as nom, pl.code_banque as cb, pl.code_guichet as cg, pl.number as cc, pl.amount as somme,";
-				$sql .= " f.ref as reffac, p.fk_facture as idfac,";
+				$sql .= " f.ref as reffac,";
+				$sql .= " p.fk_facture as idfac, p.rowid as pid,";
 				$sql .= " rib.rowid, rib.datec, rib.iban_prefix as iban, rib.bic as bic, rib.rowid as drum, rib.rum, rib.date_rum";
 				$sql .= " FROM";
 				$sql .= " " . MAIN_DB_PREFIX . "prelevement_lignes as pl,";
@@ -2068,7 +2069,8 @@ class BonPrelevement extends CommonObject
 				if (!empty($forsalary)) {
 					$sql = "SELECT u.rowid as userId, u.address, u.zip, u.town, c.code as country_code, CONCAT(u.firstname,' ',u.lastname) as nom,";
 					$sql .= " pl.code_banque as cb, pl.code_guichet as cg, pl.number as cc, pl.amount as somme,";
-					$sql .= " s.ref as reffac, p.fk_salary as idfac,";
+					$sql .= " s.ref as reffac,";
+					$sql .= " p.fk_salary as idfac, p.rowid as pid, '' as forced_rib";
 					$sql .= " rib.rowid, rib.datec, rib.iban_prefix as iban, rib.bic as bic, rib.rowid as drum, '' as rum, '' as date_rum";
 					$sql .= " FROM";
 					$sql .= " " . MAIN_DB_PREFIX . "prelevement_lignes as pl,";
@@ -2085,7 +2087,8 @@ class BonPrelevement extends CommonObject
 				} else {
 					$sql = "SELECT soc.rowid as socid, soc.code_client as code, soc.address, soc.zip, soc.town, c.code as country_code,";
 					$sql .= " pl.client_nom as nom, pl.code_banque as cb, pl.code_guichet as cg, pl.number as cc, pl.amount as somme,";
-					$sql .= " f.ref as reffac, f.ref_supplier as fac_ref_supplier, p.fk_facture_fourn as idfac,";
+					$sql .= " f.ref as reffac, f.ref_supplier as fac_ref_supplier,";
+					$sql .= " p.fk_facture_fourn as idfac, p.rowid as pid, p.fk_societe_rib as forced_rib";
 					$sql .= " rib.rowid, rib.datec, rib.iban_prefix as iban, rib.bic as bic, rib.rowid as drum, rib.rum, rib.date_rum";
 					$sql .= " FROM";
 					$sql .= " " . MAIN_DB_PREFIX . "prelevement_lignes as pl,";
@@ -2109,6 +2112,8 @@ class BonPrelevement extends CommonObject
 				// Define $fileCrediteurSection. One section DrctDbtTxInf per invoice.
 				$nbtotalDrctDbtTxInf = -1;
 
+				require_once DOL_DOCUMENT_ROOT . '/societe/class/companybankaccount.class.php';
+
 				$resql = $this->db->query($sql);
 				if ($resql) {
 					$cachearraytotestduplicate = array();
@@ -2116,22 +2121,43 @@ class BonPrelevement extends CommonObject
 					$num = $this->db->num_rows($resql);
 					while ($i < $num) {
 						$obj = $this->db->fetch_object($resql);
+
+						// Test to avoid duplicate default IBAN, to ask user to clean its data
 						if (!empty($cachearraytotestduplicate[$obj->idfac])) {
 							$this->error = $langs->trans('ErrorCompanyHasDuplicateDefaultBAN', $obj->socid);
 							$this->invoice_in_error[$obj->idfac] = $this->error;
 							$result = -2;
 							break;
 						}
+
 						$cachearraytotestduplicate[$obj->idfac] = $obj->rowid;
 
+						// Get the default value
 						$daterum = (!empty($obj->date_rum)) ? $this->db->jdate($obj->date_rum) : $this->db->jdate($obj->datec);
 						$iban = dolDecrypt($obj->iban);
+						$bic = $obj->bic;
+						$drum = $obj->drum;
+						$rum = $obj->rum;
+
+						// But if a force bank account is defined, we use it instead
+						if (!empty($obj->forced_rib)) {
+							$bankaccount = new CompanyBankAccount($this->db);
+							$bankaccount->fetch((int) $obj->forced_rib);
+							if ($bankaccount->id > 0) {
+								$daterum = $bankaccount->date_rum;
+								$iban = $bankaccount->iban;
+								$bic = $bankaccount->bic;
+								$drum = $bankaccount->id;
+								$rum = $bankaccount->rum;
+							}
+						}
+
 						$refobj = $obj->reffac;
 						if (empty($refobj) && !empty($forsalary)) {	// If ref of salary not defined, we force a value
 							$refobj = "SAL" . $obj->idfac;
 						}
 
-						$fileCrediteurSection .= $this->EnregDestinataireSEPA($obj->code, $obj->nom, $obj->address, $obj->zip, $obj->town, $obj->country_code, $obj->cb, $obj->cg, $obj->cc, $obj->somme, $refobj, $obj->idfac, $iban, $obj->bic, $daterum, $obj->drum, $obj->rum, $type, $obj->fac_ref_supplier);
+						$fileCrediteurSection .= $this->EnregDestinataireSEPA($obj->code, $obj->nom, $obj->address, $obj->zip, $obj->town, $obj->country_code, $obj->cb, $obj->cg, $obj->cc, $obj->somme, $refobj, $obj->idfac, $iban, $bic, $daterum, $drum, $rum, $type, $obj->fac_ref_supplier);
 
 						$this->total += $obj->somme;
 						$i++;
