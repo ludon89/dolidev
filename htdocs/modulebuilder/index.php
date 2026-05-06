@@ -3760,7 +3760,7 @@ if ($module == 'initmodule') {
 					print $langs->trans("Description");
 					print '</td><td>';
 					if ($action == 'edit_moduledescription' && GETPOST('keydescription', 'alpha') === 'desc') {
-						print '<input class="minwidth500" name="propsmodule" value="'.dol_escape_htmltag($moduleobj->description).'">';
+						print '<input class="minwidth500" name="propsmodule" value="'.dol_escape_htmltag($moduleobj->description).'" spellcheck="false">';
 						print '<input class="reposition button smallpaddingimp" type="submit" name="modifydesc" value="'.$langs->trans("Modify").'"/>';
 						print '<input class="reposition button button-cancel smallpaddingimp" type="submit" name="cancel" value="'.$langs->trans("Cancel").'"/>';
 					} else {
@@ -3831,7 +3831,7 @@ if ($module == 'initmodule') {
 					print $langs->trans("Picto");
 					print '</td><td>';
 					if ($action == 'edit_modulepicto' && GETPOST('keydescription', 'alpha') === 'picto') {
-						print '<input class="minwidth200 maxwidth500" name="propsmodule" value="'.dol_escape_htmltag($moduleobj->picto).'">';
+						print '<input class="minwidth200 maxwidth500" name="propsmodule" value="'.dol_escape_htmltag($moduleobj->picto).'" spellcheck="false">';
 
 						print $form->textwithpicto('', $langs->trans("Example").': fa-file, fa-globe, ... any font awesome code.<br>Advanced syntax is fa-fakey[_faprefix[_facolor[_fasize]]] where faprefix can be far,far, facolor can be a text like \'red\' orvalue like \'#FF0000\' and fasize is CSS font size like \'1em\'');
 
@@ -3854,7 +3854,7 @@ if ($module == 'initmodule') {
 					print $langs->trans("EditorName");
 					print '</td><td>';
 					if ($action == 'edit_moduledescription' && GETPOST('keydescription', 'alpha') === 'editor_name') {
-						print '<input name="propsmodule" value="'.dol_escape_htmltag($moduleobj->editor_name).'">';
+						print '<input name="propsmodule" value="'.dol_escape_htmltag($moduleobj->editor_name).'" spellcheck="false">';
 						print '<input class="reposition button smallpaddingimp" type="submit" name="modifyname" value="'.$langs->trans("Modify").'"/>';
 						print '<input class="reposition button button-cancel smallpaddingimp" type="submit" name="cancel" value="'.$langs->trans("Cancel").'"/>';
 					} else {
@@ -3867,7 +3867,7 @@ if ($module == 'initmodule') {
 					print $langs->trans("EditorUrl");
 					print '</td><td>';
 					if ($action == 'edit_moduledescription' && GETPOST('keydescription', 'alpha') === 'editor_url') {
-						print '<input name="propsmodule" value="'.dol_escape_htmltag($moduleobj->editor_url).'">';
+						print '<input name="propsmodule" value="'.dol_escape_htmltag($moduleobj->editor_url).'" spellcheck="false">';
 						print '<input class="reposition button smallpaddingimp" type="submit" name="modifyeditorurl" value="'.$langs->trans("Modify").'"/>';
 						print '<input class="reposition button button-cancel smallpaddingimp" type="submit" name="cancel" value="'.$langs->trans("Cancel").'"/>';
 					} else {
