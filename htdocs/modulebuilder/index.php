@@ -3610,7 +3610,7 @@ if ($module == 'initmodule') {
 		$h++;
 
 		$head2[$h][0] = $_SERVER["PHP_SELF"].'?tab=exportimport&module='.$module.($forceddirread ? '@'.$dirread : '');
-		$head2[$h][1] = $langs->trans("Export").'-'.$langs->trans("Import");
+		$head2[$h][1] = $langs->trans("ImportExportProfiles");
 		$head2[$h][2] = 'exportimport';
 		$h++;
 
