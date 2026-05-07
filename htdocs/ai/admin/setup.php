@@ -271,6 +271,13 @@ if (getDolGlobalString("AI_API_SERVICE")) {
 	include DOL_DOCUMENT_ROOT.'/core/tpl/formlayoutai.tpl.php';
 	print $out;
 
+	print ' &nbsp; ';
+	if (getDolGlobalString("AI_DEBUG")) {
+		print ' <span class="small opacitymedium">'.$langs->trans("DebugOnInFile", 'dolibarr_ai.log').'</span>';
+	} else {
+		print ' <span class="small opacitymedium">'.$langs->trans("DebugOff", 'dolibarr_ai.log').'</span>';
+	}
+
 	print '<br><textarea id="'.$htmlname.'" placeholder="Click on picto to enter a prompt or enter a message and click picto to make text transformation..." class="quatrevingtpercent" rows="4"></textarea>';	// The div
 
 	print '<br><br>';
@@ -284,6 +291,13 @@ if (getDolGlobalString("AI_API_SERVICE")) {
 	$out = $langs->trans("Test").': &nbsp; ';
 	include DOL_DOCUMENT_ROOT.'/core/tpl/formlayoutai.tpl.php';
 	print $out;
+
+	print ' &nbsp; ';
+	if (getDolGlobalString("AI_DEBUG")) {
+		print ' <span class="small opacitymedium">'.$langs->trans("DebugOnInFile", 'dolibarr_ai.log').'</span>';
+	} else {
+		print ' <span class="small opacitymedium">'.$langs->trans("DebugOff", 'dolibarr_ai.log').'</span>';
+	}
 
 	print '<br>';
 	$doleditor = new DolEditor($htmlname, '', '', 100, 'dolibarr_details');
