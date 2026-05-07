@@ -207,14 +207,14 @@ class FormAI extends Form
 				});
 
 				$('#ai_summarize".$htmlContent."_select').on('change', function() {
-					console.log('We change #ai_summarize".$htmlContent."_select with lang '+$(this).val());
+					console.log('We change #ai_summarize".$htmlContent."_select with length '+$(this).val());
 					if ($(this).val() != null && $(this).val() != '' && $(this).val() != '-1') {
 						prepareCallAIGenerator($(this));
 					}
 				});
 
 				$('#ai_rephraser".$htmlContent."_select').on('change', function() {
-					console.log('We change #ai_summarize".$htmlContent."_select with lang '+$(this).val());
+					console.log('We change #ai_summarize".$htmlContent."_select with mode '+$(this).val());
 					if ($(this).val() != null && $(this).val() != '' && $(this).val() != '-1') {
 						prepareCallAIGenerator($(this));
 					}
@@ -238,10 +238,11 @@ class FormAI extends Form
 					instructions = '';
 					htmlname = '".dol_escape_js($htmlContent)."';
 					format = '".dol_escape_js($format)."';
-					functionai = $(element).data('functionai');		/* element is the html element we have manipulated in the ai tool */
+					functionai = $(element).data('functionai');				/* element is the html element we have manipulated in the ai tool */
+					style = $('#ai_rephraser'+htmlname+'_select').val();
 					texttomodify = '';
 
-					console.log('htmlname='+htmlname+' functionai='+functionai);
+					console.log('htmlname='+htmlname+' functionai='+functionai+' style='+style);
 					if ($('#'+htmlname).is('div')) {
 						texttomodify = $('#'+htmlname).html();	/* for div */
 					} else {
@@ -289,8 +290,12 @@ class FormAI extends Form
 						}
 						instructions = 'Summarize the following text '+ (unit == 'percent' ? 'by ' : 'in') + width + ' ' + unit + ': ' + texttomodify;
 					} else if (functionai == 'textrephraser') {
-						style = $('#ai_rephraser'+htmlname+'_select').val();
-						instructions = 'Rephrase the following text in a '+style+' style: ' + texttomodify;
+						if (style == 'spellchecker') {
+							instructions = 'Fix spelling and grammar errors in the following text : ' + texttomodify;
+							functionai = 'textspellchecker';
+						} else {
+							instructions = 'Rephrase the following text in a '+style+' style: ' + texttomodify;
+						}
 					} else if (functionai == 'textgenerationextrafield'){
 						instructions = $(element).val();
 					} else {

@@ -300,7 +300,7 @@ if (getDolGlobalString("AI_API_SERVICE")) {
 	}
 
 	print '<br>';
-	$doleditor = new DolEditor($htmlname, '', '', 100, 'dolibarr_details');
+	$doleditor = new DolEditor($htmlname, '', '', 150, 'dolibarr_details');
 	print $doleditor->Create(1);
 
 	print '</form>';
