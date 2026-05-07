@@ -207,7 +207,7 @@ print '<th class="linecolht right">'.$langs->trans('TotalHTShort').'</th>';
 // Multicurrency
 if (isModEnabled("multicurrency") && $this->multicurrency_code != $conf->currency) {
 	print '<th class="linecoltotalht_currency right">'.$langs->trans('TotalHTShort');
-	print '&nbsp;<span class="opacitymedium">('.$langs->getCurrencySymbol($this->multicurrency_code).')<span></th>';
+	print '&nbsp;<span class="opacitymedium">('.$langs->getCurrencySymbol($this->multicurrency_code).')</span></th>';
 }
 
 if ($outputalsopricetotalwithtax) {
