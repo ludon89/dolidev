@@ -127,7 +127,7 @@ class FormAI extends Form
 		}
 
 		if (empty($onlyenhancements) || in_array($onlyenhancements, array('texttranslation'))) {
-			$out .= ($out ? '<br>' : '');
+			$out .= ($out ? '<div style="height: 10px;"></div>' : '');
 			$out .= '<div id="ai_translation'.$htmlContent.'" class="ai_translation'.$htmlContent.' paddingtop paddingbottom ai_feature">';
 			$out .= img_picto('', 'language', 'class="pictofixedwidth paddingrightonly"');
 			$out .= $formadmin->select_language("", "ai_translation".$htmlContent."_select", 0, array(), $langs->trans("TranslateByAI").'...', 0, 0, 'minwidth250 ai_translation'.$htmlContent.'_select');
@@ -136,7 +136,7 @@ class FormAI extends Form
 
 		if (empty($onlyenhancements) || in_array($onlyenhancements, array('textsummarize'))) {
 			$summarizearray = getListForAISummarize();
-			$out .= ($out ? '<br>' : '');
+			$out .= ($out ? '<div style="height: 10px;"></div>' : '');
 			$out .= '<div id="ai_summarize'.$htmlContent.'" class="ai_summarize'.$htmlContent.' paddingtop paddingbottom ai_feature">';
 			$out .= img_picto('', 'edit', 'class="pictofixedwidth paddingrightonly"');
 			$out .= $form->selectarray("ai_summarize".$htmlContent."_select", $summarizearray, 0, $langs->trans("SummarizeByAI").'...', 0, 0, '', 1, 0, 0, '', 'minwidth250 ai_summarize'.$htmlContent.'_select');
@@ -145,7 +145,7 @@ class FormAI extends Form
 
 		if (empty($onlyenhancements) || in_array($onlyenhancements, array('textrephrase'))) {
 			$stylearray = getListForAIRephraseStyle();
-			$out .= ($out ? '<br>' : '');
+			$out .= ($out ? '<div style="height: 10px;"></div>' : '');
 			$out .= '<div id="ai_rephraser'.$htmlContent.'" class="ai_rephraser'.$htmlContent.' paddingtop paddingbottom ai_feature">';
 			$out .= img_picto('', 'edit', 'class="pictofixedwidth paddingrightonly"');
 			$out .= $form->selectarray("ai_rephraser".$htmlContent."_select", $stylearray, 0, $langs->trans("RephraserByAI").'...', 0, 0, '', 1, 0, 0, '', 'minwidth250 ai_rephraser'.$htmlContent.'_select');
