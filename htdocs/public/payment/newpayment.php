@@ -1835,7 +1835,7 @@ if ($source == 'member' || $source == 'membersubscription') {
 		}
 
 		$s = $langs->trans("AreYouAPreferredPartner", '<a href="https://partners.dolibarr.org" target="_blank">{s1}</a>');
-		$s = str_replace('{s1}', 'Peferred Partner', $s);
+		$s = str_replace('{s1}', 'Preferred Partner', $s);
 		print '<tr id="trbudget" class="trcompany"><td><label for="pp" class="small">'.$s.'</label></td><td>';
 		print '<input type="checkbox" name="pp" id="pp" value="1"'.((GETPOST('reload') ? GETPOST('pp') : $pp) ? ' checked="checked"' : '').' class="reposition">';
 		print '</td></tr>';
@@ -1975,15 +1975,23 @@ if ($source == 'member' || $source == 'membersubscription') {
 	$amount = max(0, (float) $amount, (float) getDolGlobalInt("MEMBER_MIN_AMOUNT"));
 
 	// Amount
+	$caneditamount = $adht->caneditamount;
+	$minimumamount = !getDolGlobalString('MEMBER_MIN_AMOUNT') ? $adht->amount : max(getDolGlobalString('MEMBER_MIN_AMOUNT'), $adht->amount, $amount);
+	$amountformuladescriptionbytype = $adht->amountformuladescriptionbytype(1); // Load the array of amount ormula description per type
+	$amountformuladescription = $amountformuladescriptionbytype[$typeid];
 	print '<tr class="CTableRow2"><td class="CTableRow2">'.$langs->trans("Amount");
 	// This place no longer allows amount edition
 	if (getDolGlobalString('MEMBER_EXT_URL_SUBSCRIPTION_INFO')) {
 		print ' - <a href="' . getDolGlobalString('MEMBER_EXT_URL_SUBSCRIPTION_INFO').'" rel="external" target="_blank" rel="noopener noreferrer">'.img_picto('', 'url', 'class="pictofixedwidth"').$langs->trans("SeeHere").'</a>';
 	}
-	print '</td><td class="CTableRow2">';
-
-	$caneditamount = $adht->caneditamount;
-	$minimumamount = !getDolGlobalString('MEMBER_MIN_AMOUNT') ? $adht->amount : max(getDolGlobalString('MEMBER_MIN_AMOUNT'), $adht->amount, $amount);
+	if ($amountformuladescription) {
+		print '</td><td class="CTableRow2">'.$amountformuladescription;
+		print '</td></tr>'."\n";
+		print '<tr class="CTableRow2"><td class="CTableRow2">';
+		print '</td><td class="CTableRow2">';
+	} else {
+		print '</td><td class="CTableRow2">';
+	}
 
 	if ($caneditamount && ($action != 'dopayment' || GETPOST('reload'))) {
 		if (GETPOSTISSET('newamount')) {
@@ -1999,7 +2007,7 @@ if ($source == 'member' || $source == 'membersubscription') {
 		print '<input type="hidden" name="newamount" value="'.$amount.'">';
 	}
 	print '<input type="hidden" name="amount" value="'.$amount.'">';
-	print '<input type="hidden" name="currency" value="'.$currency.'">';
+	print '<input type="hidden" name="currency" value="'.$currency.'">'.$langs->trans("Currency".$conf->currency);
 	print '</td></tr>'."\n";
 
 	// Tag
