@@ -3365,7 +3365,7 @@ function validateZipFile($zip, $originalfilename, $zipfile, $langs)
 				)
 			);
 
-			getDirContents($dir, $search, $results);     // This include a global $count
+			analyzeDirContents($dir, $search, $results, $count);     // This include a global $count
 
 			dol_syslog("count of errors = ".$count);
 
@@ -3412,4 +3412,113 @@ function validateZipFile($zip, $originalfilename, $zipfile, $langs)
 	$return['error'] = $error;
 
 	return $return;
+}
+
+
+/**
+ * Analyze files of a directory and subdirectories.
+ * Called by validateZipFile()
+ *
+ * @param string 				$dir		Root dir to scan
+ * @param array<mixed,mixed> 	$search		Array with strings to search
+ * @param array<mixed,mixed> 	$results	Array with results
+ * @param int 					$count		Count of errors
+ * @return void
+ */
+function analyzeDirContents($dir, $search = array(), &$results = array(), &$count = 0)
+{
+	$files = scandir($dir);
+
+	foreach ($files as $key => $value) {
+		$path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+		if (!is_dir($path)) {
+			$content = file_get_contents($path);
+
+			// Clean the content of file to make analysis easier and avoid some false positive
+			$content = preg_replace('/^\s*\/\/.*$/m', '', $content);
+
+			$fileName = basename($path);
+			$fileNameWithoutTmp = preg_replace('/\/tmp\/unzip[^\/]+\//', '', $path);
+
+			$file_array = explode(".", $fileName);
+
+			foreach ($search as $pattern) {
+				if (count($file_array) > 1) {
+					$ext = $file_array[1];
+					if (!empty($file_array[2])) {
+						$ext = $file_array[1] . '.' . $file_array[2];
+					}
+
+					if (in_array($ext, $pattern['types'])) {
+						if (strpos($content, '<?php') !== 0) continue;  // We discard files that are not php pages (we discard scripts)
+						if (strpos($path, 'htdocs_') > 0) continue;  // We discard files that are files into htdocs_... because it is files for core, so no need to be compatible with custom
+						if (strpos($path, 'phpunit') > 0) continue;  // We discard files that are files into phpunit because it is files for core, so no need to be compatible with custom
+
+						$regs = array();
+						if (!empty($pattern['multiple'])) {
+							preg_match_all('/' . $pattern['pattern'] . '/', $content, $regs);
+							// Error if only one result (0 is ok, >1 is ok)
+							if (!empty($regs) && count($regs[0]) == 1) {
+								$results[] = array(
+									'testname'      => $pattern['name'],
+									'filename'      => $fileNameWithoutTmp
+								);
+								$count++;
+							}
+						} else {
+							$id = (!empty($pattern['id']) ? $pattern['id'] : 1);
+							preg_match_all('/' . $pattern['pattern'] . '/', $content, $regs);
+
+							if (!empty($regs) && !empty($regs[$id])) {
+								foreach ($regs[$id] as $i => $string) {
+									if (!empty($pattern['contain']) && is_array($pattern['contain'])) {
+										foreach ($pattern['contain'] as $contain) {
+											// Mode strict true : doit contenir && ne pas contenir
+											if (!empty($pattern['notcontain']) && !empty($pattern['strict']) && is_array($pattern['notcontain'])) {
+												foreach ($pattern['notcontain'] as $notcontain) {
+													if (strstr($string, $contain) && strstr($string, $notcontain)) {
+														$results[] = array(
+															'testname'      => $pattern['name'],
+															'filename'      => $fileName,
+															'line'          => $regs[0][$i]
+														);
+														$count++;
+													}
+												}
+											} elseif (!strstr($string, $contain)) {        // If found
+												// Mode strict false : must contains. Note strstr return false if not found
+
+												// We found $contain into $string
+												$results[] = array(
+													'testname'      => $pattern['name'],
+													'filename'      => $fileName,
+													'line'          => $regs[0][$i]
+												);
+												$count++;
+											}
+										}
+									}
+									// Ou ne doit pas contenir
+									if (empty($count) && !empty($pattern['notcontain']) && empty($pattern['strict']) && is_array($pattern['notcontain'])) {
+										foreach ($pattern['notcontain'] as $notcontain) {
+											if (strstr($string, $notcontain)) {
+												$results[] = array(
+													'testname'      => $pattern['name'],
+													'filename'      => $fileName,
+													'line'          => $regs[0][$i]
+												);
+												$count++;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} elseif ($value != "." && $value != "..") {
+			analyzeDirContents($path, $search, $results, $count);
+		}
+	}
 }
