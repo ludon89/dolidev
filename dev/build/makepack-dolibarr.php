@@ -567,6 +567,7 @@ if ($nboftargetok) {
 
 		echo "Create xml check file with hash checksum with command php ".$SOURCE."/dev/build/generate_filelist_xml.php release=$MAJOR.$MINOR.$BUILD\n";
 		$outputLines = [];
+		$retcode = 0;
 		exec("php $SOURCE/dev/build/generate_filelist_xml.php release=$MAJOR.$MINOR.$BUILD", $outputLines, $retcode);
 		$ret = implode("\n", $outputLines);
 		if ($retcode !== 0) {
