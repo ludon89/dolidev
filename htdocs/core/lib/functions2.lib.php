@@ -3293,7 +3293,7 @@ function validateZipFile(&$zip, $originalfilename, $zipfile)
 				}
 			}
 			if ($error) {
-				$return['errormsg'].= $weblangs->trans("validationFail") . '<br>';
+				$return['errormsg'].= $weblangs->trans("UnvalidZipFile") . '<br>';
 				$return['errormsg'].= $weblangs->trans("moduleContents") . '<br>';
 				$return['errormsg'].= $weblangs->trans("moduleDirectoryRule1") . '<br>';
 				$return['errormsg'].= $weblangs->trans("moduleDirectoryRule2") . '<br>';
@@ -3382,10 +3382,10 @@ function validateZipFile(&$zip, $originalfilename, $zipfile)
 		dol_syslog("validateZipFile Error");
 
 		$link = '<a target="_blank" class="linktowiki" href="https://wiki.dolibarr.org/index.php/Modules - Packaging rules and Dolistore validation rules">Dolibarr wiki developer documentation</a>';
-		$return['errormsg'].= $weblangs->trans("invalidZipFile") .'<br>';
-		$return['errormsg'].= $weblangs->trans("seeDocumentation", $link).'<br>';
+		$return['errormsg'].= $weblangs->trans("UnvalidZipFile") .'<br>';
+		$return['errormsg'].= $weblangs->trans("SeeDocumentation", $link).'<br>';
 		$return['errormsg'].= "<br>\n";
-		$return['errormsg'].= $weblangs->trans("contactDolistore");
+		$return['errormsg'].= $weblangs->trans("Contact");
 		$return['upload'] = -1;
 		$error++;
 	} else {
