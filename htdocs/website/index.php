@@ -5391,7 +5391,9 @@ if ($mode == 'replacesite' || $massaction == 'replace') {
 
 	print load_fiche_titre($langs->trans("ReplaceWebsiteContent"), '', 'search');
 
-	print '<div class="fichecenter"><div class="fichehalfleft">';
+	print '<div class="neutral">';
+
+	print '<div class="display-flex"><div class="flex-item">';
 
 	print '<div class="tagtable">';
 
@@ -5417,7 +5419,7 @@ if ($mode == 'replacesite' || $massaction == 'replace') {
 
 	print '</div>';
 
-	print '</div><div class="fichehalfleft">';
+	print '</div><div class="flex-item">';
 
 	print '<div class="tagtable">';
 
@@ -5457,9 +5459,14 @@ if ($mode == 'replacesite' || $massaction == 'replace') {
 
 	print '</div>';
 
-	print '<input type="submit" class="button margintoponly" name="buttonreplacesitesearch" value="'.dol_escape_htmltag($langs->trans("Search")).'">';
-
 	print '</div></div>';
+
+	print '<center>';
+	print '<input type="submit" class="button margintoponly" name="buttonreplacesitesearch" value="'.dol_escape_htmltag($langs->trans("Search")).'">';
+	print '</center>';
+
+	print '</div>';
+
 
 	if ($mode == 'replacesite') {
 		print '<!-- List of search result -->'."\n";
