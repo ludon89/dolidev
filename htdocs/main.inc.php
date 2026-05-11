@@ -2005,7 +2005,7 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 			}
 
 			// jQuery jeditable for Edit In Place features
-			if (getDolGlobalString('MAIN_USE_JQUERY_JEDITABLE') && !defined('DISABLE_JQUERY_JEDITABLE')) {
+			/*if (getDolGlobalString('MAIN_USE_EDIT_IN_PLACE') && !defined('DISABLE_JQUERY_JEDITABLE')) {
 				print '<!-- JS to manage editInPlace feature -->'."\n";
 				print '<script nonce="'.getNonce().'" src="'.DOL_URL_ROOT.'/public/includes/jquery/plugins/jeditable/jquery.jeditable.js?' . $ext . '"></script>'."\n";
 				print '<script nonce="'.getNonce().'" src="'.DOL_URL_ROOT.'/public/includes/jquery/plugins/jeditable/jquery.jeditable.ui-datepicker.js?' . $ext . '"></script>'."\n";
@@ -2020,9 +2020,9 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 				print 'var indicatorInPlace = \'<img src="'.DOL_URL_ROOT."/theme/".$conf->theme."/img/working.gif".'">\';'."\n";
 				print 'var withInPlace = 300;'; // width in pixel for default string edit
 				print '</script>'."\n";
-				print '<script nonce="'.getNonce().'" src="'.DOL_URL_ROOT.'/core/js/editinplace.js?' . $ext . '"></script>'."\n";
-				print '<script nonce="'.getNonce().'" src="'.DOL_URL_ROOT.'/public/includes/jquery/plugins/jeditable/jquery.jeditable.ckeditor.js?' . $ext . '"></script>'."\n";
-			}
+				print '<script nonce="'.getNonce().'" src="'.DOL_URL_ROOT.'/core/js/editinplace.js'.($ext ? '?'.$ext : '').'"></script>'."\n";
+				print '<script nonce="'.getNonce().'" src="'.DOL_URL_ROOT.'/public/includes/jquery/plugins/jeditable/jquery.jeditable.ckeditor.js'.($ext ? '?'.$ext : '').'"></script>'."\n";
+			}*/
 			if (!defined('DISABLE_SELECT2') && (getDolGlobalString('MAIN_USE_JQUERY_MULTISELECT') || defined('REQUIRE_JQUERY_MULTISELECT'))) {
 				// jQuery plugin "mutiselect", "multiple-select", "select2", ...
 				$tmpplugin = !getDolGlobalString('MAIN_USE_JQUERY_MULTISELECT') ? constant('REQUIRE_JQUERY_MULTISELECT') : getDolGlobalString('MAIN_USE_JQUERY_MULTISELECT');
