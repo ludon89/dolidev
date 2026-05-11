@@ -41,6 +41,11 @@ if (!defined('NOCSRFCHECK')) {
 define('NOLOGIN', 1);
 
 require '../../main.inc.php';
+/**
+ * @var DoliDB $db
+ * @var Conf $conf
+ * @var User $user
+ */
 require_once DOL_DOCUMENT_ROOT . '/ai/class/mcp_protocol.class.php';
 
 while (ob_get_level()) {
@@ -57,7 +62,10 @@ if (!isModEnabled('ai') || !getDolGlobalString('AI_MCP_ENABLED')) {
 	exit;
 }
 
-global $db, $conf, $user;
+
+/*
+ * View
+ */
 
 // Headers
 header('Content-Type: application/json');
@@ -80,6 +88,7 @@ if (!empty($storedKey)) {
 
 	// Authorization: Bearer <token>
 	if (!$valid && !empty($authHeader)) {
+		$matches = array();
 		if (preg_match('/^Bearer\s+(.+)$/i', $authHeader, $matches)) {
 			$token = trim($matches[1]);
 			$valid = hash_equals($storedKey, $token);
@@ -88,10 +97,7 @@ if (!empty($storedKey)) {
 }
 
 if (!$valid) {
-	dol_syslog(
-		'[MCP Server] Unauthorized access attempt. IP=' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'),
-		LOG_WARNING
-	);
+	dol_syslog('[MCP Server] Unauthorized access attempt. IP=' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'), LOG_WARNING);
 
 	http_response_code(401);
 	echo json_encode([
