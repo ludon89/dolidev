@@ -105,10 +105,9 @@ $ALTERNATEPATH = [
 ];
 
 $RPMSUBVERSION = 'auto';
-$RPMDIR = '';
+$RPMDIR = (getenv('HOME') ?: '') . '/rpmbuild';	// by default
 if (is_dir('/usr/src/redhat')) { $RPMDIR = '/usr/src/redhat'; }   // redhat
 if (is_dir('/usr/src/packages')) { $RPMDIR = '/usr/src/packages'; } // opensuse
-if (is_dir('/usr/src/RPM')) { $RPMDIR = '/usr/src/RPM'; }     // mandrake
 
 $VERSION = '4.0';
 
@@ -652,10 +651,10 @@ if ($nboftargetok) {
 		run("rm -f  $BUILDROOT/$PROJECT/build.xml");
 
 		run("rm -f  $BUILDROOT/$PROJECT/.pre-commit-config.yaml");
-		run("rm -f  $BUILDROOT/$PROJECT/.phan");
+		run("rm -fr $BUILDROOT/$PROJECT/.phan");
 
 		run("rm -f  $BUILDROOT/$PROJECT/phpstan.neon");
-		run("rm -f  $BUILDROOT/$PROJECT/phpstan.neon.dist");
+		run("rm -fr $BUILDROOT/$PROJECT/phpstan.neon.dist");
 		run("rm -f  $BUILDROOT/$PROJECT/pom.xml");
 		run("rm -f  $BUILDROOT/$PROJECT/README-*.md");
 
@@ -674,7 +673,7 @@ if ($nboftargetok) {
 		run("rm -f  $BUILDROOT/$PROJECT/dev/build/dolibarr-*.xz");
 		run("rm -f  $BUILDROOT/$PROJECT/dev/build/dolibarr-*.zip");
 		run("rm -f  $BUILDROOT/$PROJECT/dev/build/doxygen/doxygen_warnings.log");
-		run("rm -f  $BUILDROOT/$PROJECT/dev/build/phpstan/phpstan");
+		run("rm -fr $BUILDROOT/$PROJECT/dev/build/phpstan/phpstan");
 		run("rm -f  $BUILDROOT/$PROJECT/htdocs/cache.manifest");
 		run("rm -f  $BUILDROOT/$PROJECT/htdocs/conf/conf.php");
 		run("rm -f  $BUILDROOT/$PROJECT/htdocs/conf/conf.php.mysql");
@@ -974,6 +973,7 @@ if ($nboftargetok) {
 			if ($RPMDIR === '') { $RPMDIR = (getenv('HOME') ?: '') . '/rpmbuild'; }
 
 			echo "Version is $MAJOR.$MINOR.$REL1-$RPMSUBVERSION\n";
+			echo "RPMDIR = $RPMDIR\n";
 
 			echo "Remove target $FILENAMERPM...\n";
 			@unlink("$NEWDESTI/$FILENAMERPM");

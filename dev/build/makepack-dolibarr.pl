@@ -1058,6 +1058,7 @@ if ($nboftargetok) {
 			if ( $RPMDIR eq "" ) { $RPMDIR = $ENV{'HOME'} . "/rpmbuild"; }
 
 			print "Version is $MAJOR.$MINOR.$REL1-$RPMSUBVERSION\n";
+			print "RPMDIR = $RPMDIR\n";
 
 			print "Remove target " . $FILENAMERPM . "...\n";
 			unlink( "$NEWDESTI/" . $FILENAMERPM );

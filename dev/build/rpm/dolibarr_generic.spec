@@ -214,6 +214,10 @@ done >>%{name}.lang
 #---- files
 %files -f %{name}.lang
 
+%_datadir/dolibarr/htdocs/langs/zh_CN/README.md
+%_datadir/dolibarr/htdocs/langs/zh_HK/README.md
+%_datadir/dolibarr/htdocs/langs/zh_TW/README.md
+
 %defattr(0755, root, root, 0755)
 
 %dir %_datadir/dolibarr
