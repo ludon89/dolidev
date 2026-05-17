@@ -195,29 +195,22 @@ class UniversalLLMAdapter
 	 */
 	private function curl(string $url, array $data, array $headers, bool $isClaude = false, bool $isGemini = false): ?string
 	{
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POST, true);
+		include_once DOL_DOCUMENT_ROOT.'/core/lib/geturl.lib.php';
 
-		$payload = json_encode($data);
-		if ($payload === false) {
-			return "Error: Failed to encode JSON payload.";
+		// By default, we accept only external endpoints ($dolibarr_ai_allow_local_endpoints is not set).
+		// To allow local endpoints, we must set $dolibarr_ai_allow_local_endpoints to 1 or 2 in conf.php.
+		global $dolibarr_ai_allow_local_endpoints;
+		$localurl = $dolibarr_ai_allow_local_endpoints ?? 0;
+
+		$result = getURLContent($url, 'POST', json_encode($data), 1, $headers, array('http', 'https'), $localurl);
+
+		$this->lastResponse = (string) $result['content'];
+
+		if (!empty($result['curl_error_no'])) {
+			return "Error: " . $result['curl_error_msg'];
 		}
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
-		$res = curl_exec($ch);
-		$this->lastResponse = (string) $res;
-
-		if (curl_errno($ch)) {
-			$error = curl_error($ch);
-			curl_close($ch);
-			return "Error: " . $error;
-		}
-		curl_close($ch);
-
-		$json = json_decode((string) $res, true);
+		$json = json_decode((string) (string) $result['content'], true);
 
 		if ($json === null && json_last_error() !== JSON_ERROR_NONE) {
 			return "Error: Invalid JSON response from API.";
