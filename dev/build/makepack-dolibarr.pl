@@ -677,6 +677,7 @@ if ($nboftargetok) {
 		$ret = `rm -fr $BUILDROOT/$PROJECT/.phpunit.result.cache`;
 		$ret = `rm -fr $BUILDROOT/$PROJECT/.project`;
 		$ret = `rm -fr $BUILDROOT/$PROJECT/.pydevproject`;
+		$ret = `rm -f  $BUILDROOT/$PROJECT/.pyproject.toml`;
 		$ret = `rm -fr $BUILDROOT/$PROJECT/.settings`;
 		$ret = `rm -fr $BUILDROOT/$PROJECT/.scrutinizer.yml`;
 		$ret = `rm -fr $BUILDROOT/$PROJECT/.stickler.yml`;

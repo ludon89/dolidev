@@ -643,6 +643,7 @@ if ($nboftargetok) {
 		run("rm -fr $BUILDROOT/$PROJECT/.phpunit.result.cache");
 		run("rm -fr $BUILDROOT/$PROJECT/.project");
 		run("rm -fr $BUILDROOT/$PROJECT/.pydevproject");
+		run("rm -fr $BUILDROOT/$PROJECT/.pyproject.toml");
 		run("rm -fr $BUILDROOT/$PROJECT/.settings");
 		run("rm -fr $BUILDROOT/$PROJECT/.scrutinizer.yml");
 		run("rm -fr $BUILDROOT/$PROJECT/.stickler.yml");
@@ -755,6 +756,7 @@ if ($nboftargetok) {
 		run("rm -fr $BUILDROOT/$PROJECT/htdocs/factory*");
 		run("rm -fr $BUILDROOT/$PROJECT/htdocs/forceproject*");
 		run("rm -fr $BUILDROOT/$PROJECT/htdocs/lead*");
+		run("rm -fr $BUILDROOT/$PROJECT/htdocs/langs/*/README.md");
 		run("rm -fr $BUILDROOT/$PROJECT/htdocs/management*");
 		run("rm -fr $BUILDROOT/$PROJECT/htdocs/multicompany*");
 		run("rm -fr $BUILDROOT/$PROJECT/htdocs/ndf*");
