@@ -347,7 +347,7 @@ a.top-menu-dropdown-link {
 	border-radius: 0;
 }
 
-
+#topmenu-tool,
 #topmenu-login-dropdown,
 #topmenu-quickadd-dropdown,
 #topmenu-bookmark-dropdown,

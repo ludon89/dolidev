@@ -2727,6 +2727,13 @@ function top_menu_quickadd()
 
 	$html = '';
 
+	if (isModEnabled('ai')) {
+		$html .= '<!-- div for quick ai link -->
+	    <div id="topmenu-tool" class="atoplogin dropdown inline-block">
+	        <a accesskey="i" class="nofocusvisible" href="'.DOL_URL_ROOT.'/ai/assistant/index.php" title="'.$langs->trans('AI').' ('.$conf->browser->stringforfirstkey.' i)"><i class="fa fa-magic"></i></a>
+	    </div>';
+	}
+
 	if (!empty($conf->use_javascript_ajax)) {
 		$html .= '<!-- div for quick add link -->
     <div id="topmenu-quickadd-dropdown" class="atoplogin dropdown inline-block">
