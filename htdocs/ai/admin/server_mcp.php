@@ -166,6 +166,7 @@ if ($action == 'generate_key') {
 	}
 }
 
+
 /*
  * VIEW
  */
@@ -256,7 +257,7 @@ if (getDolGlobalString('AI_MCP_ENABLED')) {
 	print '<td>' . $langs->trans('ObfuscatePIIData') . '</td>';
 	print '<td>';
 	print ajax_constantonoff('AI_PRIVACY_REDACTION');
-	print ' <span class="opacitymedium">' . $langs->trans("RedactionHelp") . '</span>';
+	print ' &nbsp; <span class="opacitymedium">' . $langs->trans("RedactionHelp") . '</span>';
 	print '</td>';
 	print '</tr>';
 
@@ -278,7 +279,7 @@ if (getDolGlobalString('AI_MCP_ENABLED')) {
 	print '<td>' . $langs->trans('EnableLogging') . '</td>';
 	print '<td>';
 	print ajax_constantonoff('AI_LOG_REQUESTS');
-	print ' <a href="' . DOL_URL_ROOT . '/ai/admin/log_viewer.php" target="_blank" class="button" style="padding-top: 4px; padding-bottom: 4px;">View Logs</a>';
+	print ' &nbsp; <a href="' . DOL_URL_ROOT . '/ai/admin/log_viewer.php" target="_blank" style="padding-top: 4px; padding-bottom: 4px;">'.$langs->trans("ViewLogs").'</a>';
 	print '</td>';
 	print '</tr>';
 
