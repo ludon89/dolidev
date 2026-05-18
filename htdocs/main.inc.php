@@ -2733,7 +2733,7 @@ function top_menu_ai()
 	if (isModEnabled('ai')) {
 		$html .= '<!-- div for quick ai link -->
 	    <div id="topmenu-tool" class="atoplogin dropdown inline-block">
-	        <a accesskey="a" class="nofocusvisible" href="'.DOL_URL_ROOT.'/ai/assistant/index.php" title="'.$langs->trans('AI').' ('.$conf->browser->stringforfirstkey.' a)"><i class="fa fa-magic"></i></a>
+	        <a accesskey="a" class="nofocusvisible" href="'.DOL_URL_ROOT.'/ai/assistant/index.php" title="'.$langs->trans('AIAssistant').' ('.$conf->browser->stringforfirstkey.' a)"><i class="fa fa-magic"></i></a>
 	    </div>';
 	}
 
