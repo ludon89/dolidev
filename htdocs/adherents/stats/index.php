@@ -209,16 +209,16 @@ print '<td class="right">'.$langs->trans("AmountTotal").'</td>';
 print '<td class="right">'.$langs->trans("AmountAverage").'</td>';
 print '</tr>';
 
-$MAXLINES = 10;
-$oldyear = 0;
+$MAXLINES = 5;
 $nbline = 0;
+$oldyear = 0;
 $cssline = '';
 foreach ($data as $val) {
 	$year = (int) $val['year'];
 	while ($oldyear > $year + 1) {	// If we have empty year
 		$oldyear--;
 		$nbline++;
-		if ($nbline >= $MAXLINES) {
+		if ($nbline > $MAXLINES) {
 			$cssline = ' hidden';
 		}
 		print '<tr class="oddeven'.$cssline.'" height="24">';
@@ -242,7 +242,7 @@ foreach ($data as $val) {
 	print '</tr>';
 	$oldyear = $year;
 	$nbline++;
-	if ($nbline >= $MAXLINES) {
+	if ($nbline > $MAXLINES) {
 		$cssline = ' hidden';
 	}
 }
@@ -252,6 +252,7 @@ if ($nbline > $MAXLINES) {
 	print '<a href="#" class="showmoreoptions" onclick="javascript:$(\'.hidden\').toggle();$(this).toggle();">'.img_picto('', 'chevron-down', 'class="paddingright"').$langs->trans("More").'...</a>';
 	print '</td></tr>';
 }
+
 print '</table>';
 print '</div>';
 
