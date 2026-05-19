@@ -2730,7 +2730,7 @@ function top_menu_ai()
 
 	$html = '';
 
-	if (isModEnabled('ai')) {
+	if (isModEnabled('ai') && getDolGlobalString('AI_ASSISTANT_ENABLED')) {
 		// Open the AI Assistant in a popup overlay rather than navigating away,
 		// so the user keeps their current page context while interacting with
 		// the assistant. Uses the standard Dolibarr helper which builds an

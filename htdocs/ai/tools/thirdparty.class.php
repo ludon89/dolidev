@@ -61,6 +61,7 @@ class ToolThirdParty extends McpTool
 					"properties" => [
 						"query" => ["type" => ["string", "integer"], "description" => "The ID of the thirdparty, or a name/alias/code/email to search for."],
 						"type" => ["type" => "string", "enum" => ["customer", "prospect", "supplier"], "description" => "Filter by type (optional)."],
+						"country_code" => ["type" => "string", "description" => "ISO 2-letter country code (e.g. US, FR, GR) (optional)."],
 						"limit" => ["type" => "integer", "default" => 5]
 					],
 					"required" => ["query"]
@@ -192,10 +193,11 @@ class ToolThirdParty extends McpTool
 	/**
 	 * Search for third parties based on provided criteria.
 	 *
-	 * @param   array{query:string|int, type?:string, limit?:int|string} $args   Array of arguments:
-	 *                                                                           - query: Search string or ID
-	 *                                                                           - type: 'customer', 'prospect', 'supplier'
-	 *                                                                           - limit: Limit results (default 5)
+	 * @param   array{query:string|int, type?:string, country_code?:string, limit?:int|string} $args   Array of arguments:
+	 *                                                                                                 - query: Search string or ID
+	 *                                                                                                 - country_code: ISO country code on 2 chars (FR, US, GR...)
+	 *                                                                                                 - type: 'customer', 'prospect', 'supplier'
+	 *                                                                                                 - limit: Limit results (default 5)
 	 * @return array{error:string}|list<array{id:int,name:string,alias:string,code_cust:string,code_sup:string,email:string,type:string,url:string}>
 	 *
 	 */
@@ -207,6 +209,7 @@ class ToolThirdParty extends McpTool
 
 		$query = $args['query'];
 		$type = isset($args['type']) ? (string) $args['type'] : '';
+		$country_code = isset($args['country_code']) ? (string) $args['country_code'] : '';
 		$limit = isset($args['limit']) ? (int) $args['limit'] : 5;
 
 		// Safety fallback
@@ -217,18 +220,20 @@ class ToolThirdParty extends McpTool
 		// Dolibarr SQL construction
 		$sql = "SELECT s.rowid, s.nom, s.name_alias, s.code_client, s.code_fournisseur, s.email, s.client, s.fournisseur";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "societe as s";
+		if ($country_code) {
+			$sql.= " INNER JOIN ".MAIN_DB_PREFIX."c_country as c ON s.fk_pays = c.rowid AND c.code = '".$this->db->escape($country_code)."'";
+		}
 		$sql .= " WHERE s.entity IN (" . getEntity('societe') . ")";
 
 		if (is_numeric($query)) {
 			$sql .= " AND s.rowid = " . (int) $query;
 			$limit = 1;
 		} else {
-			$q = $this->db->escape($query);
-			$sql .= " AND (s.nom LIKE '%" . $q . "%'";
-			$sql .= " OR s.name_alias LIKE '%" . $q . "%'";
-			$sql .= " OR s.code_client LIKE '%" . $q . "%'";
-			$sql .= " OR s.code_fournisseur LIKE '%" . $q . "%'";
-			$sql .= " OR s.email LIKE '%" . $q . "%')";
+			$sql .= " AND (s.nom LIKE '%" . $this->db->escape($q) . "%'";
+			$sql .= " OR s.name_alias LIKE '%" . $this->db->escape($q) . "%'";
+			$sql .= " OR s.code_client LIKE '%" . $this->db->escape($q) . "%'";
+			$sql .= " OR s.code_fournisseur LIKE '%" . $this->db->escape($q) . "%'";
+			$sql .= " OR s.email LIKE '%" . $this->db->escape($q) . "%')";
 		}
 
 		if ($type === 'customer') {

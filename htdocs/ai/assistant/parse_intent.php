@@ -48,7 +48,7 @@ require_once DOL_DOCUMENT_ROOT . '/ai/class/privacy_guard.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/security2.lib.php';
 
 // Security check
-if (!isModEnabled('ai') || !getDolGlobalString('AI_MCP_ENABLED')) {
+if (!isModEnabled('ai') || !getDolGlobalString('AI_ASSISTANT_ENABLED')) {
 	http_response_code(403);
 	accessforbidden('Module or feature not allowed');
 }
@@ -291,7 +291,7 @@ try {
 		$systemRules .= "IMPORTANT: If the user asks for functionality that is NOT available in the list of Tools above, you MUST use the tool 'respond_to_user' to inform them that the specific feature is not available.";
 
 		// If MCP is disabled, we disable all tools
-		if (!getDolGlobalString('AI_MCP_ENABLED')) {
+		if (getDolGlobalString('AI_ASSISTANT_DISABLE_TOOLS')) {
 			$toolsForLLM = array();
 		}
 
@@ -338,6 +338,7 @@ try {
 			$model = (string) $defModel;
 		}
 		$adapterType = $servicesList[$serviceKey]['adapter_type'] ?? 'openai';
+
 
 		// The request.
 		// var_dump($query);
