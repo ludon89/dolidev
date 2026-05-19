@@ -35,7 +35,7 @@ if (!defined('NOREQUIREHTML')) {
 if (!defined('NOREQUIREAJAX')) {
 	define('NOREQUIREAJAX', 1);
 }
-if (!defined('NOCSRFCHECK')) {
+if (!defined('NOCSRFCHECK')) {		// TODO Enable the CSRF check
 	define('NOCSRFCHECK', 1);
 }
 
@@ -49,6 +49,7 @@ require_once DOL_DOCUMENT_ROOT . '/core/lib/security2.lib.php';
 
 // Security check
 if (!isModEnabled('ai') || !getDolGlobalString('AI_MCP_ENABLED')) {
+	http_response_code(403);
 	accessforbidden('Module or feature not allowed');
 }
 
@@ -72,17 +73,17 @@ $rawResponseLog = "";
 $providerUsed = "offline";
 $errorDetails = "";
 
-$mcpEnabled = getDolGlobalInt('AI_MCP_ENABLED', 0);
+$assistantEnabled = getDolGlobalInt('AI_ASSISTANT_ENABLED', 0);
 $serviceKey = getDolGlobalString('AI_API_SERVICE');
 $doRedact = getDolGlobalInt('AI_PRIVACY_REDACTION', 0);
 $timeout = getDolGlobalInt('AI_REQUEST_TIMEOUT', 120);
 
 // Kill switch
-if (!$mcpEnabled) {
+if (!$assistantEnabled) {
 	$response = [
 		"tool" => "respond_to_user",
 		"arguments" => [
-			"message" => "AI service is currently disabled. Please contact your administrator to enable it."
+			"message" => "AI assistant service is currently disabled. Please contact your administrator to enable it."
 		]
 	];
 	ob_end_clean();
@@ -107,7 +108,7 @@ try {
 	// Privacy (Name Resolution & Masking)
 	$langs->loadLangs(array("main", "bills", "orders", "propal", "supplier_invoice", "supplier_order", "projects", "other"));
 
-	// Words we want to block in any language.
+	// Translation key of Words we want to block in any language.
 	$blockKeys = [
 		// Objects (Nouns)
 		'Bill',
@@ -141,10 +142,13 @@ try {
 		'Modify',
 		'Delete',
 		'Validate',
-		'Send'
+		'Send',
+		// Other
+		'Hello',
+		'Test'
 	];
 
-	// Resolve keys to the actual current language strings
+	// Resolve keys to the actual current language
 	$dynamicStopWords = [];
 	foreach ($blockKeys as $key) {
 		$word = $langs->transnoentities($key);
@@ -156,10 +160,10 @@ try {
 	// Add common short English/French/Spanish commands that users often type
 	// regardless of the UI language.
 	$commonCommands = ['show', 'find', 'search', 'list', 'get', 'voir', 'chercher', 'lista', 'buscar'];
-	$dynamicStopWords = array_unique(array_merge($dynamicStopWords, $commonCommands));
+	$dynamicStopWords = array_unique(array_merge($dynamicStopWords, $commonCommands));		// $dynamicStopWords is an array of words
 
 
-	$cleanQuery = preg_replace('/[^\p{L}\p{N}\s\-]/u', '', $query);
+	$cleanQuery = preg_replace('/[^\p{L}\p{N}\s\-]/u', '', $query);							// Remove special chars from the prompt query
 	$words = preg_split('/\s+/', $cleanQuery, -1, PREG_SPLIT_NO_EMPTY);
 	$count = count($words);
 	$candidates = array();
@@ -187,6 +191,7 @@ try {
 		return true;
 	};
 
+	// Fill array $candidates of thirdparty name we may want to work with
 	for ($i = 0; $i < $count; $i++) {
 		// Single Word
 		if ($isValidPhrase($words[$i])) {
@@ -214,10 +219,8 @@ try {
 
 	if (!empty($candidates)) {
 		foreach ($candidates as $phrase) {
-			$escapedPhrase = $db->escape($phrase);
-
 			// We use LIKE '...' to match the start of the company name.
-			$sql = "SELECT rowid, nom FROM " . MAIN_DB_PREFIX . "societe WHERE nom LIKE '" . $escapedPhrase . "%' LIMIT 1";
+			$sql = "SELECT rowid, nom FROM " . MAIN_DB_PREFIX . "societe WHERE nom LIKE '" . $db->escape($phrase) . "%' LIMIT 1";
 
 			$res = $db->query($sql);
 
@@ -265,8 +268,7 @@ try {
 			// Filter Logic
 			$toolsSchema = filterToolsProfessional($allToolsSchema, $detectedCategories);
 
-			dol_syslog("AI Pro: Latin script. Detected: " . json_encode($detectedCategories) .
-				". Filtered to " . count($toolsSchema) . " tools.");
+			dol_syslog("AI Pro: Latin script. Detected: " . json_encode($detectedCategories) . ". Filtered to " . count($toolsSchema) . " tools.");
 		}
 
 		// If we are sending a lot of tools (Non-Latin or Fallback), we strip descriptions.
@@ -285,12 +287,17 @@ try {
 		// Build System Prompt
 		$basePrompt = getDolGlobalString('AI_INTENT_PROMPT') ?: "You are a professional Dolibarr assistant.";
 
-		$systemRules = "\n\nRules: Respond ONLY JSON. Format: {\"tool\":..., \"arguments\":{...}}. ";
+		$systemRules = "\n\nRules: Respond ONLY JSON and ensure any json string does not contains special chars and are correctly json encoded. Format: {\"tool\":..., \"arguments\":{...}}. ";
 		$systemRules .= "IMPORTANT: If the user asks for functionality that is NOT available in the list of Tools above, you MUST use the tool 'respond_to_user' to inform them that the specific feature is not available.";
 
+		// If MCP is disabled, we disable all tools
+		if (!getDolGlobalString('AI_MCP_ENABLED')) {
+			$toolsForLLM = array();
+		}
 
-
-		$systemPrompt = $basePrompt . "\n\nTools:\n" . json_encode($toolsForLLM, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . $systemRules . " Date: " . date('Y-m-d');
+		$systemPrompt = $basePrompt . "\n\n";
+		$systemPrompt .= "Tools:\n" . json_encode($toolsForLLM, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+		$systemPrompt .= $systemRules . " Date: " . date('Y-m-d');
 
 		// Get API configuration
 		$servicesList = getListOfAIServices();
@@ -332,9 +339,14 @@ try {
 		}
 		$adapterType = $servicesList[$serviceKey]['adapter_type'] ?? 'openai';
 
+		// The request.
+		// var_dump($query);
+
 		if (!empty($apiKey)) {
 			$adapter = new UniversalLLMAdapter($adapterType, $apiKey, $url, $model, $timeout);
 			$rawResponse = $adapter->generate($systemPrompt, $query);
+
+			//var_dump($rawResponse);exit;
 
 			// Capture logs
 			$rawRequestLog = $adapter->lastRequest;
@@ -348,6 +360,7 @@ try {
 				$clean = preg_replace('/```json\s*|\s*```/s', '', $rawResponse);
 				$clean = trim($clean);
 
+				$matches = array();
 				if (preg_match('/\{.*\}/s', $clean, $matches)) {
 					$clean = $matches[0];
 				}
@@ -356,6 +369,9 @@ try {
 				if ($guard) {
 					$clean = $guard->unmaskAiResponse($clean);
 				}
+
+				// Removed carriage returns and newlines
+				$clean = preg_replace('/[\r\n]/', ' ', $clean);
 
 				$intentJSON = json_decode($clean, true);
 
@@ -368,7 +384,7 @@ try {
 				if ($intentJSON && isset($intentJSON['tool'])) {
 					$validToolNames = array_column($toolsSchema, 'name');
 					if (!in_array($intentJSON['tool'], $validToolNames)) {
-						dol_syslog("AI Validation: Tool '" . $intentJSON['tool'] . "' not found in filtered schema. Switching to respond_to_user.", LOG_WARNING);
+						dol_syslog("AI Validation: Tool '" . $intentJSON['tool'] . "' not found in filtered schema. Send error message via respond_to_user.", LOG_WARNING);
 
 						// Force the standard response for non-existent functionality
 						$intentJSON = [
