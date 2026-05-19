@@ -307,7 +307,6 @@ if (getDolGlobalString('AI_MCP_ENABLED')) {
 
 	print '<br>';
 	print '<br>';
-	*/
 
 	// AI Provider Config and Connection testing
 	$services = getListOfAIServices();
@@ -339,6 +338,7 @@ if (getDolGlobalString('AI_MCP_ENABLED')) {
 	}
 
 	print '<br><br>';
+	*/
 
 	// External Access Configuration
 	print load_fiche_titre($langs->trans("AiMcpExternalAccess"), '', 'fas fa-lock-open');
