@@ -12516,7 +12516,7 @@ function dol_eval_standard($s, $hideerrors = 1, $onlysimplestring = '1')
 			$tmpo = ob_get_clean();
 			$isObBufferActive = false;
 		}
-		$error = 'dol_eval try/catch error : ';
+		$error = 'dol_eval try/catch error for string: ' . $s . ' - Error: ';
 		$error .= $e->getMessage();
 		dol_syslog($error, LOG_WARNING);
 		return 'Exception during evaluation: ' . $s;
