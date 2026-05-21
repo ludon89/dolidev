@@ -780,6 +780,17 @@ if ($mysoc->country_code == 'FR') {
 	$tooltiphelp = "<i>".$langs->trans("Example").': '.$langs->trans("VATIsNotUsedExampleFR")."</i>\n";
 }
 print '<label for="no_vat">'.$form->textwithpicto($langs->trans("VATIsNotUsedDesc"), $tooltiphelp)."</label>";
+
+print '<div class="shownifvatnotused">';
+$placeholder = (($mysoc->country_code == 'FR') ? 'VATEX-FR-FRANCHISE' : '');
+$tooltiptext = $langs->trans("VATExemptionCodeDesc").'<br>'.$langs->trans("VATExemptionCodeDesc2").'<br>'.$langs->trans("VATExemptionCodeDesc3");
+if (($mysoc->country_code == 'FR')) {
+	$tooltiptext .= '<br><br>'.$langs->trans("Example").':<br>';
+	$tooltiptext .= 'VATEX-FR-FRANCHISE, VATEX-FR-CGI261-4, VATEX-FR-J, VATEX-FR-I, VATEX-FR-D, ...';
+}
+print $form->textwithpicto($langs->trans("VATExemptionCode"), $tooltiptext, 1, 'help', 'valignmiddle', 0, 3, 'exemptioncode').' <input type="text" name="MAIN_INFO_SOCIETE_VAT_EXEMPTION_CODE" placeholder="'.$placeholder.'">';
+print '</div>';
+
 print "</td></tr>\n";
 
 print "</table>";
