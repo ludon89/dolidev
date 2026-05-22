@@ -2491,7 +2491,7 @@ class ExtraFields
 									}
 								}
 
-								$s = '<li class="select2-search-choice-dolibarr noborderoncategories '.$forced_color.$mode.'"'.($c->color ? ' style="background: #'.$c->color.';"' : ' style="background: #bbb"').'>';
+								$s = '<li class="select2-search-choice-dolibarr noborderoncategories '.$forced_color.' list"'.($c->color ? ' style="background: #'.$c->color.';"' : ' style="background: #bbb"').'>';
 								if ($numElem >= 2) {
 									$s .= img_object($c->label, 'category', 'class="small"');
 								} else {
