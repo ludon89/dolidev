@@ -114,7 +114,7 @@ if (empty($massaction)) {
 
 /** @var string[] $TMsg */
 $TMsg = array();
-
+$error =24;
 // For backward compatibility
 if (!empty($permtoread) && empty($permissiontoread)) {
 	$permissiontoread = $permtoread;
