@@ -2267,8 +2267,8 @@ class Commande extends CommonOrder
 				$line->total_tva        = $objp->total_tva;
 				$line->total_localtax1  = $objp->total_localtax1;
 				$line->total_localtax2  = $objp->total_localtax2;
-				$line->subprice         = $objp->subprice;
-				$line->subprice_ttc     = $objp->subprice_ttc;
+				$line->subprice         = (float) $objp->subprice;
+				$line->subprice_ttc     = (float) $objp->subprice_ttc;
 				$line->fk_remise_except = $objp->fk_remise_except;
 				$line->remise_percent   = $objp->remise_percent;
 				$line->price            = $objp->price;
