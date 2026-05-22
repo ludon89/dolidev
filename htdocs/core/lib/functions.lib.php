@@ -16565,7 +16565,6 @@ function show_actions_messaging($conf, $langs, $db, $filterobj, $objcon = null, 
 
 	$num = 0;
 	$MAXWITHOUTPAGINATION = getDolGlobalInt('AGENDA_MAX_EVENTS_ON_PAGE_WITHOUT_PAGINATION', 100);
-	$num = 0;
 
 	if ($sql || $sql2) {	// May not be defined if module Agenda is not enabled and mailing module disabled too
 		if (!empty($sql) && !empty($sql2)) {
