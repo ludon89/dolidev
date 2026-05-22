@@ -52,7 +52,7 @@ repos:
       # Check that shell files are executables
       - id: check-shebang-scripts-are-executable
         exclude:
-          (?x)^( dev/tools/dolibarr-postgres2mysql.php |test/other/test_serialize.php
+          (?x)^( dev/tools/dolibarr-postgres2mysql.php
           |test/phpunit/textutf8.txt |test/phpunit/textiso.txt |htdocs/includes/.*
           |htdocs/modulebuilder/template/.* |dev/build/debian/dolibarr.postrm |dev/build/debian/dolibarr.postinst
           |dev/build/debian/dolibarr.config )$
