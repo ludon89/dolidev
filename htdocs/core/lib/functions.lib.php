@@ -3551,6 +3551,14 @@ function dol_banner_tab($object, $paramid, $morehtml = '', $shownav = 1, $fieldi
 		}
 	}
 
+	if (getDolGlobalString('MAIN_SHOW_TECHNICAL_ID') && (getDolGlobalString('MAIN_SHOW_TECHNICAL_ID') == '1' || preg_match('/' . preg_quote($object->element, '/') . '/i', getDolGlobalString('MAIN_SHOW_TECHNICAL_ID'))) && !empty($object->id)) {
+		$morehtmlref .= '<div style="clear: both;"></div>';
+		$morehtmlref .= '<div class="smallimp refidno opacitymedium banner-object-technical-id">';
+		$morehtmlref .= $langs->trans("TechnicalID") . ': ' . ((int) $object->id);
+		$morehtmlref .= '</div>';
+	}
+
+
 	// Show barcode
 	if ($showbarcode) {
 		$morehtmlleft .= '<div class="floatleft inline-block valignmiddle divphotoref">' . $form->showbarcode($object, 100, 'photoref valignmiddle') . '</div>';
@@ -3667,12 +3675,6 @@ function dol_banner_tab($object, $paramid, $morehtml = '', $shownav = 1, $fieldi
 			$morehtmlref .= $moreaddress;
 			$morehtmlref .= '</div>';
 		}
-	}
-	if (getDolGlobalString('MAIN_SHOW_TECHNICAL_ID') && (getDolGlobalString('MAIN_SHOW_TECHNICAL_ID') == '1' || preg_match('/' . preg_quote($object->element, '/') . '/i', getDolGlobalString('MAIN_SHOW_TECHNICAL_ID'))) && !empty($object->id)) {
-		$morehtmlref .= '<div style="clear: both;"></div>';
-		$morehtmlref .= '<div class="refidno opacitymedium banner-object-technical-id">';
-		$morehtmlref .= $langs->trans("TechnicalID") . ': ' . ((int) $object->id);
-		$morehtmlref .= '</div>';
 	}
 
 	$parameters = array('morehtmlref' => &$morehtmlref, 'moreparam' => &$moreparam, 'morehtmlleft' => &$morehtmlleft, 'morehtmlstatus' => &$morehtmlstatus, 'morehtmlright' => &$morehtmlright);
