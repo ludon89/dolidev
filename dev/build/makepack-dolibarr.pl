@@ -243,8 +243,6 @@ if (! -e $SOURCE . "/htdocs/version.inc.php") {
 	$PROJVERSION = $MAJORVERSION . "." . $MINORVERSION;
 }
 
-print "xx".$PROJVERSION;
-
 ( $MAJOR, $MINOR, $BUILD ) = split( /\./, $PROJVERSION, 3 );
 if ( $MINOR eq '' ) { die "Error can't detect version"; }
 
