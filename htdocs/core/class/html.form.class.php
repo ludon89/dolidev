@@ -6937,46 +6937,44 @@ class Form
 			$formconfirm .= '<input type="hidden" name="action" value="' . $action . '">' . "\n";
 			$formconfirm .= '<input type="hidden" name="token" value="' . newToken() . '">' . "\n";
 
-			$formconfirm .= '<table class="valid centpercent">' . "\n";
+			$formconfirm .= '<div class="valid">' . "\n";
 
 			// Line title
-			$formconfirm .= '<tr class="validtitre"><td class="validtitre" colspan="2">';
+			$formconfirm .= '<div class="validtitre">';
 			$formconfirm .= img_picto('', 'pictoconfirm') . ' ' . $title;
-			$formconfirm .= '</td></tr>' . "\n";
+			$formconfirm .= '</div>' . "\n";
 
 			// Line text
 			if (is_array($formquestion) && array_key_exists('text', $formquestion) && !empty($formquestion['text'])) {
-				$formconfirm .= '<tr class="valid"><td class="valid" colspan="2">' . $formquestion['text'] . '</td></tr>' . "\n";
+				$formconfirm .= '<div class="valid">' . $formquestion['text'] . '</div>' . "\n";
 			}
 
 			// Line form fields
 			if ($more) {
-				$formconfirm .= '<tr class="valid"><td class="valid" colspan="2">' . "\n";
+				$formconfirm .= '<div>' . "\n";
 				$formconfirm .= $more;
-				$formconfirm .= '</td></tr>' . "\n";
+				$formconfirm .= '</div>' . "\n";
 			}
 
 			// NEW: Help block row (between form fields and question)
 			if (!empty($helpContent)) {
-				$formconfirm .= '<tr class="valid"><td class="valid" colspan="2" style="padding-top:8px; border-top:1px solid #eee;">';
+				$formconfirm .= '<div style="padding-top:8px; border-top:1px solid #888;">';
 				$formconfirm .= $this->getHelpBlock($helpContent);
-				$formconfirm .= '</td></tr>' . "\n";
+				$formconfirm .= '</div>' . "\n";
 			}
 
 			// Let's add a row that acts as a spacer.
-			$formconfirm .= '<tr class="valid"><td class="valid" colspan="2" style="border-top: 2px solid #e0e0e0; padding-top: 30px;"></td></tr>' . "\n";
+			$formconfirm .= '<div style="padding-top: 20px;"></div>' . "\n";
 
 			// Question row
-			$formconfirm .= '<tr class="valid">';
-			$formconfirm .= '<td class="valid">' . $question . '</td>';
-			$formconfirm .= '<td class="valid center">';
+			$formconfirm .= '<div class="inline-block">' . $question . '</div>';
 
+			$formconfirm .= '<div class="inline-block">';
 			$formconfirm .= $this->selectyesno("confirm", $newselectedchoice, 0, false, 0, 0, 'marginleftonly marginrightonly', $labelbuttonyes, $labelbuttonno);
 			$formconfirm .= '<input class="button valignmiddle confirmvalidatebutton small" type="submit" value="' . $langs->trans("Validate") . '">';
-			$formconfirm .= '</td>';
-			$formconfirm .= '</tr>' . "\n";
+			$formconfirm .= '</div>';
 
-			$formconfirm .= '</table>' . "\n";
+			$formconfirm .= '</div>';
 
 			if (empty($disableformtag)) {
 				$formconfirm .= "</form>\n";
