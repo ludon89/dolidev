@@ -106,7 +106,7 @@ if ($action == 'update') {
 	$tmpthirdparty->idprof1 = GETPOST("BLOCKEDLOG_REGISTRATION_IDPROF1");
 
 	// Check validity of email
-	if (!isValidEMail(GETPOST("BLOCKEDLOG_REGISTRATION_EMAIL"))) {
+	if (!isValidEmail(GETPOST("BLOCKEDLOG_REGISTRATION_EMAIL"))) {
 		setEventMessages($langs->trans("ErrorBadEMail", GETPOST("BLOCKEDLOG_REGISTRATION_EMAIL")), null, 'errors');
 		$error++;
 	}
@@ -432,7 +432,7 @@ if (empty($mode)) {
 	//Company IDPROF1
 	$item = $formSetup->newItem('BLOCKEDLOG_REGISTRATION_IDPROF1');
 	$item->defaultFieldValue = (GETPOSTISSET('BLOCKEDLOG_REGISTRATION_IDPROF1') ? GETPOST('BLOCKEDLOG_REGISTRATION_IDPROF1') : getDolGlobalString('BLOCKEDLOG_REGISTRATION_IDPROF1', $mysoc->idprof1));
-	$item->helpText = $langs->trans("Example").': '.$langs->trans("732 829 320");
+	$item->helpText = $langs->trans("Example").': 732 829 320';
 	$item->fieldParams['isMandatory'] = 1;
 
 	//Company country code
