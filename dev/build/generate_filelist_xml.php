@@ -250,7 +250,7 @@ if ($release) {
 		$fileforgitcontent = file_get_contents($fileforgit);
 	}
 	if (empty($fileforgitcontent)) {
-		print "Failed to get the last commit ID (are you on the branch for the release branch name ".$branchname." ?). We will use an empty value for gitcommit.\n";
+		print "Can't get the last commit ID (are you on the branch for the release branch name ".$branchname." ?). We will use an empty value for gitcommit.\n";
 	}
 	$gitcommit = trim($fileforgitcontent);
 
