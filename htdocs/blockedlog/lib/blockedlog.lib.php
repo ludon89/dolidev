@@ -232,15 +232,15 @@ function isALNEQualifiedVersion($ignoredev = 0, $ignoremodule = 0)
  */
 function isALNERunningVersion($blockedlogtestalreadydone = 0)
 {
-	// For Debug help: Constant set by developer to force all LNE restrictions
-	// even if country is not France so we can test them on any dev instance.
-	// Note that you can force, with this option, the enabling of the LNE restrictions,
-	// but there is no way to force the disabling of the LNE restriction.
+	// For Debug help: Constant CERTIF_LNE can be set 2 by developer to force all LNE restrictions
+	// even if the country is not France, so we can test the restrictions on any dev instance.
+	// Note that you can force, with this constant, the enabling of the restrictions,
+	// but there is no way to force the disabling of a restriction.
 	if (defined('CERTIF_LNE') && (int) constant('CERTIF_LNE') === 2
 		&& isModEnabled('blockedlog') && ($blockedlogtestalreadydone || isBlockedLogUsed())) {
 		return true;
 	}
-	if (defined('CERTIF_LNE') && (int) constant('CERTIF_LNE') === 1
+	if (defined('CERTIF_LNE') && (int) constant('CERTIF_LNE') === 1		// Value is 1 when version is certified
 		&& isModEnabled('blockedlog') && ($blockedlogtestalreadydone || isBlockedLogUsed())) {
 		return true;
 	}
