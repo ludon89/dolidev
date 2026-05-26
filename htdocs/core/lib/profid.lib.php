@@ -264,13 +264,15 @@ function isValidProfIds($idprof, $thirdparty)
 	}
 
 	// Check SIREN
-	if ($idprof == 1 && $thirdparty->country_code == 'FR' && !isValidSiren($thirdparty->idprof1)) {
-		return -1;
-	}
+	if ($thirdparty->country_code == 'FR') {
+		if ($idprof == 1 && !isValidSiren($thirdparty->idprof1)) {
+			return -1;
+		}
 
-	// Check SIRET
-	if ($idprof == 2 && $thirdparty->country_code == 'FR' && !isValidSiret($thirdparty->idprof2)) {
-		return -1;
+		// Check SIRET
+		if ($idprof == 2 && !isValidSiret($thirdparty->idprof2)) {
+			return -2;
+		}
 	}
 
 	// Verify CIF/NIF/NIE if pays ES

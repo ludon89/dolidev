@@ -424,14 +424,15 @@ if (empty($mode)) {
 
 	//Company email
 	$item = $formSetup->newItem('BLOCKEDLOG_REGISTRATION_EMAIL');
-	$item->defaultFieldValue = getDolGlobalString('BLOCKEDLOG_REGISTRATION_EMAIL', $mysoc->email);
+	$item->defaultFieldValue = (GETPOSTISSET('BLOCKEDLOG_REGISTRATION_EMAIL') ? GETPOST('BLOCKEDLOG_REGISTRATION_EMAIL') : getDolGlobalString('BLOCKEDLOG_REGISTRATION_EMAIL', $mysoc->email));
 	$item->setAsEmail();
 	$item->fieldParams['isMandatory'] = 1;
 	$item->cssClass = "minwidth300 maxwidth500 widthcentpercentminusx";
 
 	//Company IDPROF1
 	$item = $formSetup->newItem('BLOCKEDLOG_REGISTRATION_IDPROF1');
-	$item->defaultFieldValue = getDolGlobalString('BLOCKEDLOG_REGISTRATION_IDPROF1', $mysoc->idprof1);
+	$item->defaultFieldValue = (GETPOSTISSET('BLOCKEDLOG_REGISTRATION_IDPROF1') ? GETPOST('BLOCKEDLOG_REGISTRATION_IDPROF1') : getDolGlobalString('BLOCKEDLOG_REGISTRATION_IDPROF1', $mysoc->idprof1));
+	$item->helpText = $langs->trans("Example").': '.$langs->trans("732 829 320");
 	$item->fieldParams['isMandatory'] = 1;
 
 	//Company country code
