@@ -47,9 +47,13 @@ passwd=$6
 if [ "$confirm" != "confirm" ] && [ "$confirm" != "confirmresetblockedlog" ]
 then
 	echo "----- $0 -----"
-	echo "Usage: initdemo.sh confirm|confirmresetblockedlog "
+	echo "Usage: initdemo.sh confirm|confirmresetblockedlog"
 	echo " or"
 	echo "Usage: initdemo.sh confirm|confirmresetblockedlog [mysqldump_dolibarr_x.x.x.sql database port login pass]"
+	echo
+	echo "confirm:                To reload database"
+	echo "confirmresetblockedlog: To reload database and reset blocked log"
+	echo
 	exit
 fi
 
