@@ -226,8 +226,6 @@ function formatObject($objtoshow, $prefix, $parentelement = '')
 				$types = $arrayoffields[$key]['type'] ?? '';
 				$labels = (array_key_exists($key, $convertkey) ? ($arrayoffields[$convertkey[$key]]['label'] ?? '') : '');
 				$s .= '<!-- '.$key.' '.$types.' '.$labels.' -->';
-
-				$s .= '<!-- '.$key.' '.$arrayoffields[$key]['type'].' '.$arrayoffields[$convertkey[$key]]['label'].' -->';
 				$s .= ($prefix ? $prefix.' > ' : '');
 				$s .= $key;
 				$s .= '</td>';
