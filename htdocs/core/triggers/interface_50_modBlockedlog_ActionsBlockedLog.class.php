@@ -199,9 +199,11 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 				'MEMBER_SUBSCRIPTION_CREATE', 'MEMBER_SUBSCRIPTION_MODIFY', 'MEMBER_SUBSCRIPTION_DELETE',
 				'DON_VALIDATE', 'DON_MODIFY', 'DON_DELETE'))) {
 				/** @var Don|Subscription $object */
+				'@phan-var-force Don|Subscription $object';
 				$amounts = (float) $object->amount;
 			} elseif ($action == 'CASHCONTROL_CLOSE') {
 				/** @var CashControl $object */
+				'@phan-var-force CashControl $object';
 				$amounts = (float) $object->cash + (float) $object->cheque + (float) $object->card;
 			} else {
 				if (property_exists($object, 'total_ht')) {
@@ -214,6 +216,8 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 		}
 		if ($action === 'PAYMENT_CUSTOMER_CREATE' || $action === 'PAYMENT_SUPPLIER_CREATE' || $action === 'DONATION_PAYMENT_CREATE'
 			|| $action === 'PAYMENT_CUSTOMER_DELETE' || $action === 'PAYMENT_SUPPLIER_DELETE' || $action === 'DONATION_PAYMENT_DELETE') {
+			/** @var Paiement $object */
+			'@phan-var-force Paiement $object';
 			$qualified++;
 			if (!empty($object->amounts)) {
 				foreach ($object->amounts as $amount) {
@@ -223,6 +227,8 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 				$amounts = $object->amount;
 			}
 		} elseif (strpos($action, 'PAYMENT') !== false && !in_array($action, array('PAYMENT_ADD_TO_BANK'))) {
+			/** @var Paiement $object */
+			'@phan-var-force Paiement $object';
 			$qualified++;
 			$amounts = (float) $object->amount;
 		}
