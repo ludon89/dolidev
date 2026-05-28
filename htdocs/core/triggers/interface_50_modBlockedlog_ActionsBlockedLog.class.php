@@ -107,6 +107,7 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 
 		if ($action === 'BILL_UNVALIDATE') {
 			/** @var Facture $object */
+			'@phan-var-force Facture $object';
 			if ($object->isEditable() <= 0) {
 				$this->errors[] = 'Modifying this invoice is not allowed';
 				return -2;
