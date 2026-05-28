@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2017       ATM Consulting          <contact@atm-consulting.fr>
  * Copyright (C) 2017-2018  Laurent Destailleur	    <eldy@users.sourceforge.net>
- * Copyright (C) 2025       Frédéric France         <frederic.france@free.fr>
+ * Copyright (C) 2025-2026  Frédéric France         <frederic.france@free.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -129,6 +129,8 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 		// If we are here, we are on an action code that will have a control or will generate a record in blockedlog database.
 
 		if ($action === 'PAYMENT_CUSTOMER_CREATE' && $object->element == 'payment') {
+			/** @var Paiement $object */
+			'@phan-var-force Paiement $object';
 			include_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
 			if (isALNERunningVersion() && $mysoc->country_code == 'FR') {
 				if (empty($object->paiementcode) && !empty($object->paiementid)) {
