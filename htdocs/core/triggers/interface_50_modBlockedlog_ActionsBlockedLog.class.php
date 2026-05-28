@@ -105,14 +105,15 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 		}
 
 
-		/** @var Facture|Don|Paiement|PaymentDonation|Subscription|PaymentVarious|CashControl $object */
 		if ($action === 'BILL_UNVALIDATE') {
+			/** @var Facture $object */
 			if ($object->isEditable() <= 0) {
 				$this->errors[] = 'Modifying this invoice is not allowed';
 				return -2;
 			}
 		}
 
+		/** @var Facture|Don|Paiement|PaymentDonation|Subscription|PaymentVarious|CashControl $object */
 		dol_syslog("Trigger '".$this->name."' for action '".$action."' launched by ".__FILE__.". id=".$object->id);
 
 		require_once DOL_DOCUMENT_ROOT.'/blockedlog/class/blockedlog.class.php';
