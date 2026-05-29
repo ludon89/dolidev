@@ -102,10 +102,11 @@ class DolibarrApi
 	{
 		// phpcs:enable
 		if (!is_array($value)) {
-			// Make protected values for $field forbidden
+			// Make protected values for forbidden properties
+			/* Disabled. A protection exists to check that ->entity is same than the HTTP header DOLAPIENTITY
 			if (in_array($field, array('entity'))) {
 				throw new RestException(400, 'Parameter '.$field.' is not allowed in request. To work on a different entity, you must set the entity into the HTTP header "DOLAPIENTITY: idOfEntity"');
-			}
+			}*/
 			if (in_array($field, array(
 				'db', 'table_element', 'table_rowid', 'table_ref_field', 'table_element_line', 'element', 'fk_element', 'element_for_permission', 'class_element_line',
 				'fields', 'TRIGGER_PREFIX', 'picto',
