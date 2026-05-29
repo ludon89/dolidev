@@ -504,7 +504,7 @@ function getNumberInvoicesPieChart($mode)
 				$mode == 'customers' ? $langs->trans('InvoiceNotLate30Days') : $langs->trans("InvoiceToPay30Days"),
 			);
 
-			$colorseries = array('#888800', $badgeStatus1, $badgeStatus3, $badgeStatus4, $badgeStatus11, '-'.$badgeStatus11);
+			$colorseries = array('#998844', $badgeStatus1, $badgeStatus3, $badgeStatus4, $badgeStatus11, '-'.$badgeStatus11);
 
 			$result = '<div class="div-table-responsive-no-min">';
 			$result .= '<table class="noborder nohover centpercent">';
