@@ -392,7 +392,8 @@ if (!GETPOST('code')) {
 			// If call back to this url was for a OAUTH2 login
 			if ($forlogin) {
 				// _SESSION['googleoauth_receivedlogin'] has been set to the key to validate the next test by function_googleoauth(), so we can make the redirect
-				$backtourl .= '?actionlogin=login&afteroauthloginreturn=google&mainmenu=home'.($username ? '&username='.urlencode($username) : '').'&token='.newToken();
+				// $backtourl should be a url like https://mydomain/mypage.php?param1=value1 but without param token and action. Part after the # should also have been removed by caller.
+				$backtourl .= (preg_match('/\?/', $backtourl) ? '&' : '?').'actionlogin=login&afteroauthloginreturn=google&mainmenu=home'.($username ? '&username='.urlencode($username) : '').'&token='.newToken();
 				if (!empty($tmparray['entity'])) {
 					$backtourl .= '&entity='.$tmparray['entity'];
 				}
