@@ -82,8 +82,11 @@ function check_user_password_googleoauth($usertotest, $passwordtotest, $entityto
 
 			$oauthstateanticsrf = bin2hex(random_bytes(128/8));
 			$_SESSION['oauthstateanticsrf'] = $shortscope.'-'.$oauthstateanticsrf;
+			$backtourl = DOL_MAIN_URL_ROOT . $_SERVER['REQUEST_URI'];
+			$backtourl = preg_replace('/token=[^&]+/', '', $backtourl);	// We remove any token into url so we are sure only url with no action are qualified as call back urls.
+			$backtourl = preg_replace('/action=[a-z]+/i', '', $backtourl);	// We remove any token into url so we are sure only url with no action are qualified as call back urls.
 
-			$url = $urlwithroot.'/core/modules/oauth/google_oauthcallback.php?shortscope='.urlencode($shortscope).'&state='.urlencode('forlogin-'.$shortscope.'-'.$oauthstateanticsrf).'&username='.urlencode($usertotest);
+			$url = $urlwithroot.'/core/modules/oauth/google_oauthcallback.php?shortscope='.urlencode($shortscope).'&state='.urlencode('forlogin-'.$shortscope.'-'.$oauthstateanticsrf).'&username='.urlencode($usertotest).'&backtourl='.urldecode($backtourl);
 
 			// we go on oauth provider authorization page
 			header('Location: '.$url);
