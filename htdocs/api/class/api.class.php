@@ -521,7 +521,7 @@ class DolibarrApi
 	 *
 	 * @param  string[]	$matches    Array of found string by regex search.
 	 * 								Each entry is 1 and only 1 criteria.
-	 * 								Example: "t.ref:like:'SO-%'", "t.date_creation:<:'20160101'", "t.date_creation:<:'2016-01-01 12:30:00'", "t.nature:is:NULL", "t.field2:isnot:NULL"
+	 * 								Example: "t.ref:like:'SO-%'", "t.date_creation:>:'20160101'", "t.date_creation:<:'2016-01-01 12:30:00'", "t.nature:is:NULL", "t.field2:isnot:NULL"
 	 * @return string               Forged criteria. Example: "t.field like 'abc%'"
 	 */
 	protected static function _forge_criteria_callback($matches)
