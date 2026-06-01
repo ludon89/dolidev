@@ -90,6 +90,8 @@ if (($search_start == -1 || empty($search_start)) && !GETPOSTISSET('search_start
 	$search_startyear = $tmparray['year'];
 }
 
+$includebeforev2 = GETPOSTINT('includebeforev2');
+
 // Load variable for pagination
 $limit = GETPOSTINT('limit') ? GETPOSTINT('limit') : $conf->liste_limit;
 $sortfield = GETPOST('sortfield', 'aZ09comma');
@@ -740,7 +742,20 @@ if (is_array($blocks)) {
 				} else {
 					print ' - '.$langs->trans("Now");
 				}
-				print '</span>';
+				print '</span> &nbsp; ';
+
+				// If there is at least one record with old format
+				$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."blockedlog WHERE object_format < 'V2' and action = 'BILL_VALIDATE' LIMIT 1";
+				$resql = $db->query($sql);
+				$obj = $db->fetch_object($resql);
+				if ($obj) {
+					$foundav1 = 1;
+					if ($includebeforev2) {
+						print ' <span class="small"><a class="reposition" href="'.$_SERVER["PHP_SELF"].'?includebeforev2=0&'.($page ? 'page='.$page.'&' : '').$param.'">'.$form->textwithpicto($langs->trans("OnlyFromV2"), $langs->trans("OnlyFromV2Help")).'</a></span>';
+					} else {
+						print ' <span class="small"><a class="reposition" href="'.$_SERVER["PHP_SELF"].'?includebeforev2=1&'.($page ? 'page='.$page.'&' : '').$param.'">'.$form->textwithpicto($langs->trans("IncludesAll"), $langs->trans("IncludesAllHelp")).'</a></span>';
+					}
+				}
 				print '</td>';
 
 				// Action
@@ -748,7 +763,7 @@ if (is_array($blocks)) {
 
 				// Amount (HT)
 				print '<td class="right nowraponall" colspan="3">';
-				print ($foundoldformat ? '' : price($totalhtamountlifetime['BILL_VALIDATE'])).' '.$langs->trans("HT").($foundoldformat ? '' : " - ".price($totalamountlifetime['BILL_VALIDATE'] - $totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->transnoentitiesnoconv("VAT")).' - '.price($totalamountlifetime['BILL_VALIDATE']).' '.$langs->trans("TTC");
+				print ($foundoldformat ? '' : price($totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->trans("HT")).($foundoldformat ? '' : " - ".price($totalamountlifetime['BILL_VALIDATE'] - $totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->transnoentitiesnoconv("VAT")).($foundoldformat ? '' : " - ").price($totalamountlifetime['BILL_VALIDATE']).' '.$langs->trans("TTC");
 				print '</td>';
 
 				// Details link
