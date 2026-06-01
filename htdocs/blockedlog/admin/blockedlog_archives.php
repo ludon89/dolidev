@@ -766,7 +766,7 @@ if ($action == 'check' || $action == 'checkconfirmed') {
 
 		if (GETPOST('inputregistrationnumber')) {
 			$inputregistrationnumber = GETPOST('inputregistrationnumber');
-			print 'We will use this value as full registration number ';
+			print $langs->trans("WeWillUseThisValueAsNumber");
 			print '<input type="text" name="inputregistrationnumber" class="width300" placeholder="'.$langs->trans("FullRegistrationNumber").'" value="'.$inputregistrationnumber.'" spellcheck="false">';
 
 			$secretkey = $inputregistrationnumber;	// We will use the entered value to check authenticity
