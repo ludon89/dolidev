@@ -942,7 +942,7 @@ if (($id > 0 || !empty($ref)) || $projectidforalltimes > 0 || $allprojectforuser
 			$projectstatic->fetch_thirdparty();
 		}
 		$res = $projectstatic->fetch_optionals();
-	} elseif ($object->fetch($id, $ref) >= 0) {
+	} elseif ($object->fetch($id, $ref) > 0) {
 		if (getDolGlobalString('PROJECT_ALLOW_COMMENT_ON_TASK') && empty($object->comments)) {
 			$object->fetchComments();
 		}
