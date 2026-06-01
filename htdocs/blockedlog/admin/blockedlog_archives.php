@@ -652,7 +652,7 @@ if ($action == 'export' && $user->hasRight('blockedlog', 'read')) {		// read is 
 $form = new Form($db);
 $formother = new FormOther($db);
 
-if ($withtab) {
+if ($withtab && !userIsTaxAuditor()) {
 	$title = $langs->trans("ModuleSetup").' '.$langs->trans('BlockedLog');
 } else {
 	$title = $langs->trans("BrowseBlockedLog");
@@ -672,7 +672,7 @@ if (!is_array($blocks)) {
 }
 
 $linkback = '';
-if ($withtab) {
+if ($withtab && !userIsTaxAuditor()) {
 	$linkback = '<a href="'.dolBuildUrl($backtopage ? $backtopage : DOL_URL_ROOT.'/admin/modules.php', ['restore_lastsearch_values' => 1]).'">'.img_picto($langs->trans("BackToModuleList"), 'back', 'class="pictofixedwidth"').'<span class="hideonsmartphone">'.$langs->trans("BackToModuleList").'</span></a>';
 }
 
