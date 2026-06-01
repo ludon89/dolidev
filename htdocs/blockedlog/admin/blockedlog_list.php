@@ -748,7 +748,7 @@ if (is_array($blocks)) {
 
 				// Amount (HT)
 				print '<td class="right nowraponall" colspan="3">';
-				print price($totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->trans("HT").($foundoldformat ? '' : " - ".price($totalamountlifetime['BILL_VALIDATE'] - $totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->transnoentitiesnoconv("VAT")).' - '.price($totalamountlifetime['BILL_VALIDATE']).' '.$langs->trans("TTC");
+				print ($foundoldformat ? '' : price($totalhtamountlifetime['BILL_VALIDATE'])).' '.$langs->trans("HT").($foundoldformat ? '' : " - ".price($totalamountlifetime['BILL_VALIDATE'] - $totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->transnoentitiesnoconv("VAT")).' - '.price($totalamountlifetime['BILL_VALIDATE']).' '.$langs->trans("TTC");
 				print '</td>';
 
 				// Details link

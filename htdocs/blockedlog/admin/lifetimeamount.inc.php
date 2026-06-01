@@ -60,6 +60,9 @@ $sql .= " WHERE entity = ".((int) $conf->entity);
 //$sql .= " AND action IN ('BILL_VALIDATE', 'BILL_SENTBYMAIL', 'PAYMENT_CUSTOMER_CREATE', 'CASHCONTROL_CLOSE', 'PAYMENT_CUSTOMER_DELETE', 'DOC_DOWNLOAD', 'DOC_PREVIEW')";
 $sql .= " AND action IN ('BILL_VALIDATE', 'PAYMENT_CUSTOMER_CREATE', 'PAYMENT_CUSTOMER_DELETE')";	// Only event into lifetime total
 $sql .= " AND date_creation < '".$db->idate($dateend)."'";
+if (!getDolGlobalString('BLOCKEDLOG_LIFETIME_INCLUDE_ALSO_RECORD_BEFORE')) {
+	$sql .= " AND object_format >= 'V2'";		// We take all record from the new format (V2)
+}
 $sql .= " GROUP BY action, module_source, object_format";
 
 $resql = $db->query($sql);
