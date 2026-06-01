@@ -748,7 +748,7 @@ if (is_array($blocks)) {
 
 				// Amount (HT)
 				print '<td class="right nowraponall" colspan="3">';
-				print $totalhtamountlifetime['BILL_VALIDATE'].' '.$langs->trans("HT")." - ".($foundoldformat ? '' : ($totalamountlifetime['BILL_VALIDATE'] - $totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->transnoentitiesnoconv("VAT")).' - '.$totalamountlifetime['BILL_VALIDATE'].' '.$langs->trans("TTC");
+				print price($totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->trans("HT")." - ".($foundoldformat ? '' : price($totalamountlifetime['BILL_VALIDATE'] - $totalhtamountlifetime['BILL_VALIDATE']).' '.$langs->transnoentitiesnoconv("VAT")).' - '.price($totalamountlifetime['BILL_VALIDATE']).' '.$langs->trans("TTC");
 				print '</td>';
 
 				// Details link
@@ -800,7 +800,7 @@ if (is_array($blocks)) {
 
 				// Amount (HT)
 				print '<td class="right nowraponall" colspan="3">';
-				print ($totalamountlifetime['PAYMENT_CUSTOMER_CREATE'] + $totalamountlifetime['PAYMENT_CUSTOMER_DELETE']);
+				print price($totalamountlifetime['PAYMENT_CUSTOMER_CREATE'] + $totalamountlifetime['PAYMENT_CUSTOMER_DELETE']);
 				print '</td>';
 
 				// Details link
