@@ -115,7 +115,7 @@ if ($confirm == 'regenerate') {
 	$db->begin();
 
 	// Now restart request with all data, so without the limit(1) in sql request
-	$sql = "SELECT rowid, entity, date_creation, tms, user_fullname, action, module_source, amounts_taxexcl, amounts, element, fk_object, date_object, ref_object,";
+	$sql = "SELECT rowid, entity, date_creation, tms, user_fullname, action, module_source, pos_source, amounts_taxexcl, amounts, element, fk_object, date_object, ref_object,";
 	$sql .= " linktoref, linktype, signature, fk_user, object_data, object_version, object_format, debuginfo";
 	$sql .= " FROM ".MAIN_DB_PREFIX."blockedlog";
 	$sql .= " WHERE entity = ".((int) $entity);
@@ -151,6 +151,7 @@ if ($confirm == 'regenerate') {
 
 			$block_static->action = $obj->action;
 			$block_static->module_source = $obj->module_source;
+			$block_static->pos_source = $obj->pos_source;
 
 			$block_static->amounts_taxexcl = is_null($obj->amounts_taxexcl) ? null : (float) $obj->amounts_taxexcl;	// Database store value with 8 digits, we cut ending 0 them with (flow)
 			$block_static->amounts = (float) $obj->amounts;															// Database store value with 8 digits, we cut ending 0 them with (flow)
