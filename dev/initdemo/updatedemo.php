@@ -338,6 +338,10 @@ if ($confirm == 'confirmcleanblockedlog' || $confirm == 'confirmemptyblockedlog'
 	print "\n";
 	$db->query($sql);
 
+	//UPDATE llx_societe_remise_except SET fk_facture = NULL, fk_facture_source = NULL, fk_facture_line = NULL;
+
+	//DELETE FROM llx_facturedet WHERE fk_facture NOT IN (SELECT rowid FROM llx_facture);
+
 	$sql = "DELETE FROM ".MAIN_DB_PREFIX."facture WHERE datef < '".$lastyear."-12-31'";
 	print $sql;
 	print "\n";
