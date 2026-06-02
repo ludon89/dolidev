@@ -2068,6 +2068,8 @@ class CMailFile
 			}
 		}
 
+		sleep(1000);
+
 		return $_retVal;
 	}
 
