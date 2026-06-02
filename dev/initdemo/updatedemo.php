@@ -335,6 +335,16 @@ if ($confirm == 'confirmcleanblockedlog' || $confirm == 'confirmemptyblockedlog'
 	print "\n";
 	$db->query($sql);
 
+	$sql = "UPDATE llx_blockedlog SET pos_source = 1 WHERE module_source = 'takepos'";
+	print $sql;
+	print "\n";
+	$db->query($sql);
+
+	$sql = "DELETE FROM ".MAIN_DB_PREFIX."pos_cash_fence";
+	print $sql;
+	print "\n";
+	$db->query($sql);
+
 	$sql = "DELETE FROM ".MAIN_DB_PREFIX."facture WHERE datef < '".$lastyear."-12-31'";
 	print $sql;
 	print "\n";
