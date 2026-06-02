@@ -266,6 +266,9 @@ if ($confirm == 'confirm') {
 if ($confirm == 'confirmcleanblockedlog' || $confirm == 'confirmemptyblockedlog') {
 	$year = $tmp['year'];			// Old year in demo
 	$lastyear = $tmp['year'] - 2;	// New year in demo
+	if ($confirm == 'confirmemptyblockedlog') {
+		$lastyear = $tmp['year'];
+	}
 
 	// Upgrade dates from current year to current year - 2.
 	while ($year >= $lastyear) {
@@ -315,7 +318,7 @@ if ($confirm == 'confirmcleanblockedlog' || $confirm == 'confirmemptyblockedlog'
 	}
 
 
-	$sql = "CREATE TABLE tmp_delete (SELECT pf.fk_paiement FROM llx_paiement_facture as pf WHERE pf.fk_facture IN (SELECT f.rowid FROM llx_facture as f WHERE f.datef < '2024-12-31'))";
+	$sql = "CREATE TABLE tmp_delete (SELECT pf.fk_paiement FROM llx_paiement_facture as pf WHERE pf.fk_facture IN (SELECT f.rowid FROM llx_facture as f WHERE f.datef < '".$lastyear."-12-31'))";
 	print $sql;
 	print "\n";
 	$db->query($sql);
