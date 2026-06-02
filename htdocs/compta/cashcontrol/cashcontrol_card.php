@@ -1114,7 +1114,7 @@ if (empty($action) || $action == "view" || $action == "close") {
 				print price($initialbalanceforterminal[$terminalid]['cash']).'<br>';
 				print '</td>';
 
-				// Amount calculated per payment type
+				// Amount calculated per payment type (field cash_calculated, cheque_calculated, card_calculated)
 				$i = 0;
 				foreach ($arrayofpaymentmode as $key => $val) {
 					print '<td class="smallheight center'.($i == 0 ? ' hide0' : '').'">';
