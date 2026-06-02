@@ -328,7 +328,7 @@ if ($confirm == 'confirmcleanblockedlog' || $confirm == 'confirmemptyblockedlog'
 	print "\n";
 	$db->query($sql);
 
-	$sql = "DELETE FROM ".MAIN_DB_PREFIX."paiement WHERE rowid IN (SELECT fk_paiement FROM tmp_delete)";
+	$sql = "DELETE FROM ".MAIN_DB_PREFIX."paiement WHERE rowid IN (SELECT fk_paiement FROM tmp_delete) OR rowid NOT IN (SELECT fk_paiement FROM ".MAIN_DB_PREFIX."paiement_facture)";
 	print $sql;
 	print "\n";
 	$db->query($sql);
