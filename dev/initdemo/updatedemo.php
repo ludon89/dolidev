@@ -343,6 +343,11 @@ if ($confirm == 'confirmcleanblockedlog' || $confirm == 'confirmemptyblockedlog'
 	print "\n";
 	$db->query($sql);
 
+	$sql = "DELETE FROM ".MAIN_DB_PREFIX."pos_cash_fence WHERE date_creation < '".$lastyear."-12-31'";
+	print $sql;
+	print "\n";
+	$db->query($sql);
+
 	$sql = "DROP TABLE tmp_delete";
 	print $sql;
 	print "\n";
