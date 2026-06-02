@@ -612,6 +612,7 @@ if ($action == "create" || $action == "start" || $action == 'close') {
 			if ($resql) {
 				$obj = $db->fetch_object($resql);
 				if ($obj) {
+					// $theoricalamountforterminal and $theoricalnbofinvoiceforterminal will be used to get the amount for period (cash_calculated, cheque_calculated and card_calculated)
 					$theoricalamountforterminal[$terminalid][$key] = $obj->total;
 					$theoricalnbofinvoiceforterminal[$terminalid][$key] = $obj->nb;
 				}
