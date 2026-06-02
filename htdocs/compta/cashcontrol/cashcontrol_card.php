@@ -580,6 +580,7 @@ if ($action == "create" || $action == "start" || $action == 'close') {
 		foreach ($arrayofpaymentmode as $key => $val) {
 			// NOTE: Must be same request than into report.php, except it does an aggregate and do the request 3 times, once per payment type.
 
+			// TODO
 			/*$sql = "SELECT p.rowid, p.datep as datep, cp.code,";
 			$sql .= " f.rowid as facid, f.ref, f.datef as datef, pf.amount as amount,";
 			$sql .= " b.fk_account as bankid,";
