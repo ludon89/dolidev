@@ -103,6 +103,9 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 			return -1;
 		}
 
+		// Check that the file conf.php can't be read by any user.
+		// TODO
+
 
 		if ($action === 'BILL_UNVALIDATE') {
 			/** @var Facture $object */
