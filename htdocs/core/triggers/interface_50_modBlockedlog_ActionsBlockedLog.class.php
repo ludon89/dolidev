@@ -99,7 +99,7 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 		include_once DOL_DOCUMENT_ROOT.'/blockedlog/lib/blockedlog.lib.php';
 		$isqualified = isALNERunningVersion(1);
 		if ($isqualified && (defined('CERTIF_LNE') && (int) constant('CERTIF_LNE') == 1) && !isHTTPS()) {
-			$this->errors[] = 'Error: You are using Dolibarr with the module to be compliant with the French Law Finance certification. In this version, the HTTPS is mandatory (Your hosting does not match the install requirements) to be allowed the record any event.';
+			$this->errors[] = 'Error: You are using Dolibarr with the module to be compliant with the French Law Finance certification. In this version, the HTTPS is mandatory to be allowed to record any event (Your hosting does not match the install requirements).';
 			return -1;
 		}
 
