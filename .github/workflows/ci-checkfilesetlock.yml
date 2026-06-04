@@ -48,7 +48,7 @@ jobs:
       #    - fail the step only if none could be added
       #    - succeed if at least one was added (but log failures)
       - name: Assign reviewers when check fails
-        if: ${{ github.event_name == 'pull_request_target' && steps.checklock.outcome == 'failure'
+        if: ${{ github.event_name == 'pull_request_target' && steps.checklock.outcome == 'failure' }}
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
