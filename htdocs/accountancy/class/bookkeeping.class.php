@@ -489,7 +489,7 @@ class BookKeeping extends CommonObject
 				$this->error = 'BookkeepingRecordAlreadyExists';
 				$this->errors[] = $langs->trans('WarningBookkeepingRecordAlreadyExists', $this->doc_type, $this->fk_doc, $this->fk_docdet);
 
-				dol_syslog(__METHOD__ . ' duplicate record detected: doc_type={$this->doc_type}, doc_ref={$this->doc_ref}, fk_doc={(int) $this->fk_doc}, fk_docdet={(int) $this->fk_docdet}', LOG_WARNING);
+				dol_syslog(get_class($this).":: duplicate record detected: doc_type=" . $this->doc_type.", doc_ref=" . $this->doc_ref . ", fk_doc=" . ((int) $this->fk_doc) . ", fk_docdet=" . ((int) $this->fk_docdet), LOG_WARNING);
 			}
 		} else {
 			$result = -5;
