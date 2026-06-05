@@ -352,6 +352,16 @@ class BookKeeping extends CommonObject
 		}
 		$sql .= " AND entity = ".$conf->entity; // Do not use getEntity for accounting features
 
+		// Allow duplicates in incomes or loss statements
+		$accountProfit = getDolGlobalString('ACCOUNTING_RESULT_PROFIT');
+		$accountLoss   = getDolGlobalString('ACCOUNTING_RESULT_LOSS');
+
+		if (($accountProfit && $this->numero_compte === trim($accountProfit)) ||
+			($accountLoss   && $this->numero_compte === trim($accountLoss))) {
+			// If the account being processed corresponds to the “Profit” or “Loss” constant, the detection is bypassed
+			$sql .= " AND 1 = 2";
+		}
+
 		$resql = $this->db->query($sql);
 
 		if ($resql) {
@@ -477,7 +487,18 @@ class BookKeeping extends CommonObject
 				$result = -3;
 				$error++;
 				$this->error = 'BookkeepingRecordAlreadyExists';
-				dol_syslog(__METHOD__.' '.$this->error, LOG_WARNING);
+				$this->errors[] = $langs->trans('WarningBookkeepingRecordAlreadyExists', $this->doc_type, $this->fk_doc, $this->fk_docdet);
+
+				dol_syslog(__METHOD__ . ' duplicate record detected: '
+					. 'doc_type=' . $this->doc_type
+					. ', doc_ref=' . $this->doc_ref
+					. ', fk_doc=' . ((int) $this->fk_doc)
+					. ', fk_docdet=' . ((int) $this->fk_docdet)
+					. ', numero_compte=' . $this->numero_compte
+					. ', label_operation=' . $this->label_operation
+					. ', subledger_account=' . ($this->subledger_account ?? '(null)'),
+					LOG_WARNING
+				);
 			}
 		} else {
 			$result = -5;
