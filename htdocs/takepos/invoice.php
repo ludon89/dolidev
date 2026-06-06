@@ -471,6 +471,7 @@ if (empty($reshook)) {
 			$db->rollback();
 		}
 	}
+
 	$creditnote = null;
 	if ($action == 'creditnote' && $user->hasRight('facture', 'creer')) {
 		$db->begin();
