@@ -1817,7 +1817,7 @@ class BlockedLog
 			//$fingerprint = dol_hash(print_r($mysoc, true).getRandomPassword(true), '5');
 			$fingerprint = bin2hex(random_bytes(32)); // 64 char hex
 
-			dolibarr_set_const($db, 'BLOCKEDLOG_ENTITY_FINGERPRINT', $fingerprint, 'chaine', 0, 'Numeric Unique Fingerprint', $conf->entity);
+			dolibarr_set_const($db, 'BLOCKEDLOG_ENTITY_FINGERPRINT', $fingerprint, 'chaine', 0, 'Initial signature fingerprint', $conf->entity);
 
 			$conf->global->BLOCKEDLOG_ENTITY_FINGERPRINT = $fingerprint;
 		}
