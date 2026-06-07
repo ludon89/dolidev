@@ -239,11 +239,12 @@ $nbmonthallowed = $nbrecordallowed / $maxtranspermonth;
 $htmltext = '';
 $htmltext .= $langs->trans("UnalterableLogTool2", $langs->transnoentitiesnoconv("Archives"))."<br>";
 $htmltext .= '<span class="small">'.$langs->trans("UnalterableLogTool2MaxUsage", $nbrecorddone, $mindisksize, $nbrecordallowed)."</span><br>";
-$htmltext .= '<span class="small">'.$langs->trans("UnalterableLogTool2b", $langs->transnoentitiesnoconv("Archives"))."</span><br>";
 
 $htmltext .= '<span class="small">'.$langs->trans("UnalterableLogTool3")."</span><br>";
 if ($mysoc->country_code == 'FR') {
-	$htmltext .= '<br><span class="small">'.$langs->trans("UnalterableLogTool1FR").'</span><br>';
+	$htmltext .= '<br><span class="small">'.$langs->trans("UnalterableLogTool1FR", $langs->transnoentitiesnoconv("Archives")).'</span><br>';
+} else {
+	$htmltext .= '<span class="small">'.$langs->trans("UnalterableLogTool2b", $langs->transnoentitiesnoconv("Archives"))."</span><br>";
 }
 
 print info_admin($htmltext, 0, 0, 'warning');

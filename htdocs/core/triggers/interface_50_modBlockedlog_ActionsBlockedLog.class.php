@@ -103,9 +103,11 @@ class InterfaceActionsBlockedLog extends DolibarrTriggers
 			return -1;
 		}
 
-		// Check that the file conf.php can't be read by any user.
-		// TODO
-
+		// Detect if a certified version was installed on an old version. So we can force the user to redo the configuration stepwith new requirements.
+		if ($mysoc->country_code == 'FR' && $isqualified && !isRegistrationDataSavedAndPushed()) {
+			$this->errors[] = 'Error: You are using Dolibarr with the module "Blocked Log"to be compliant with the French Law Finance certification, but the registration step was not done or is not complete. Try to reenable the module %s.';
+			return -1;
+		}
 
 		if ($action === 'BILL_UNVALIDATE') {
 			/** @var Facture $object */
