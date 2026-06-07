@@ -188,9 +188,11 @@ print '<td>'.$langs->trans("Parameters").'</td>';
 print '<td></td>';
 print "</tr>\n";
 
+// Initial signature
+// Generated randomly when doing the first insert by blockedlog.class.php, and saved into BLOCKEDLOG_ENTITY_FINGERPRINT
 print '<tr class="oddeven">';
-print '<td class="titlefieldmiddle">';
-print $langs->trans("CompanyInitialKey").'</td><td>';
+print '<td class="titlefieldmiddle" title="Parameter BLOCKEDLOG_ENTITY_FINGERPRINT">';
+print $langs->trans("CompanyInitialKey").'</td><td title="Parameter BLOCKEDLOG_ENTITY_FINGERPRINT">';
 print $block_static->getOrInitFirstSignature();
 print '</td></tr>';
 

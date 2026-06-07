@@ -33,7 +33,6 @@ include_once DOL_DOCUMENT_ROOT.'/blockedlog/versionmod.inc.php';
  */
 function getBlockedLogVersionToShow()
 {
-	// return DOL_VERSION;
 	return constant('DOLCERT_VERSION');
 }
 
