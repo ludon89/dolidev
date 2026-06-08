@@ -2,6 +2,7 @@
 English Dolibarr ChangeLog
 --------------------------------------------------------------
 
+
 ***** ChangeLog for 23.0.3 compared to 23.0.2 *****
 
 FIX: #36589 (#38037) There is no save button in the "Variant attributes extrafields" and "Variant attributes values extrafields" tabs of the product variant module
