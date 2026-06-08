@@ -4910,7 +4910,7 @@ if ($action == 'create') {
 
 	$head = facture_prepare_head($object);
 
-	print dol_get_fiche_head($head, 'compta', $langs->trans('InvoiceCustomer'), -1, $object->picto);
+	print dol_get_fiche_head($head, 'compta', $langs->trans('InvoiceCustomer'), -1, $object->picto, 0, '', '', 0, '', 1);
 
 	$formconfirm = '';
 
@@ -5075,7 +5075,7 @@ if ($action == 'create') {
 	// Confirm back to draft status (action = 'modif')
 	if ($action == 'modif') {
 		$oktomodif = 1;		// Assume we can modify by default
-		/*
+
 		$testvalue = $object->isEditable();
 		if ($testvalue < 0) {
 			switch ($testvalue) {
@@ -5115,7 +5115,7 @@ if ($action == 'create') {
 			$oktomodif = 0;
 			$action = '';
 		}
-		*/
+
 		if ($oktomodif) {
 			$text = $langs->trans('ConfirmUnvalidateBill', $object->ref);
 			$formquestion = array();
