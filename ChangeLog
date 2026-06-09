@@ -171,6 +171,7 @@ NEW: A lot of look and feel enhancement in the immutable log pages.
 NEW: Enhance the tools to check file integrity.
 NEW: The OAuth login with Google stay on the requested page after the redirect instead of reaching the home page.
 NEW: Add shipment online url to substitution array
+NEW: ModuleBuilder - selectable object tabs (+ fixes for multi-object generation)
 
 For developers:
 ---------------
