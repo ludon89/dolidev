@@ -968,6 +968,8 @@ function showWebsiteTemplates(Website $website, int $refresh)
  * Check that the new string $phpfullcodestring contains only php code (including <php tag)
  * - Block if user has no permission to change PHP code.
  * - Block also if bad code found in the new string.
+ * This does not check for evil callable function (like dol_eval_standard could do), because php concat should be allowed so obfuscation is always possible so
+ * detecting callable function can't be guaranteed. For this reason, application is protected by a global variable $dolibarr_website_allow_custom_php.
  *
  * @param	string		$phpfullcodestringold		PHP old string (before the change). For example "<?php echo 'a' ?><php echo 'b' ?>"
  * @param	string		$phpfullcodestring			PHP new string. For example "<?php echo 'a' ?><php echo 'c' ?>"
