@@ -810,7 +810,7 @@ if ($action != 'createsubscription' && $action != 'create_thirdparty') {
 		}
 
 		if (empty($num)) {
-			$colspan = 6;
+			$colspan = 7;
 			if (isModEnabled('bank')) {
 				$colspan++;
 			}
