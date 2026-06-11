@@ -527,6 +527,7 @@ LetteringAuto=Auto matching
 LetteringManual=Manual matching
 LetteringPartial=Partial matching
 GeneralMatchingManual=Manual matching on general account
+GeneralMatchingPartial=Partial matching on general account
 GeneralUnmatchingManual=Manual unmatching on general account
 Unlettering=Unmatching
 UnletteringAuto=Auto unmatching
