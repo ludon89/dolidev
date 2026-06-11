@@ -943,7 +943,7 @@ if (empty($reshook)) {
 			$newcardbutton .= dolGetButtonTitle($langs->trans('GroupBySubAccountAccounting'), '', 'fa fa-align-left vmirror paddingleft imgforviewmode', DOL_URL_ROOT . '/accountancy/bookkeeping/listbyaccount.php?type=sub&' . $url_param, '', 1, array('morecss' => 'marginleftonly'));
 		}
 	}
-	$newcardbutton .= dolGetButtonTitle($langs->trans('ExportToPdf'), '', 'fa fa-file-pdf paddingleft', $_SERVER['PHP_SELF'] . '?action=exporttopdf'.(!empty($type) ? '&type=sub' : '').'&' . $url_param, '', $permissiontoexport, array('morecss' => 'marginleftonly'));
+	$newcardbutton .= dolGetButtonTitle($langs->trans('ExportToPdf'), '', 'fa fa-file-pdf paddingleft', $_SERVER['PHP_SELF'] . '?token=' . newToken() .'&action=exporttopdf'.(!empty($type) ? '&type=sub' : '').'&' . $url_param, '', $permissiontoexport, array('morecss' => 'marginleftonly'));
 
 	$newcardbutton .= dolGetButtonTitleSeparator();
 
