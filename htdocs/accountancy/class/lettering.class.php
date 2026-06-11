@@ -399,7 +399,7 @@ class Lettering extends BookKeeping
 				if ($resql) {
 					if ($obj = $this->db->fetch_object($resql)) {
 						if (!(round(abs($obj->deb), 2) === round(abs($obj->cred), 2))) {
-							$this->errors[] = $langs->trans('ErrorMatchingUnbalanced', price(price2num(abs($obj->deb),'MT')), price(price2num(abs($obj->cred),'MT')));
+							$this->errors[] = $langs->trans('ErrorMatchingUnbalanced', price(price2num(abs($obj->deb), 'MT')), price(price2num(abs($obj->cred), 'MT')));
 							$error++;
 						}
 					}
@@ -703,7 +703,7 @@ class Lettering extends BookKeeping
 				if ($resql) {
 					if ($obj = $this->db->fetch_object($resql)) {
 						if (!(round(abs($obj->deb), 2) === round(abs($obj->cred), 2))) {
-							$this->errors[] = $langs->trans('ErrorMatchingUnbalanced', price(price2num(abs($obj->deb),'MT')), price(price2num(abs($obj->cred),'MT')));
+							$this->errors[] = $langs->trans('ErrorMatchingUnbalanced', price(price2num(abs($obj->deb), 'MT')), price(price2num(abs($obj->cred), 'MT')));
 							$error++;
 						}
 					}
