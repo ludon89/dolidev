@@ -6690,7 +6690,11 @@ class Form
 		} else {
 			if ($selected) {
 				$this->load_cache_availability();
-				print $this->cache_availability[$selected]['label'];
+				if (isset($this->cache_availability[$selected])) {
+					print $this->cache_availability[$selected]['label'];
+				} else {
+					print "&nbsp;";
+				}
 			} else {
 				print "&nbsp;";
 			}
@@ -9984,10 +9988,10 @@ class Form
 						$out .= ' disabled="disabled"';
 					}
 					if (!empty($tmplabelhtml)) {
-						$out .= ' data-html="' . dolPrintHTMLForAttribute($tmplabelhtml, 0, 0, '', 0, 1) . '"';
+						$out .= ' data-html="' . dolPrintHTMLForAttribute($tmplabelhtml) . '"';
 					} else {
 						$tmplabelhtml = ($tmppicto ? img_picto('', $tmppicto, 'class="pictofixedwidth" style="color: #' . $tmpcolor . '"') : '') . $newval;
-						$out .= ' data-html="' . dolPrintHTMLForAttribute($tmplabelhtml, 0, 0, '', 0, 1) . '"';
+						$out .= ' data-html="' . dolPrintHTMLForAttribute($tmplabelhtml) . '"';
 					}
 					$out .= '>';
 					$out .= dol_htmlentitiesbr($newval);
